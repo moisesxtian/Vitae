@@ -24,6 +24,7 @@
     --c-dark: 17, 24, 39;       /* gray-900 */
     --c-accent1: 245, 158, 11;  /* amber-500 */
     --c-accent2: 29, 78, 216;   /* blue-700 */
+    --c-bgcolor: 255, 255, 255;   /* white */
   }
 }
 
@@ -38,6 +39,7 @@
   --color-dark: rgb(var(--c-dark));
   --color-accent1: rgb(var(--c-accent1));
   --color-accent2: rgb(var(--c-accent2));
+  --color-bgcolor: rgb(var(--c-bgcolor));
 }
 
 /* 5. Tailwind utilities layer to generate classes */
