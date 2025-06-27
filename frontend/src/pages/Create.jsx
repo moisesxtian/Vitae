@@ -10,19 +10,19 @@ export default function Create() {
       title: 'Smart AI Build',
       description: 'Answer a few questions, and let our AI craft your resume.',
       icon: <Sparkles className="w-8 h-8 text-primary" />,
-      route: '/build/ai',
+      route: '/create/ai',
     },
     {
       title: 'Manual Build',
       description: 'Start from scratch and enter details manually.',
       icon: <Pencil className="w-8 h-8 text-primary" />,
-      route: '/build/manual',
+      route: '/create/manual',
     },
     {
       title: 'Import LinkedIn',
       description: 'Fetch and parse your LinkedIn profile into a resume.',
       icon: <Linkedin className="w-8 h-8 text-primary" />,
-      route: '/build/linkedin',
+      route: '/create/linkedin',
     },
   ];
 

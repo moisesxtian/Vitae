@@ -1,5 +1,6 @@
 import MainPage from "./pages/MainPage"
 import Create from "./pages/Create"
+import ManualBuild from "./pages/ManualBuild"
 import Navbar from "./components/Navbar"
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 
@@ -12,6 +13,7 @@ function App() {
           <Routes>
             <Route path="/" element={<MainPage />}/>
             <Route path="/create" element={<Create />}/>
+            <Route path="/create/manual" element={<ManualBuild/>}/>
           </Routes>
         </div>
       </BrowserRouter>
