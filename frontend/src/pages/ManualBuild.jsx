@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react'; // Import useMemo
 import { useNavigate } from 'react-router-dom';
 
 const phLocations = {
@@ -9,22 +9,9 @@ const phLocations = {
         NCR: {
           name: 'NCR',
           cities: [
-            'Manila',
-            'Quezon City',
-            'Makati',
-            'Pasig',
-            'Taguig',
-            'Mandaluyong',
-            'Pasay',
-            'Marikina',
-            'San Juan',
-            'Valenzuela',
-            'Caloocan',
-            'Malabon',
-            'Navotas',
-            'Las Piñas',
-            'Muntinlupa',
-            'Pateros'
+            'Manila', 'Quezon City', 'Makati', 'Pasig', 'Taguig',
+            'Mandaluyong', 'Pasay', 'Marikina', 'San Juan', 'Valenzuela',
+            'Caloocan', 'Malabon', 'Navotas', 'Las Piñas', 'Muntinlupa', 'Pateros'
           ]
         }
       }
@@ -32,61 +19,56 @@ const phLocations = {
     CAR: {
       name: 'Cordillera Administrative Region',
       provinces: {
-        Abra: {
-          cities: ['Bangued', 'Tayum', 'Bucay', 'Lagangilang']
-        },
-        Apayao: {
-          cities: ['Calanasan', 'Kabugao', 'Conner']
-        },
-        Benguet: {
-          cities: ['Baguio', 'La Trinidad', 'Itogon']
-        },
-        Ifugao: {
-          cities: ['Lagawe', 'Kiangan', 'Hingyon']
-        },
-        Kalinga: {
-          cities: ['Tabuk', 'Lubuagan', 'Pinukpuk']
-        },
-        'Mountain Province': {
-          cities: ['Bontoc', 'Sagada', 'Banaue']
-        }
+        Abra: { cities: ['Bangued', 'Tayum', 'Bucay', 'Lagangilang'] },
+        Apayao: { cities: ['Calanasan', 'Kabugao', 'Conner'] },
+        Benguet: { cities: ['Baguio', 'La Trinidad', 'Itogon'] },
+        Ifugao: { cities: ['Lagawe', 'Kiangan', 'Hingyon'] },
+        Kalinga: { cities: ['Tabuk', 'Lubuagan', 'Pinukpuk'] },
+        'Mountain Province': { cities: ['Bontoc', 'Sagada', 'Banaue'] }
       }
     },
     CALABARZON: {
       name: 'CALABARZON (Region IV-A)',
       provinces: {
-        Cavite: {
-          cities: ['Dasmariñas', 'Cavite City', 'Imus', 'Trece Martires']
-        },
-        Laguna: {
-          cities: ['Calamba', 'Santa Rosa', 'San Pedro', 'Biñan']
-        },
-        Batangas: {
-          cities: ['Batangas City', 'Lipa', 'Tanauan', 'Lemery']
-        },
-        Quezon: {
-          cities: ['Lucena', 'Tayabas', 'Tiaong']
-        },
+        Cavite: { cities: ['Dasmariñas', 'Cavite City', 'Imus', 'Trece Martires'] },
+        Laguna: { cities: ['Calamba', 'Santa Rosa', 'San Pedro', 'Biñan'] },
+        Batangas: { cities: ['Batangas City', 'Lipa', 'Tanauan', 'Lemery'] },
+        Quezon: { cities: ['Lucena', 'Tayabas', 'Tiaong'] },
         Rizal: {
           cities: [
-            'Antipolo',
-            'Taytay',
-            'Cainta',
-            'Binangonan',
-            'Angono',
-            'Rodriguez (Montalban)',
-            'San Mateo',
-            'Morong',
-            'Tanay',
-            'Cardona',
-            'Pililla'
+            'Antipolo', 'Taytay', 'Cainta', 'Binangonan', 'Angono',
+            'Rodriguez (Montalban)', 'San Mateo', 'Morong', 'Tanay', 'Cardona', 'Pililla'
           ]
         }
       }
     },
-    // ... add more regions like MIMAROPA, Bicol, etc.
   }
 };
+
+// Input and Select components remain outside, as they are generic UI elements
+function Input({ label, name, value, onChange, type = 'text' }) {
+  return (
+    <div className="flex flex-col">
+      <label htmlFor={name} className="text-sm mb-1 text-dark/80">{label}</label>
+      <input type={type} name={name} id={name} value={value} onChange={onChange} className="border border-dark/10 rounded-md px-4 py-2 focus:ring-2 focus:ring-primary text-sm bg-bgcolor" required />
+    </div>
+  );
+}
+
+function Select({ label, name, value, onChange, options }) {
+  return (
+    <div className="flex flex-col">
+      <label htmlFor={name} className="text-sm mb-1 text-dark/80">{label}</label>
+      <select name={name} id={name} value={value} onChange={onChange} className="border border-dark/10 rounded-md px-4 py-2 bg-bgcolor text-sm focus:ring-2 focus:ring-primary" required>
+        <option value="">Select {label}</option>
+        {options.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
+      </select>
+    </div>
+  );
+}
+
+// Global counter for unique education IDs (or use a library like 'uuid')
+let nextEducationId = 0;
 
 export default function ManualBuild() {
   const navigate = useNavigate();
@@ -102,7 +84,7 @@ export default function ManualBuild() {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const addEducation = () =>
-    setEducationList([...educationList, { instName: '', degree: '', field: '', start: '', end: '', honors: '', coursework: '' }]);
+    setEducationList([...educationList, { id: nextEducationId++, instName: '', degree: '', field: '', start: '', end: '', honors: '', coursework: '' }]);
 
   const handleEduChange = (idx, e) => {
     const list = [...educationList];
@@ -110,8 +92,8 @@ export default function ManualBuild() {
     setEducationList(list);
   };
 
-  const removeEducation = (idx) =>
-    setEducationList(educationList.filter((_, i) => i !== idx));
+  const removeEducation = (idToRemove) => // Remove by unique ID
+    setEducationList(educationList.filter(ed => ed.id !== idToRemove));
 
   const validateStep = () => {
     if (step === 3 && educationList.length > 0) {
@@ -136,12 +118,13 @@ export default function ManualBuild() {
   const prevStep = () => setStep(prev => prev - 1);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
     console.log('Submitted form:', { ...formData, education: educationList });
-    // navigate or send data
+    // You can navigate or send data to an API here
   };
 
-  const StepContent = () => {
+  // Use useMemo to memoize the StepContent JSX based on its dependencies
+  const memoizedStepContent = useMemo(() => {
     if (step === 1) {
       return (
         <>
@@ -157,12 +140,40 @@ export default function ManualBuild() {
     } else if (step === 2) {
       return (
         <>
-          <Select label="Country" name="country" value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value, region: '', province: '', city: '' })} options={['Philippines', 'Other']} />
+          <Select
+            label="Country"
+            name="country"
+            value={formData.country}
+            onChange={(e) => setFormData({ ...formData, country: e.target.value, region: '', province: '', city: '' })}
+            options={['Philippines', 'Other']}
+          />
           {formData.country === 'Philippines' ? (
             <>
-              <Select label="Region" name="region" value={formData.region} onChange={(e) => setFormData({ ...formData, region: e.target.value, province: '', city: '' })} options={Object.keys(phLocations.regions)} />
-              {formData.region && <Select label="Province" name="province" value={formData.province} onChange={(e) => setFormData({ ...formData, province: e.target.value, city: '' })} options={Object.keys(phLocations.regions[formData.region].provinces)} />}
-              {formData.region && formData.province && <Select label="City" name="city" value={formData.city} onChange={handleChange} options={phLocations.regions[formData.region].provinces[formData.province].cities} />}
+              <Select
+                label="Region"
+                name="region"
+                value={formData.region}
+                onChange={(e) => setFormData({ ...formData, region: e.target.value, province: '', city: '' })}
+                options={Object.keys(phLocations.regions)}
+              />
+              {formData.region && (
+                <Select
+                  label="Province"
+                  name="province"
+                  value={formData.province}
+                  onChange={(e) => setFormData({ ...formData, province: e.target.value, city: '' })}
+                  options={Object.keys(phLocations.regions[formData.region].provinces)}
+                />
+              )}
+              {formData.region && formData.province && (
+                <Select
+                  label="City"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  options={phLocations.regions[formData.region].provinces[formData.province].cities}
+                />
+              )}
             </>
           ) : (
             <>
@@ -180,14 +191,13 @@ export default function ManualBuild() {
             <h3 className="font-semibold text-lg">Education</h3>
             <button type="button" onClick={addEducation} className="rounded-full px-4 py-1 bg-primary text-white text-sm hover:opacity-90">+ Add Education</button>
           </div>
-          {educationList.length === 0 && (
-            <button type="button" onClick={nextStep} className="text-sm text-primary hover:underline my-2">Skip — no education to add</button>
-          )}
           {educationList.map((ed, idx) => (
-            <div key={idx} className="border p-4 rounded-lg space-y-3 bg-bgcolor">
+            // Use ed.id as the key for stable rendering of list items
+            <div key={ed.id} className="border p-4 rounded-lg space-y-3 bg-bgcolor mt-4">
               <div className="flex justify-between items-center">
                 <h4 className="font-medium">Institution #{idx + 1}</h4>
-                <button type="button" onClick={() => removeEducation(idx)} className="text-red-500 text-sm hover:underline">Remove</button>
+                {/* Pass the unique ID to removeEducation */}
+                <button type="button" onClick={() => removeEducation(ed.id)} className="text-red-500 text-sm hover:underline">Remove</button>
               </div>
               <Input label="Institution Name" name="instName" value={ed.instName} onChange={(e) => handleEduChange(idx, e)} />
               <Input label="Degree" name="degree" value={ed.degree} onChange={(e) => handleEduChange(idx, e)} />
@@ -205,45 +215,47 @@ export default function ManualBuild() {
       );
     }
     return null;
-  };
+  }, [
+    step,
+    formData,
+    handleChange,
+    educationList,
+    handleEduChange,
+    addEducation,
+    removeEducation,
+    phLocations // Ensure phLocations is in dependencies if used
+  ]);
 
   return (
     <div className="min-h-screen bg-bgcolor text-dark flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-2xl border border-dark/10 rounded-2xl p-6 shadow-md bg-white">
         <h2 className="text-2xl font-bold text-accent2 mb-4 text-center">Step {step} of 3</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
-          <StepContent />
+          {/* Render the memoized content */}
+          {memoizedStepContent}
           <div className="flex justify-between items-center pt-6">
             {step > 1 && <button type="button" onClick={prevStep} className="rounded-full px-6 py-2 text-sm bg-dark/10 text-dark hover:bg-dark/20">← Back</button>}
-            <button type={step === 3 ? 'submit' : 'button'} onClick={step < 3 ? nextStep : null} className="ml-auto rounded-full px-6 py-2 text-sm bg-primary text-white hover:opacity-90">
-              {step < 3 ? 'Next →' : 'Submit →'}
+            
+            <button
+              className="ml-auto rounded-full px-6 py-2 text-sm bg-primary text-white hover:opacity-90"
+              onClick={() => {
+                if (step === 3) {
+                    handleSubmit();
+                } else{
+                    nextStep();
+                }
+              }}
+              // Set type to "submit" only when on the last step and there's education data
+              type={step === 3 && educationList.length > 0 ? "submit" : "button"}
+            >
+                {step === 3 ?
+                educationList.length === 0 ? 'Skip' : 'Submit'
+                : 'Next →'}
             </button>
           </div>
         </form>
         <button onClick={() => navigate('/')} className="mt-6 text-sm text-primary hover:underline block text-center">← Back to Home</button>
       </div>
-    </div>
-  );
-}
-
-// Reusable components
-function Input({ label, name, value, onChange, type = 'text' }) {
-  return (
-    <div className="flex flex-col">
-      <label htmlFor={name} className="text-sm mb-1 text-dark/80">{label}</label>
-      <input type={type} name={name} id={name} value={value} onChange={onChange} className="border border-dark/10 rounded-md px-4 py-2 focus:ring-2 focus:ring-primary text-sm bg-bgcolor" required />
-    </div>
-  );
-}
-
-function Select({ label, name, value, onChange, options }) {
-  return (
-    <div className="flex flex-col">
-      <label htmlFor={name} className="text-sm mb-1 text-dark/80">{label}</label>
-      <select name={name} id={name} value={value} onChange={onChange} className="border border-dark/10 rounded-md px-4 py-2 bg-bgcolor text-sm focus:ring-2 focus:ring-primary" required>
-        <option value="">Select {label}</option>
-        {options.map((opt, idx) => <option key={idx} value={opt}>{opt}</option>)}
-      </select>
     </div>
   );
 }
