@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link,useNavigate} from 'react-router-dom';
 
 export default function Navbar() {
+  const navigate = useNavigate();
   return (
     <div className="bg-bgcolor shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -8,7 +9,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               {/* Logo using BucklaneScript */}
-              <div className="text-accent2 text-4xl font-bold font-logo">
+              <div className="text-accent2 text-4xl font-bold font-logo hover:scale-105 hover:rotate-2 transition-transform duration-300 cursor-pointer" onClick={() => navigate('/')}>
                 Vitae
               </div>
             </div>
