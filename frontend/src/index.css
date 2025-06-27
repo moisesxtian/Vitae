@@ -1,6 +1,9 @@
+/* 1. If using Google Fonts for body, import before tailwindcss */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
-/* Logo font */
+/* 2. Load your custom logo font */
 @font-face {
   font-family: 'BucklaneScript';
   src: url('./assets/fonts/BucklaneScript.otf') format('opentype');
@@ -9,32 +12,33 @@
   font-display: swap;
 }
 
+/* 3. Define base CSS variables */
 @layer base {
   :root {
-    /* Color palette (RGB for opacity support) */
+    /* Font stacks */
+    --font-logo: 'BucklaneScript', cursive;
+    --font-body: 'Poppins', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    /* Colors (RGB for opacity support) */
     --c-primary: 37, 99, 235;   /* blue-600 */
     --c-dark: 17, 24, 39;       /* gray-900 */
     --c-accent1: 245, 158, 11;  /* amber-500 */
-    --c-accent2: 29, 78, 216;
-
-
-    /* Font variables */
-    --font-logo: 'BucklaneScript', cursive;
-    --font-body: 'Poppins', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --c-accent2: 29, 78, 216;   /* blue-700 */
   }
 }
 
+/* 4. Register theme variables so Tailwind can generate utilities */
 @theme {
+  /* Font families */
+  --font-logo: var(--font-logo);
+  --font-sans: var(--font-body);
+
   /* Colors */
   --color-primary: rgb(var(--c-primary));
   --color-dark: rgb(var(--c-dark));
   --color-accent1: rgb(var(--c-accent1));
   --color-accent2: rgb(var(--c-accent2));
-
-  /* Body font overrides default sans for font-sans utility */
-  --font-sans: var(--font-body);
-  /* Optional: separate logo variable stays untouched */
 }
 
-/* Utility layer only */
+/* 5. Tailwind utilities layer to generate classes */
 @tailwind utilities;

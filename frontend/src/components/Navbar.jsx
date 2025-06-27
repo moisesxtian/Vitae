@@ -6,7 +6,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               {/* Logo using BucklaneScript */}
-              <div className="text-blue-600 text-2xl font-bold font-[var(--font-logo)]">
+              <div className="text-accent2 text-4xl font-bold font-logo">
                 Vitae
               </div>
             </div>
