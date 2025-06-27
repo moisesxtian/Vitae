@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'; // Import useMemo
 import { useNavigate } from 'react-router-dom';
+import { Plus,Trash } from 'lucide-react';
 
 const phLocations = {
   regions: {
@@ -56,6 +57,7 @@ function Input({ label, name, value, onChange, type = 'text' }) {
 }
 
 function Select({ label, name, value, onChange, options }) {
+    
   return (
     <div className="flex flex-col">
       <label htmlFor={name} className="text-sm mb-1 text-dark/80">{label}</label>
@@ -84,7 +86,7 @@ export default function ManualBuild() {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const addEducation = () =>
-    setEducationList([...educationList, { id: nextEducationId++, instName: '', degree: '', field: '', start: '', end: '', honors: '', coursework: '' }]);
+    setEducationList([...educationList, { id: nextEducationId++, instName: '', degree: '', field: '', start: '', end: '', honors: ''}]);
 
   const handleEduChange = (idx, e) => {
     const list = [...educationList];
@@ -128,7 +130,7 @@ export default function ManualBuild() {
     if (step === 1) {
       return (
         <>
-          <Input label="First Name" name="firstName" value={formData.firstName} onChange={handleChange} />
+          <Input label="First Name" name="firstName" value={formData.firstName} onChange={handleChange}  />
           <Input label="Middle Initial" name="middleInitial" value={formData.middleInitial} onChange={handleChange} />
           <Input label="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} />
           <Input label="Email" name="email" value={formData.email} onChange={handleChange} type="email" />
@@ -189,15 +191,15 @@ export default function ManualBuild() {
         <>
           <div className="flex justify-between items-center">
             <h3 className="font-semibold text-lg">Education</h3>
-            <button type="button" onClick={addEducation} className="rounded-full px-4 py-1 bg-primary text-white text-sm hover:opacity-90">+ Add Education</button>
+            <button type="button" onClick={addEducation} className="rounded-full px-2 py-2 bg-primary text-white text-sm hover:opacity-90"><Plus className='w-5 h-5'/></button>
           </div>
           {educationList.map((ed, idx) => (
             // Use ed.id as the key for stable rendering of list items
-            <div key={ed.id} className="border p-4 rounded-lg space-y-3 bg-bgcolor mt-4">
+            <div key={ed.id} className="border p-4 rounded-lg space-y-3 bg-bgcolor mt-4 border-dark/10">
               <div className="flex justify-between items-center">
                 <h4 className="font-medium">Institution #{idx + 1}</h4>
                 {/* Pass the unique ID to removeEducation */}
-                <button type="button" onClick={() => removeEducation(ed.id)} className="text-red-500 text-sm hover:underline">Remove</button>
+                <button type="button" onClick={() => removeEducation(ed.id)} className="text-red-500 rounded-full border p-2 hover:bg-gray-200"><Trash className='w-4 h-4'/></button>
               </div>
               <Input label="Institution Name" name="instName" value={ed.instName} onChange={(e) => handleEduChange(idx, e)} />
               <Input label="Degree" name="degree" value={ed.degree} onChange={(e) => handleEduChange(idx, e)} />
@@ -207,8 +209,6 @@ export default function ManualBuild() {
                 <Input label="End Date" name="end" type="month" value={ed.end} onChange={(e) => handleEduChange(idx, e)} />
               </div>
               <Input label="Honors (optional)" name="honors" value={ed.honors} onChange={(e) => handleEduChange(idx, e)} />
-              <label className="text-sm text-dark/80">Relevant Coursework (optional)</label>
-              <textarea name="coursework" value={ed.coursework} onChange={(e) => handleEduChange(idx, e)} className="border border-dark/10 rounded-md px-4 py-2 focus:ring-2 focus:ring-primary bg-bgcolor" rows={2} />
             </div>
           ))}
         </>
@@ -227,13 +227,13 @@ export default function ManualBuild() {
   ]);
 
   return (
-    <div className="min-h-screen bg-bgcolor text-dark flex items-center justify-center px-4 py-10">
+    <div className="min-h-[calc(100vh-100px)] bg-bgcolor text-dark flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-2xl border border-dark/10 rounded-2xl p-6 shadow-md bg-white">
         <h2 className="text-2xl font-bold text-accent2 mb-4 text-center">Step {step} of 3</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Render the memoized content */}
           {memoizedStepContent}
-          <div className="flex justify-between items-center pt-6">
+          <div className="flex justify-between items-center pt-20">
             {step > 1 && <button type="button" onClick={prevStep} className="rounded-full px-6 py-2 text-sm bg-dark/10 text-dark hover:bg-dark/20">← Back</button>}
             
             <button
@@ -254,7 +254,6 @@ export default function ManualBuild() {
             </button>
           </div>
         </form>
-        <button onClick={() => navigate('/')} className="mt-6 text-sm text-primary hover:underline block text-center">← Back to Home</button>
       </div>
     </div>
   );
