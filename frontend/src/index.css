@@ -12,7 +12,6 @@
   font-display: swap;
 }
 
-/* 3. Define base CSS variables */
 @layer base {
   :root {
     /* Font stacks */
@@ -25,6 +24,11 @@
     --c-accent1: 245, 158, 11;  /* amber-500 */
     --c-accent2: 29, 78, 216;   /* blue-700 */
     --c-bgcolor: 255, 255, 255;   /* white */
+  }
+}
+@layer utilities{
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
   }
 }
 
@@ -40,6 +44,18 @@
   --color-accent1: rgb(var(--c-accent1));
   --color-accent2: rgb(var(--c-accent2));
   --color-bgcolor: rgb(var(--c-bgcolor));
+  
+  /* Animations */
+  --animation-bounce: bounce 0.3s ease-in-out;
+  --animation-fade-in: fade-in 0.3s ease-in-out;
+  --animation-fade-out: fade-out 0.3s ease-in-out;
+  @keyframes shake{
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
 }
 
 /* 5. Tailwind utilities layer to generate classes */
