@@ -1,6 +1,8 @@
 import {useState} from "react";
 import Input from "../components/Input";
-import { Plus, X,Briefcase} from "lucide-react";
+import { Plus, X,Briefcase, GraduationCap,BadgeCheck} from "lucide-react";
+
+// Information Form
 export const StepOne = ({ formData, setFormData}) => {
   const [errorMessage, setErrorMessage] = useState("");
   return (
@@ -89,6 +91,8 @@ export const StepOne = ({ formData, setFormData}) => {
     </div>
   );
 };
+
+// Skills Form
 export const StepTwo = ({ formData, setFormData}) => {
   const handleSkillChange = (index, value) => {
     const updatedSkills = [...formData.skills];
@@ -152,6 +156,8 @@ export const StepTwo = ({ formData, setFormData}) => {
     </div>
   );
 };
+
+//Work  Experience Form
 export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
   const handleExperienceChange = (idx, e) => {
     const updated = [...formData.experience];
@@ -200,7 +206,7 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
     setFormData({ ...formData, experience: updated });
   };
 
- return (
+  return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold text-accent2 text-center">Work Experience</h2>
 
@@ -234,7 +240,7 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
             />
           </div>
 
-          <div className="grid grid-cols-2 md:flex-row md:items-end gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <Input
               label="Start Date"
               name="start"
@@ -242,7 +248,7 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
               value={exp.start}
               onChange={e => handleExperienceChange(idx, e)}
             />
-
+            {!exp.present && (
               <Input
                 label="End Date"
                 name="end"
@@ -250,39 +256,48 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
                 value={exp.end}
                 onChange={e => handleExperienceChange(idx, e)}
               />
+            )}
+          </div>
 
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={exp.present}
+              onChange={() => togglePresent(idx)}
+              id={`present-${idx}`}
+            />
+            <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
+              I currently work here
+            </label>
+          </div>
 
-          </div>
-      {exp.bullets.map((bullet, bIdx) => (
-          <div className="flex h-auto w-fita p-2 rounded-lg items-center gap-2  overflow-auto">
-        <div key={bIdx} className="flex h-au w-full items-center gap-2">
-          <div className="flex-1">
-              <Input
-            label={`Responsibilites / Accomplishment #${bIdx + 1}`}
-            name={`bullet-${bIdx}`}
-            type="text"
-            value={bullet}
-            placeholder={'e.g. Spearheaded the development of...'}
-            
-            onChange={(e) => handleBulletChange(idx, bIdx, e.target.value)}
-          />
-          </div>
-          <button
-            type="button"
-            onClick={() => removeBullet(idx, bIdx)}
-            className="p-2 rounded-full hover:bg-gray-200 transition"
-          >
-            <X className="w-5 h-5 text-red-600 hover:text-red-800" />
-          </button>
-  </div>
-          </div>
-))}
-          
+          {exp.bullets.map((bullet, bIdx) => (
+            <div key={bIdx} className="flex p-2 rounded-lg items-center gap-2 overflow-auto">
+              <div className="flex-1">
+                <Input
+                  label={`Responsibilities / Accomplishment #${bIdx + 1}`}
+                  name={`bullet-${bIdx}`}
+                  type="text"
+                  value={bullet}
+                  placeholder="e.g. Spearheaded the development of..."
+                  onChange={e => handleBulletChange(idx, bIdx, e.target.value)}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => removeBullet(idx, bIdx)}
+                className="p-2 rounded-full hover:bg-gray-200 transition"
+              >
+                <X className="w-5 h-5 text-red-600 hover:text-red-800" />
+              </button>
+            </div>
+          ))}
+
           <div className="flex items-center gap-2 mt-2">
             <button
               type="button"
               onClick={() => addBullet(idx)}
-              className=" flex gap-2 text-accent2 hover:underline"
+              className="flex gap-2 text-accent2 hover:underline"
             >
               <Plus className="w-5 h-5" />
               Add Bullet Point
@@ -292,15 +307,235 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
       ))}
 
       <div className="mt-4 flex justify-between">
-      <button
-        type="button"
-        onClick={addExperience}
-        className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
-      >
-        <Plus className="w-5 h-5" />
-        Add Work Experience
-      </button>
+        <button
+          type="button"
+          onClick={addExperience}
+          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
+        >
+          <Plus className="w-5 h-5" />
+          Add Work Experience
+        </button>
+      </div>
+    </div>
+  );
+};
 
+// Education
+export const StepFour = ({ formData, setFormData, prevStep, nextStep }) => {
+  const handleEducationChange = (idx, e) => {
+    const updated = [...formData.education];
+    updated[idx][e.target.name] = e.target.value;
+    setFormData({ ...formData, education: updated });
+  };
+
+  const togglePresent = idx => {
+    const updated = [...formData.education];
+    updated[idx].present = !updated[idx].present;
+    if (updated[idx].present) updated[idx].end = '';
+    setFormData({ ...formData, education: updated });
+  };
+
+  const addEducation = () => {
+    setFormData({
+      ...formData,
+      education: [
+        ...formData.education,
+        { school: '', degree: '', field: '', start: '', end: '', present: false },
+      ]
+    });
+  };
+
+  const removeEducation = idx => {
+    const updated = [...formData.education];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, education: updated });
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Educational Background</h2>
+
+      {formData.education.map((edu, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-1 text-accent2 font-semibold">
+              <GraduationCap className="w-5 h-5" />
+              <span>Education #{idx + 1}</span>
+            </div>
+            <button type="button" onClick={() => removeEducation(idx)}>
+              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <Input
+              label="School / University"
+              name="school"
+              value={edu.school}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+            <Input
+              label="Degree"
+              name="degree"
+              value={edu.degree}
+              placeholder={"e.g. Bachelor of Science"}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+            <Input
+              label="Field of Study"
+              name="field"
+              placeholder={"e.g. Computer Science"}
+              value={edu.field}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+            <Input
+              label="Start Date"
+              name="start"
+              type="month"
+              value={edu.start}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+            {!edu.present && (
+              <Input
+                label="End Date"
+                name="end"
+                type="month"
+                value={edu.end}
+                onChange={e => handleEducationChange(idx, e)}
+              />
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={edu.present}
+              onChange={() => togglePresent(idx)}
+              id={`present-${idx}`}
+            />
+            <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
+              I currently study here
+            </label>
+          </div>
+        </div>
+      ))}
+
+      <div className="mt-4 flex justify-between">
+        <button
+          type="button"
+          onClick={addEducation}
+          className="self-start flex items-center gap-2 text-accent2 hover:underline"
+        >
+          <Plus className="w-5 h-5" />
+          Add Education
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Certifications Form
+export const StepFive = ({ formData, setFormData, prevStep, nextStep }) => {
+  const handleCertChange = (idx, e) => {
+    const updated = [...formData.certifications];
+    updated[idx][e.target.name] = e.target.value;
+    setFormData({ ...formData, certifications: updated });
+  };
+
+  const addCertification = () => {
+    setFormData({
+      ...formData,
+      certifications: [
+        ...formData.certifications,
+        {
+          name: '',
+          issuer: '',
+          date: '',
+          credentialId: '',
+          credentialUrl: '',
+        },
+      ],
+    });
+  };
+
+  const removeCertification = idx => {
+    const updated = [...formData.certifications];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, certifications: updated });
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Certifications</h2>
+
+      {formData.certifications.map((cert, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-1 text-accent2 font-semibold">
+              <BadgeCheck className="w-5 h-5" />
+              <span>Certificate #{idx + 1}</span>
+            </div>
+            <button type="button" onClick={() => removeCertification(idx)}>
+              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
+            </button>
+          </div>
+
+          <Input
+            label="Certificate Name"
+            name="name"
+            value={cert.name}
+            placeholder={"e.g. AWS Certified Cloud Practitioner"}
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Issuing Organization"
+            name="issuer"
+            value={cert.issuer}
+            placeholder={"e.g. AWS"}
+            
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Date Earned"
+            name="date"
+            type="month"
+            value={cert.date}
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Credential ID (optional)"
+            name="credentialId"
+            value={cert.credentialId}
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Credential URL (optional)"
+            name="credentialUrl"
+            type="url"
+            value={cert.credentialUrl}
+            onChange={e => handleCertChange(idx, e)}
+          />
+        </div>
+      ))}
+
+      <div className="mt-4 flex justify-between">
+        <button
+          type="button"
+          onClick={addCertification}
+          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
+        >
+          <Plus className="w-5 h-5" />
+          Add Certification
+        </button>
       </div>
     </div>
   );

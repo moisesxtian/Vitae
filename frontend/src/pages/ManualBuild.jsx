@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {StepOne, StepTwo, StepThree} from "../components/Steps";
+import {StepOne, StepTwo, StepThree,StepFour,StepFive} from "../components/Steps";
 
 const ManualBuild = () => {
   const [step, setStep] =useState(1);
@@ -31,6 +31,11 @@ const isStepOneValid = () => {
     setErrorMessage("");
   }
 };
+//handle submit
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log("Form submitted with data:", formData);
+}
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -54,6 +59,10 @@ const isStepOneValid = () => {
         return <StepTwo formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       case 3:
         return <StepThree formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+      case 4:
+        return <StepFour formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+      case 5:
+        return <StepFive formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       default:
         return null;
     }
@@ -65,7 +74,11 @@ const isStepOneValid = () => {
         {renderStep()}
           {errorMessage && <p className="text-red-500 flex justify-center text-sm mt-2 animate-shake">{errorMessage}</p>}
         <div className="flex justify-between f mt-6">
-        {step > 1 ? (
+
+        
+        {
+        // 2how "Back" button only if the step is greater than 1
+        step > 1 ? (
           <button
             type="button"
             onClick={prevStep}
@@ -75,13 +88,20 @@ const isStepOneValid = () => {
           </button>
         ) :(<div className="w-24"></div>)
         }
-        <button
+        {step < 5 ? (
+                <button
           type="button"
           onClick={isStepOneValid}
-          className="mt-6 bg-accent2 text-white font-medium px-6 py-2 rounded-full hover:opacity-90 transition"
-        >
+          className="mt-6 bg-accent2 text-white font-medium px-6 py-2 rounded-full hover:opacity-90 transition">
+
           Proceed
+        </button>): (
+          <button
+          onClick={handleSubmit}
+          className="mt-6 bg-accent2 text-white font-medium px-6 py-2 rounded-full hover:opacity-90 transition">
+          Finish
         </button>
+        )}
 
         
         </div>
