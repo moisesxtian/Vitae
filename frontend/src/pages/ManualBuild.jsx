@@ -1,11 +1,30 @@
 import {useState} from "react";
 import {StepOne, StepTwo, StepThree,StepFour,StepFive} from "../components/Steps";
+import useForm from "../hooks/useForm";
 
 const ManualBuild = () => {
+    const [formData, setFormData] = useState({
+    firstName: "",
+    middleInitial: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    summary: "",
+    linkedin: "",
+    projects: [],
+    certifications: [],
+    education: [],
+    experience: [],
+    skills: [],
+  });
+  
+  const {sendFormData} = useForm(formData);
   const [step, setStep] =useState(1);
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => (prev > 1 ? prev - 1 : prev));
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
 const isStepOneValid = () => {
   const containsOnlyLetters = (str) => /^[a-zA-Z]*$/.test(str);
   const isNotEmpty=
@@ -32,25 +51,31 @@ const isStepOneValid = () => {
   }
 };
 //handle submit
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log("Form submitted with data:", formData);
-}
+  console.log("Processing Request...");
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    middleInitial: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    summary: "",
-    linkedin: "",
-    projects: [],
-    certifications: [],
-    education: [],
-    experience: [],
-    skills: [],
-  });
+  setIsLoading(true); // ✅ Begin loading BEFORE sending request
+  setErrorMessage("");
+
+  try {
+    const response = await sendFormData();
+    if (response) {
+      console.log("Form submitted successfully!");
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000); // Optional delay for UX effect
+    } else {
+      setIsLoading(false);
+      setErrorMessage("Failed to submit the form. Please try again.");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    setIsLoading(false);
+    setErrorMessage("An error occurred. Please try again.");
+  }
+};
+
   const renderStep = () => {
     switch (step) {
       case 1:

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ data.firstName }} {{ data.lastName }} – Resume</title>
+  <style>
+    /* Page & Body Setup */
+    @page { size: A4; margin: 1.9cm; }
+    body, html { margin: 0; padding: 0; }
+    body {
+      font-family: "Times New Roman", serif;
+      font-size: 11pt;
+      line-height: 1.15;
+      color: #000;
+    }
+
+    /* Header Styling */
+    header { text-align: center; margin-bottom: .5cm; }
+    header h1 { font-size: 24pt; margin: .1cm 0 .1cm; font-weight: bold; }
+    header p { font-size: 10pt; margin: 0 .2cm; }
+
+    /* Basic Section Styling */
+    section {
+      margin-bottom: .7cm;
+      page-break-inside: avoid;
+      min-height: 4cm;
+    }
+    section h2 {
+      font-size: 13pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: .2cm;
+      padding-bottom: 2pt;
+      border-bottom: 1px solid #000;
+    }
+    section p, ul li { margin-bottom: 4pt; }
+
+    /* Two-Column Container */
+    .two-col { display: flex; gap: 1cm; }
+    .two-col section { flex: 1; }
+
+    /* Flex Header/Detail Layout */
+    .flexed {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+    }
+    .flexed .dates { font-style: italic; }
+
+    /* Lists */
+    ul {
+      margin: 4pt 0 .3cm 1cm;
+      padding: 0;
+      list-style-type: disc;
+    }
+    ul li { margin-bottom: 2pt; }
+
+    /* Skills Multi-Column */
+    .skills ul {
+      columns: 2;
+      column-gap: 1.5cm;
+      margin-left: 1cm;
+    }
+
+    /* Footer Anchor */
+    footer {
+      margin-top: 2cm;
+      text-align: center;
+      font-size: 9pt;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}{% endif %} {{ data.lastName }}</h1>
+    <p>
+      {% if data.email %}{{ data.email }}{% endif %}
+      {% if data.phone %} · {{ data.phone }}{% endif %}
+      {% if data.linkedin %} · {{ data.linkedin }}{% endif %}
+    </p>
+  </header>
+
+  <div class="two-col">
+    {% if data.summary %}
+    <section>
+      <h2>Summary</h2>
+      <p>{{ data.summary }}</p>
+    </section>
+    {% endif %}
+
+    {% if data.skills %}
+    {% set clean_skills = data.skills | select('string') | list %}
+    {% if clean_skills %}
+    <section class="skills">
+      <h2>Skills</h2>
+      <ul>
+        {% for skill in clean_skills %}
+        <li>{{ skill }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  {% if data.experience %}
+  <section>
+    <h2>Work Experience</h2>
+    {% for job in data.experience %}
+      {% if job.jobtitle or job.company %}
+      <div class="mb-2">
+        <div class="flexed">
+          <span>{{ job.jobtitle }}{% if job.company %}, {{ job.company }}{% endif %}</span>
+          <span class="dates">{{ job.start }} – {{ "Present" if job.present else job.end }}</span>
+        </div>
+        {% set filtered = job.bullets | select('string') | list %}
+        {% if filtered %}
+        <ul>
+          {% for bullet in filtered %}
+          <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if data.education %}
+  <section>
+    <h2>Education</h2>
+    {% for edu in data.education %}
+      {% if edu.school or edu.degree or edu.field %}
+      <div class="mb-2">
+        <div class="flexed">
+          <span>{% if edu.degree %}{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}{% endif %}</span>
+          <span class="dates">{{ edu.start }} – {{ "Present" if edu.present else edu.end }}</span>
+        </div>
+        {% if edu.school %}
+        <div><em>{{ edu.school }}</em></div>
+        {% endif %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if data.certifications %}
+  {% set certs = data.certifications | selectattr('name') | list %}
+  {% if certs %}
+  <section>
+    <h2>Certifications</h2>
+    <ul>
+      {% for cert in certs %}
+      <li>
+        {{ cert.name }}{% if cert.issuer %} – {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+  {% endif %}
+
+  {% if data.projects %}
+  {% set projs = data.projects | selectattr('name') | list %}
+  {% if projs %}
+  <section>
+    <h2>Projects</h2>
+    {% for p in projs %}
+    <div>
+      <strong>{{ p.name }}</strong>
+      {% if p.description %}
+      <p>{{ p.description }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+  {% endif %}
+
+</body>
+</html>

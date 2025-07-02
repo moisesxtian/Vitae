@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Resume - {{ data.firstName }} {{ data.lastName }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <header class="col-12 text-center mt-4">
+            <h1>{{ data.firstName }} {{ data.middleInitial }} {{ data.lastName }}</h1>
+            <p>{{ data.email }} | {{ data.phone }}</p>
+            {% if data.linkedin %}
+                <p><a href="{{ data.linkedin }}">{{ data.linkedin }}</a></p>
+            {% endif %}
+        </header>
+    </div>
+    <div class="row">
+        <main class="col-9">
+            {% if data.summary %}
+            <section class="mb-4">
+                <h4>Summary</h4>
+                <p>{{ data.summary }}</p>
+            </section>
+            {% endif %}
+
+            {% if data.experience %}
+            <section>
+                <h4>Work Experience</h4>
+                {% for job in data.experience %}
+                <div class="mb-3">
+                    <strong>{{ job.jobtitle }}</strong> — {{ job.company }}<br>
+                    <small class="text-muted">{{ job.start }} - {{ "Present" if job.present else job.end }}</small>
+                    <ul>
+                        {% for bullet in job.bullets %}
+                        <li>{{ bullet }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            {% if data.education %}
+            <section>
+                <h4>Education</h4>
+                {% for edu in data.education %}
+                <div class="mb-2">
+                    <strong>{{ edu.degree }}</strong>{% if edu.field %}, {{ edu.field }}{% endif %}<br>
+                    {{ edu.school }}<br>
+                    <small class="text-muted">{{ edu.start }} - {{ "Present" if edu.present else edu.end }}</small>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+        </main>
+
+        <aside class="col-3">
+            {% if data.skills %}
+            <section class="mb-4">
+                <h5>Skills</h5>
+                <ul>
+                    {% for skill in data.skills %}
+                    <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            {% if data.certifications %}
+            <section class="mb-4">
+                <h5>Certifications</h5>
+                <ul>
+                    {% for cert in data.certifications %}
+                    <li>{{ cert }}</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            {% if data.projects %}
+            <section class="mb-4">
+                <h5>Projects</h5>
+                {% for proj in data.projects %}
+                <div class="mb-2">
+                    <strong>{{ proj.name }}</strong>
+                    <p>{{ proj.description }}</p>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+        </aside>
+    </div>
+</div>
+</body>
+</html>
