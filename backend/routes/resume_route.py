@@ -5,4 +5,4 @@ from controllers.resumeController import submit_resume
 router = APIRouter()
 @router.post("/submit") 
 async def submit_resume_router(data: Resume):
-    return submit_resume(data)
+    return await submit_resume(data)

@@ -1,33 +1,40 @@
-from models.resumeModel import Resume
-from fastapi.responses import JSONResponse
-
-from jinja2 import Environment, FileSystemLoader
+from fastapi.concurrency import run_in_threadpool
+from fastapi.responses import FileResponse
 from weasyprint import HTML
-import uuid
-import os
+from jinja2 import Environment, FileSystemLoader
+import uuid, os
+
+from models.resumeModel import Resume
 
 env = Environment(loader=FileSystemLoader("templates"))
 
-def submit_resume(data: Resume):
-    print("Received resume data:")
-    print(data)
+def clean_data(obj):
+    if isinstance(obj, dict):
+        return {k: clean_data(v) for k, v in obj.items() if v not in ("", [], None)}
+    elif isinstance(obj, list):
+        return [clean_data(item) for item in obj if item not in ("", [], None)]
+    else:
+        return obj
 
-    # Render HTML from template
-    template = env.get_template("harvard_resume.html")
-    html_content = template.render(data=data)
+async def submit_resume(data: Resume):
+    # Convert Pydantic model to dict and clean it
+    raw_data = data.dict()
+    cleaned_data = clean_data(raw_data)
 
-    # Generate unique filename
+    # Render HTML
+    template = await run_in_threadpool(env.get_template, "harvard_resume.html")
+    html_content = await run_in_threadpool(template.render, data=cleaned_data)
+
+    # PDF file path
     filename = f"resume_{uuid.uuid4()}.pdf"
     output_path = os.path.join("generated", filename)
-
-    # Ensure folder exists
     os.makedirs("generated", exist_ok=True)
 
-    # Convert HTML to PDF
-    HTML(string=html_content, base_url=".").write_pdf(output_path)
-
-    # Return the file to frontend
-    return JSONResponse(content={
-        "message": "Resume generated successfully",
-        "file_path": output_path
-    })
+    # Export to PDF
+    await run_in_threadpool(HTML(string=html_content, base_url=".").write_pdf, output_path)
+    print (f"PDF generated at: {cleaned_data}")
+    return FileResponse(
+        output_path,
+        media_type="application/pdf",
+        filename=filename,
+    )
