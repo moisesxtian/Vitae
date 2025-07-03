@@ -99,18 +99,16 @@
 
     /* Skills Multi-Column */
     .skills ul {
-      columns: 3;
-      column-gap: 1.5cm;
-      margin-left: 1cm;
-      /* Ensure the UL itself has a defined max-width so columns can be calculated correctly */
-      max-width: calc(100% - 1cm); /* 100% of parent minus its own left margin */
+    margin: 0.2cm 0 0.4cm;
+    padding: 0;
+    column-width: 5cm;
+    column-gap: 1cm;
     }
     /* Individual skills (li) within the columns */
     .skills ul li {
-        /* Applying aggressive word break for skills, as they can be technical terms */
-        word-break: break-all; /* Forces breaks even in long continuous words if necessary */
-        overflow-wrap: break-word;
-        white-space: normal;
+    font-size: 12pt;
+    font-style: italic;
+    padding:2pt 6pt;
     }
 
 
@@ -185,31 +183,39 @@
 {% if data.education %}
   <section>
     <h2>Education</h2>
+
     {% for edu in data.education %}
       {% if edu.school or edu.degree or edu.field %}
-      <div class="mb-2">
-        <div class="flexed">
-          <span>
-            {% if edu.degree %}{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}{% endif %}
-          </span>
-          <span class="dates">{{ edu.start }} – {{ "Present" if edu.present else edu.end }}</span>
-        </div>
-        {% if edu.school %}
-        <div><em>{{ edu.school }}</em></div>
-        {% endif %}
-      </div>
+        <div class="mb-2">
+          <div class="flexed justify-between">
+            <span class="font-bold">
+              {{ edu.school }}
+            </span>
+            <span class="dates text-sm text-gray-600">
+              {{ edu.start }} – {{ "Present" if edu.present else edu.end }}
+            </span>
+          </div>
 
-      {% if edu.bullets %}
-        <ul>
-          {% for bullet in edu.bullets %}
-          <li>{{ bullet }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+          {% if edu.degree or edu.field %}
+            <div><em>
+              {% if edu.degree %}{{ edu.degree }}{% endif %}
+              {% if edu.field %} in {{ edu.field }}{% endif %}
+            </em></div>
+          {% endif %}
+
+          {% if edu.bullets %}
+            <ul class="list-disc list-inside mt-1 text-sm">
+              {% for bullet in edu.bullets %}
+                <li>{{ bullet }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
       {% endif %}
     {% endfor %}
   </section>
 {% endif %}
+
 
 
   {% if data.certifications %}

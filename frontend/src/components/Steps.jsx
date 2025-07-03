@@ -1,6 +1,6 @@
 import {useState} from "react";
 import Input from "../components/Input";
-import { Plus, X,Briefcase, GraduationCap,BadgeCheck,ArrowLeft,ArrowRight} from "lucide-react";
+import { Plus, X,Briefcase, GraduationCap,BadgeCheck,ChevronDown,ChevronUp} from "lucide-react";
 
 
 // Information Form
@@ -160,8 +160,9 @@ export const StepTwo = ({ formData, setFormData}) => {
 
 
 // Education
-
 export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
+  const [expandedIdx, setExpandedIdx] = useState(null);
+
   const handleEducationChange = (idx, e) => {
     const updated = [...formData.education];
     updated[idx][e.target.name] = e.target.value;
@@ -175,30 +176,6 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
     setFormData({ ...formData, education: updated });
   };
 
-  const addEducation = () => {
-    setFormData({
-      ...formData,
-      education: [
-        ...formData.education,
-        {
-          school: "",
-          degree: "",
-          field: "",
-          start: "",
-          end: "",
-          present: false,
-          bullets: [""],
-        },
-      ],
-    });
-  };
-
-  const removeEducation = (idx) => {
-    const updated = [...formData.education];
-    updated.splice(idx, 1);
-    setFormData({ ...formData, education: updated });
-  };
-
   const handleBulletChange = (eduIdx, bulletIdx, value) => {
     const updated = [...formData.education];
     updated[eduIdx].bullets[bulletIdx] = value;
@@ -209,7 +186,6 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
     const updated = [...formData.education];
     updated[eduIdx].bullets.push("");
     setFormData({ ...formData, education: updated });
-    console.log("Added bullet point to education index:", formData.education);
   };
 
   const removeBullet = (eduIdx, bulletIdx) => {
@@ -218,124 +194,196 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
     setFormData({ ...formData, education: updated });
   };
 
+  const removeEducation = (idx) => {
+    const updated = [...formData.education];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, education: updated });
+    if (expandedIdx === idx) setExpandedIdx(null);
+  };
+
+  const toggleCollapse = (idx) => {
+    setExpandedIdx(expandedIdx === idx ? null : idx);
+  };
+
+  const addEducation = (level) => {
+    const newEducation = {
+      level,
+      school: "",
+      degree: "",
+      field: "",
+      start: "",
+      end: "",
+      present: false,
+      bullets: [""],
+    };
+
+    setFormData({
+      ...formData,
+      education: [newEducation, ...formData.education],
+    });
+    setExpandedIdx(0);
+  };
+
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold text-accent2 text-center">Educational Background</h2>
+    <div className="flex flex-col not-first:flex-col gap-6">
+      <h2 className="text-2xl font-bold text-accent2 text-center">
+        Educational Background
+      </h2>
+
+      <div className="grid grid-cols-4 gap-2 w-full m-auto">
+        {["College", "Senior High", "High School", "Elementary"].map((level) => (
+          <button
+            key={level}
+            type="button"
+            onClick={() => addEducation(level)}
+            className={//if Elementary and Highschool, Color is Gray, else Color is Accent2
+              `px-4 py-2 rounded-lg text-sm font-medium ${
+                level === "Elementary" || level === "High School"
+                  ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  : "bg-accent2 text-white hover:bg-accent2/90"
+              } transition-colors`
+            }
+          >{level}
+          </button>
+        ))}
+      </div>
 
       {formData.education.map((edu, idx) => (
         <div
           key={idx}
-          className="border border-gray-200 p-4 rounded-lg space-y-4 bg-white shadow-sm"
+          className="border border-gray-300 rounded-lg bg-white shadow-md"
         >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-1 text-accent2 font-semibold">
+          {/* Header */}
+          <div
+            className="flex justify-between items-center p-4 cursor-pointer bg-gray-50"
+            onClick={() => toggleCollapse(idx)}
+          >
+            <div className="flex items-center gap-2 font-medium text-accent2">
               <GraduationCap className="w-5 h-5" />
-              <span>Education #{idx + 1}</span>
+              <span>{edu.level} – {edu.school || "Untitled"}</span>
             </div>
-            <button type="button" onClick={() => removeEducation(idx)}>
-              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={(e) => { e.stopPropagation(); removeEducation(idx); }}>
+                <X className="w-4 h-4 text-red-500 hover:text-red-700" />
+              </button>
+              {expandedIdx === idx ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            <Input
-              label="School / University"
-              name="school"
-              value={edu.school}
-              onChange={(e) => handleEducationChange(idx, e)}
-            />
-            <Input
-              label="Degree"
-              name="degree"
-              value={edu.degree}
-              placeholder="e.g. Bachelor of Science"
-              onChange={(e) => handleEducationChange(idx, e)}
-            />
-            <Input
-              label="Field of Study"
-              name="field"
-              value={edu.field}
-              placeholder="e.g. Computer Science"
-              onChange={(e) => handleEducationChange(idx, e)}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Start Date"
-              name="start"
-              type="month"
-              value={edu.start}
-              onChange={(e) => handleEducationChange(idx, e)}
-            />
-            {!edu.present && (
-              <Input
-                label="End Date"
-                name="end"
-                type="month"
-                value={edu.end}
-                onChange={(e) => handleEducationChange(idx, e)}
-              />
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={edu.present}
-              onChange={() => togglePresent(idx)}
-              id={`present-${idx}`}
-            />
-            <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
-              I currently study here
-            </label>
-          </div>
-
-          <div className="mt-2">
-            <h4 className="font-semibold text-sm text-gray-700 mb-1">Highlights / Achievements</h4>
-            {edu.bullets &&
-              edu.bullets.map((bullet, bulletIdx) => (
-                <div key={bulletIdx} className="flex gap-2 mb-2">
-                  <input
-                    type="text"
-                    value={bullet}
-                    onChange={(e) =>
-                      handleBulletChange(idx, bulletIdx, e.target.value)
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                    placeholder={`Bullet point ${bulletIdx + 1}`}
+          {/* Content */}
+          {expandedIdx === idx && (
+            <div className="p-4 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  label="School / University"
+                  name="school"
+                  value={edu.school}
+                  onChange={(e) => handleEducationChange(idx, e)}
+                />
+                {edu.level === "College" && (
+                <Input
+                  label="Degree"
+                  name="degree"
+                  placeholder="e.g. Bachelor of Science"
+                  value={edu.degree}
+                  onChange={(e) => handleEducationChange(idx, e)}
+                />
+                )}
+                {edu.level==="College"&&(
+                  <div className="col-span-2">
+                  <Input
+                  label="Field of Study"
+                  name="field"
+                  placeholder="e.g. Computer Science"
+                  value={edu.field}
+                  onChange={(e) => handleEducationChange(idx, e)}
                   />
-                  <button
-                    type="button"
-                    onClick={() => removeBullet(idx, bulletIdx)}
-                    className="text-red-500 hover:text-red-700"
-                    title="Remove bullet"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            <button
-              type="button"
-              onClick={() => addBullet(idx)}
-              className="text-accent2 text-sm hover:underline"
-            >
-              + Add bullet point
-            </button>
-          </div>
+                  </div>
+                )}
+                  {edu.level==="Senior High"&&(
+                  <Input
+                  label="Strand"
+                  name="field"
+                  placeholder="e.g. Computer Science"
+                  value={edu.field}
+                  onChange={(e) => handleEducationChange(idx, e)}
+                  />
+                )}
+                
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="Start Date"
+                  name="start"
+                  type="month"
+                  value={edu.start}
+                  onChange={(e) => handleEducationChange(idx, e)}
+                />
+                {!edu.present && (
+                  <Input
+                    label="End Date"
+                    name="end"
+                    type="month"
+                    value={edu.end}
+                    onChange={(e) => handleEducationChange(idx, e)}
+                  />
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id={`present-${idx}`}
+                  checked={edu.present}
+                  onChange={() => togglePresent(idx)}
+                />
+                <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
+                  I currently study here
+                </label>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-sm text-gray-700 mb-2">
+                  Highlights / Achievements
+                </h4>
+                {edu.bullets.map((bullet, bulletIdx) => (
+                  <div key={bulletIdx} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={bullet}
+                      onChange={(e) =>
+                        handleBulletChange(idx, bulletIdx, e.target.value)
+                      }
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                      placeholder={`Bullet point ${bulletIdx + 1}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeBullet(idx, bulletIdx)}
+                      className="text-red-500 hover:text-red-700"
+                      title="Remove bullet"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => addBullet(idx)}
+                  className="text-accent2 text-sm hover:underline"
+                >
+                  + Add bullet point
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       ))}
-
-      <div className="mt-4 flex justify-between">
-        <button
-          type="button"
-          onClick={addEducation}
-          className="self-start flex items-center gap-2 text-accent2 hover:underline"
-        >
-          <Plus className="w-5 h-5" />
-          Add Education
-        </button>
-      </div>
     </div>
   );
 };

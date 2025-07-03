@@ -4,8 +4,18 @@ from jinja2 import Environment, FileSystemLoader
 from tempfile import NamedTemporaryFile
 from models.resumeModel import Resume
 from fastapi.concurrency import run_in_threadpool
+from datetime import datetime
 
 env = Environment(loader=FileSystemLoader("templates"))
+
+from datetime import datetime
+
+def datetimeformat(value, format="%B %Y"):
+    try:
+        date_obj = datetime.strptime(value, "%Y-%m")  # input: '2021-08'
+        return date_obj.strftime(format)              # output: 'August 2021'
+    except Exception:
+        return value  # return original value if parsing fails
 
 def clean_data(obj):
     if isinstance(obj, dict):
@@ -16,6 +26,12 @@ def clean_data(obj):
         return obj
 
 async def submit_resume(data: Resume):
+    #convert date strings to datetime objects
+    for entry in data.education:
+        if isinstance(entry.start, str):
+            entry.start = datetimeformat(entry.start)
+        if isinstance(entry.end, str):
+            entry.end = datetimeformat(entry.end)
     raw_data = data.dict()
     cleaned_data = clean_data(raw_data)
     print("Cleaned Data:", cleaned_data)

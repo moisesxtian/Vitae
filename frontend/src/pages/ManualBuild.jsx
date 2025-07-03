@@ -1,4 +1,5 @@
 import {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import {StepOne, StepTwo, StepThree,StepFour,StepFive,StepSix} from "../components/Steps";
 import PDFViewer from "../components/PDFViewer";
 import useForm from "../hooks/useForm";
@@ -19,6 +20,7 @@ const ManualBuild = () => {
     skills: [],
   });
   
+  const navigate = useNavigate();
   const {sendFormData} = useForm(formData);
   const [step, setStep] =useState(1);
   const nextStep = () => setStep((prev) => prev + 1);
