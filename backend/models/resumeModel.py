@@ -14,6 +14,7 @@ class EducationEntry(BaseModel):
     degree: str
     field: str
     start: str
+    level: str
     end: Optional[str]
     present: bool
     bullets: List[str]

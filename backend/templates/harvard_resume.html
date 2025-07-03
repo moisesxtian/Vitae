@@ -207,7 +207,17 @@
           <span class="title-group">
             <span class="title">{{ edu.school }}</span>
             {% if edu.degree or edu.field %}
-            <span class="sub-title"><em>{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}</em></span>
+            <span class="sub-title">
+    <em>
+      {% if edu.level == "College" %}
+        {{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}
+      {% elif edu.level == "Senior High" %}
+        {{ edu.field }}
+      {% else %}
+        {{ edu.degree or edu.field }}
+      {% endif %}
+    </em>
+            </span>
             {% endif %}
           </span>
           <span class="dates">{{ edu.start }} – {{ "Present" if edu.present else edu.end }}</span>

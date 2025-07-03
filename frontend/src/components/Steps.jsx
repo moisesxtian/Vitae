@@ -179,8 +179,14 @@ export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => 
   const [expandedIdx, setExpandedIdx] = useState(null);
 
   const handleEducationChange = (idx, e) => {
+
     const updated = [...formData.education];
+
     updated[idx][e.target.name] = e.target.value;
+
+    if(updated[idx].level === "Senior High"){
+      updated[idx].degree = "";
+    }
     setFormData({ ...formData, education: updated });
   };
 
@@ -225,6 +231,7 @@ export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => 
       level,
       school: "",
       degree: "",
+      strand: "",
       field: "",
       start: "",
       end: "",
@@ -327,6 +334,7 @@ export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => 
                   value={edu.field}
                   onChange={(e) => handleEducationChange(idx, e)}
                   />
+                  
                 )}
                 
               </div>
