@@ -29,6 +29,8 @@ class Resume(BaseModel):
     firstName: str
     middleInitial: Optional[str]
     lastName: str
+    city: str
+    state: str
 
     email: EmailStr
     phone: str

@@ -64,7 +64,6 @@ export const InformationForm = ({ formData, setFormData}) => {
             />
           </div>
         </div>
-
         <Input
           label="Email"
           name="email"
@@ -86,6 +85,21 @@ export const InformationForm = ({ formData, setFormData}) => {
           }
           }
         />
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            label="City"
+            name="city"
+            value={formData.city}
+            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+          />
+          <Input
+            label="State/Province"
+            name="state"
+            value={formData.state}
+            onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+          />
+        </div>
+
 
       </div>
       <div className="flex justify-end">
@@ -689,7 +703,9 @@ export const ProjectsForm = ({ formData, setFormData }) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="text-2xl font-bold text-accent2 text-center">Personal Projects</h2>
+      <h2 className="text-2xl font-bold text-accent2 text-center">
+        Personal Projects <span className="text-base font-normal text-gray-400">(Optional)</span>
+      </h2>
 
       <button
         type="button"
