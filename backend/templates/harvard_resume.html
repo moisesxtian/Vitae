@@ -1,158 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>{{ data.firstName }} {{ data.lastName }} – Resume</title>
   <style>
-  @page { size: A4; margin: 2cm; }
-body, html {
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: "Times New Roman", serif;
-  font-size: 11pt;
-  line-height: 1.4;
-  color: #000;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
+    @page {
+      size: A4;
+      margin: 2cm;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    body {
+      font-family: "Times New Roman", serif;
+      font-size: 11pt;
+      line-height: 1.4;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+    }
 
-/* Header Styling */
-header {
-  text-align: center;
-  margin-bottom: 0.8cm;
-}
-header h1 {
-  font-size: 22pt;
-  margin: 0.1cm 0;
-  font-weight: bold;
-}
-header p {
-  font-size: 10pt;
-  margin: 0;
-  line-height: 1.2;
-}
+    header, section, footer {
+      width: 100%;
+      margin-bottom: 1.2em;
+    }
 
-/* Section Formatting */
-section {
-  margin-bottom: 1cm;
-  page-break-inside: avoid;
-}
-section h2 {
-  font-size: 13pt;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 0.3cm;
-  padding-bottom: 2pt;
-  border-bottom: 1px solid #000;
-}
+    header {
+      text-align: center;
+    }
+    header h1 {
+      font-size: 24pt;
+      margin: 0;
+      font-weight: bold;
+    }
+    header p {
+      font-size: 10pt;
+      margin: 0.4em 0 0;
+    }
 
-/* Paragraphs & Lists */
-section p,
-ul li {
-  margin-bottom: 4pt;
-  white-space: normal;
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-ul {
-  margin: 6pt 0 0 1cm;
-  padding: 0;
-  list-style-type: disc;
-}
+    h2 {
+      font-size: 13pt;
+      text-transform: uppercase;
+      margin: 0 0 0.2em;
+      padding-bottom: 2pt;
+      border-bottom: 1px solid #000;
+    }
 
-/* Summary */
-.summary {
-  white-space: normal;
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
+    .summary {
+      margin-bottom: 1em;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
 
-/* Flex Layout for Experience/Education */
-.flexed {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  font-weight: bold;
-  margin-bottom: 2pt;
-}
-.flexed span {
-  flex-shrink: 1;
-  min-width: 0;
-}
-.flexed .dates {
-  font-style: italic;
-  white-space: normal;
-  font-weight: normal;
-}
+    .flexed {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      font-weight: bold;
+    }
 
-/* Two-Column Section (e.g., Skills) */
-.two-col {
-  display: flex;
-  gap: 1cm;
-  width: 100%;
-  margin-bottom: 1cm;
-}
-.two-col section {
-  flex: 1;
-  max-width: calc(50% - 0.5cm);
-}
+    .flexed span {
+      min-width: 0;
+      flex-shrink: 1;
+    }
 
-/* Skills Section */
-.skills ul {
-  margin: 0.2cm 0 0.3cm;
-  padding: 0;
-  column-width: 5cm;
-  column-gap: 1cm;
-}
-.skills ul li {
-  font-size: 11pt;
-  font-style: italic;
-  padding: 2pt 4pt;
-  margin-bottom: 4pt;
-  break-inside: avoid;
-}
+    .dates {
+      font-style: italic;
+    }
 
-/* Certifications/Projects */
-section ul li,
-section p {
-  margin-left: 0.3cm;
-  margin-right: 0.3cm;
-}
+    ul {
+      margin: 0.5em 0 0.8em 1.2em;
+      padding: 0;
+      list-style-type: disc;
+    }
 
-/* Footer */
-footer {
-  margin-top: 2cm;
-  text-align: center;
-  font-size: 9pt;
-  color: #666;
-}
+    ul li {
+      margin-bottom: 4pt;
+    }
+
+    .skills ul {
+      margin: 0.5em 0 1em 0;
+      padding: 0;
+      column-width: 6cm;
+      column-gap: 1cm;
+    }
+
+    .skills ul li {
+      font-size: 11pt;
+      font-style: italic;
+      padding: 2pt 4pt;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 9pt;
+      color: #666;
+      margin-top: auto;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}{% endif %} {{ data.lastName }}</h1>
-<p>
-  {% if data.email %}{{ data.email }}{% endif %}
-  {% if data.phone %} · {{ data.phone }}{% endif %}
-  {% if data.city or data.state %}
-    {% if data.email or data.phone %} · {% endif %}
-    {% if data.city %}{{ data.city }}{% endif %}{% if data.city and data.state %}, {% endif %}{% if data.state %}{{ data.state }}{% endif %}
-  {% endif %}
-</p>
+    <p>
+      {% if data.email %}{{ data.email }}{% endif %}
+      {% if data.phone %} · {{ data.phone }}{% endif %}
+      {% if data.city or data.state %}
+        {% if data.email or data.phone %} · {% endif %}
+        {% if data.city %}{{ data.city }}{% endif %}{% if data.city and data.state %}, {% endif %}{% if data.state %}{{ data.state }}{% endif %}
+      {% endif %}
+    </p>
+    {% if data.linkedin %}<p>{{ data.linkedin }}</p>{% endif %}
   </header>
 
-{% if data.summary %}
-<div>
-<section>
-  <h2>Summary</h2>
-  <p class="summary">{{ data.summary }}</p>
-</section>
-</div>
-{% endif %}
+  {% if data.summary %}
+  <section>
+    <h2>Summary</h2>
+    <p class="summary">{{ data.summary }}</p>
+  </section>
+  {% endif %}
 
-<div class="two-col">
   {% if data.skills %}
   {% set clean_skills = data.skills | select('string') | list %}
   {% if clean_skills %}
@@ -166,69 +138,55 @@ footer {
   </section>
   {% endif %}
   {% endif %}
-</div>
 
   {% if data.experience %}
   <section>
     <h2>Work Experience</h2>
     {% for job in data.experience %}
-      {% if job.jobtitle or job.company %}
-      <div class="mb-2">
-        <div class="flexed">
-          <span>{{ job.jobtitle }}{% if job.company %}, {{ job.company }}{% endif %}</span>
-          <span class="dates">{{ job.start }} – {{ "Present" if job.present else job.end }}</span>
-        </div>
-        {% set filtered = job.bullets | select('string') | list %}
-        {% if filtered %}
-        <ul>
-          {% for bullet in filtered %}
-          <li>{{ bullet }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
+    {% if job.jobtitle or job.company %}
+    <div>
+      <div class="flexed">
+        <span>{{ job.jobtitle }}{% if job.company %}, {{ job.company }}{% endif %}</span>
+        <span class="dates">{{ job.start }} – {{ "Present" if job.present else job.end }}</span>
       </div>
+      {% if job.bullets %}
+      <ul>
+        {% for bullet in job.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
       {% endif %}
+    </div>
+    {% endif %}
     {% endfor %}
   </section>
   {% endif %}
 
-{% if data.education %}
+  {% if data.education %}
   <section>
     <h2>Education</h2>
-
     {% for edu in data.education %}
-      {% if edu.school or edu.degree or edu.field %}
-        <div class="mb-2">
-          <div class="flexed justify-between">
-            <span class="font-bold">
-              {{ edu.school }}
-            </span>
-            <span class="dates text-sm text-gray-600">
-              {{ edu.start }} – {{ "Present" if edu.present else edu.end }}
-            </span>
-          </div>
-
-          {% if edu.degree or edu.field %}
-            <div><em>
-              {% if edu.degree %}{{ edu.degree }}{% endif %}
-              {% if edu.field %} in {{ edu.field }}{% endif %}
-            </em></div>
-          {% endif %}
-
-          {% if edu.bullets %}
-            <ul class="list-disc list-inside mt-1 text-sm">
-              {% for bullet in edu.bullets %}
-                <li>{{ bullet }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </div>
+    {% if edu.school or edu.degree or edu.field %}
+    <div>
+      <div class="flexed">
+        <span>{{ edu.school }}</span>
+        <span class="dates">{{ edu.start }} – {{ "Present" if edu.present else edu.end }}</span>
+      </div>
+      {% if edu.degree or edu.field %}
+      <div><em>{% if edu.degree %}{{ edu.degree }}{% endif %}{% if edu.field %} in {{ edu.field }}{% endif %}</em></div>
       {% endif %}
+      {% if edu.bullets %}
+      <ul>
+        {% for bullet in edu.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endif %}
     {% endfor %}
   </section>
-{% endif %}
-
-
+  {% endif %}
 
   {% if data.certifications %}
   {% set certs = data.certifications | selectattr('name') | list %}
@@ -237,9 +195,7 @@ footer {
     <h2>Certifications</h2>
     <ul>
       {% for cert in certs %}
-      <li>
-        {{ cert.name }}{% if cert.issuer %} – {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}
-      </li>
+      <li>{{ cert.name }}{% if cert.issuer %} – {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</li>
       {% endfor %}
     </ul>
   </section>
@@ -263,5 +219,8 @@ footer {
   {% endif %}
   {% endif %}
 
+  <footer>
+    Generated with ❤️ by Vitae Builder
+  </footer>
 </body>
 </html>
