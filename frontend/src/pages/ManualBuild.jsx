@@ -1,5 +1,6 @@
 import {useState} from "react";
-import {StepOne, StepTwo, StepThree,StepFour,StepFive} from "../components/Steps";
+import {StepOne, StepTwo, StepThree,StepFour,StepFive,StepSix} from "../components/Steps";
+import PDFViewer from "../components/PDFViewer";
 import useForm from "../hooks/useForm";
 
 const ManualBuild = () => {
@@ -24,6 +25,7 @@ const ManualBuild = () => {
   const prevStep = () => setStep((prev) => (prev > 1 ? prev - 1 : prev));
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [pdfBlob, setPdfBlob] = useState(null);
 
 const isStepOneValid = () => {
   const containsOnlyLetters = (str) => /^[a-zA-Z]*$/.test(str);
@@ -60,11 +62,11 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await sendFormData();
+    setPdfBlob(response); // Assuming response is a Blob for PDF
+    console.log("Response:", response);
     if (response) {
       console.log("Form submitted successfully!");
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000); // Optional delay for UX effect
+      setIsLoading(false);
     } else {
       setIsLoading(false);
       setErrorMessage("Failed to submit the form. Please try again.");
@@ -75,6 +77,7 @@ const handleSubmit = async (e) => {
     setErrorMessage("An error occurred. Please try again.");
   }
 };
+
 
   const renderStep = () => {
     switch (step) {
@@ -88,6 +91,8 @@ const handleSubmit = async (e) => {
         return <StepFour formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       case 5:
         return <StepFive formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+      case 6:
+        return <StepSix formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       default:
         return null;
     }
@@ -113,7 +118,7 @@ const handleSubmit = async (e) => {
           </button>
         ) :(<div className="w-24"></div>)
         }
-        {step < 5 ? (
+        {step < 6 ? (
                 <button
           type="button"
           onClick={isStepOneValid}
@@ -128,8 +133,11 @@ const handleSubmit = async (e) => {
         </button>
         )}
 
-        
-        </div>
+    {/* PDF Modal Viewer */}
+    {pdfBlob && (
+      <PDFViewer pdfBlob={pdfBlob} onClose={() => setPdfBlob(null)} />
+    )}
+  </div>
         </div>
       </div>
   );

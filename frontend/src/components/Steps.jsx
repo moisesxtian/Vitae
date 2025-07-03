@@ -1,6 +1,7 @@
 import {useState} from "react";
 import Input from "../components/Input";
-import { Plus, X,Briefcase, GraduationCap,BadgeCheck} from "lucide-react";
+import { Plus, X,Briefcase, GraduationCap,BadgeCheck,ArrowLeft,ArrowRight} from "lucide-react";
+
 
 // Information Form
 export const StepOne = ({ formData, setFormData}) => {
@@ -157,8 +158,229 @@ export const StepTwo = ({ formData, setFormData}) => {
   );
 };
 
-//Work  Experience Form
+
+// Education
 export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
+  const handleEducationChange = (idx, e) => {
+    const updated = [...formData.education];
+    updated[idx][e.target.name] = e.target.value;
+    setFormData({ ...formData, education: updated });
+  };
+
+  const togglePresent = idx => {
+    const updated = [...formData.education];
+    updated[idx].present = !updated[idx].present;
+    if (updated[idx].present) updated[idx].end = '';
+    setFormData({ ...formData, education: updated });
+  };
+
+  const addEducation = () => {
+    setFormData({
+      ...formData,
+      education: [
+        ...formData.education,
+        { school: '', degree: '', field: '', start: '', end: '', present: false },
+      ]
+    });
+  };
+
+  const removeEducation = idx => {
+    const updated = [...formData.education];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, education: updated });
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Educational Background</h2>
+
+      {formData.education.map((edu, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-1 text-accent2 font-semibold">
+              <GraduationCap className="w-5 h-5" />
+              <span>Education #{idx + 1}</span>
+            </div>
+            <button type="button" onClick={() => removeEducation(idx)}>
+              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <Input
+              label="School / University"
+              name="school"
+              value={edu.school}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+            <Input
+              label="Degree"
+              name="degree"
+              value={edu.degree}
+              placeholder={"e.g. Bachelor of Science"}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+            <Input
+              label="Field of Study"
+              name="field"
+              placeholder={"e.g. Computer Science"}
+              value={edu.field}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+            <Input
+              label="Start Date"
+              name="start"
+              type="month"
+              value={edu.start}
+              onChange={e => handleEducationChange(idx, e)}
+            />
+            {!edu.present && (
+              <Input
+                label="End Date"
+                name="end"
+                type="month"
+                value={edu.end}
+                onChange={e => handleEducationChange(idx, e)}
+              />
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={edu.present}
+              onChange={() => togglePresent(idx)}
+              id={`present-${idx}`}
+            />
+            <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
+              I currently study here
+            </label>
+          </div>
+        </div>
+      ))}
+
+      <div className="mt-4 flex justify-between">
+        <button
+          type="button"
+          onClick={addEducation}
+          className="self-start flex items-center gap-2 text-accent2 hover:underline"
+        >
+          <Plus className="w-5 h-5" />
+          Add Education
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Certifications Form
+export const StepFour = ({ formData, setFormData, prevStep, nextStep }) => {
+  const handleCertChange = (idx, e) => {
+    const updated = [...formData.certifications];
+    updated[idx][e.target.name] = e.target.value;
+    setFormData({ ...formData, certifications: updated });
+  };
+
+  const addCertification = () => {
+    setFormData({
+      ...formData,
+      certifications: [
+        ...formData.certifications,
+        {
+          name: '',
+          issuer: '',
+          date: '',
+          credentialId: '',
+          credentialUrl: '',
+        },
+      ],
+    });
+  };
+
+  const removeCertification = idx => {
+    const updated = [...formData.certifications];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, certifications: updated });
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Certifications</h2>
+
+      {formData.certifications.map((cert, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-1 text-accent2 font-semibold">
+              <BadgeCheck className="w-5 h-5" />
+              <span>Certificate #{idx + 1}</span>
+            </div>
+            <button type="button" onClick={() => removeCertification(idx)}>
+              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
+            </button>
+          </div>
+
+          <Input
+            label="Certificate Name"
+            name="name"
+            value={cert.name}
+            placeholder={"e.g. AWS Certified Cloud Practitioner"}
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Issuing Organization"
+            name="issuer"
+            value={cert.issuer}
+            placeholder={"e.g. AWS"}
+            
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Date Earned"
+            name="date"
+            type="month"
+            value={cert.date}
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Credential ID (optional)"
+            name="credentialId"
+            value={cert.credentialId}
+            onChange={e => handleCertChange(idx, e)}
+          />
+          <Input
+            label="Credential URL (optional)"
+            name="credentialUrl"
+            type="url"
+            value={cert.credentialUrl}
+            onChange={e => handleCertChange(idx, e)}
+          />
+        </div>
+      ))}
+
+      <div className="mt-4 flex justify-between">
+        <button
+          type="button"
+          onClick={addCertification}
+          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
+        >
+          <Plus className="w-5 h-5" />
+          Add Certification
+        </button>
+      </div>
+    </div>
+  );
+};
+//Work  Experience Form
+export const StepFive = ({ formData, setFormData, prevStep, nextStep }) => {
   const handleExperienceChange = (idx, e) => {
     const updated = [...formData.experience];
     updated[idx][e.target.name] = e.target.value;
@@ -320,223 +542,34 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
   );
 };
 
-// Education
-export const StepFour = ({ formData, setFormData, prevStep, nextStep }) => {
-  const handleEducationChange = (idx, e) => {
-    const updated = [...formData.education];
-    updated[idx][e.target.name] = e.target.value;
-    setFormData({ ...formData, education: updated });
-  };
 
-  const togglePresent = idx => {
-    const updated = [...formData.education];
-    updated[idx].present = !updated[idx].present;
-    if (updated[idx].present) updated[idx].end = '';
-    setFormData({ ...formData, education: updated });
-  };
-
-  const addEducation = () => {
-    setFormData({
-      ...formData,
-      education: [
-        ...formData.education,
-        { school: '', degree: '', field: '', start: '', end: '', present: false },
-      ]
-    });
-  };
-
-  const removeEducation = idx => {
-    const updated = [...formData.education];
-    updated.splice(idx, 1);
-    setFormData({ ...formData, education: updated });
+export const StepSix = ({ formData, setFormData, prevStep, nextStep }) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, summary: e.target.value });
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold text-accent2 text-center">Educational Background</h2>
+    <div className="flex flex-col gap-6">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Summary / Objective</h2>
 
-      {formData.education.map((edu, idx) => (
-        <div
-          key={idx}
-          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
-        >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-1 text-accent2 font-semibold">
-              <GraduationCap className="w-5 h-5" />
-              <span>Education #{idx + 1}</span>
-            </div>
-            <button type="button" onClick={() => removeEducation(idx)}>
-              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-            <Input
-              label="School / University"
-              name="school"
-              value={edu.school}
-              onChange={e => handleEducationChange(idx, e)}
-            />
-            <Input
-              label="Degree"
-              name="degree"
-              value={edu.degree}
-              placeholder={"e.g. Bachelor of Science"}
-              onChange={e => handleEducationChange(idx, e)}
-            />
-            <Input
-              label="Field of Study"
-              name="field"
-              placeholder={"e.g. Computer Science"}
-              value={edu.field}
-              onChange={e => handleEducationChange(idx, e)}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-            <Input
-              label="Start Date"
-              name="start"
-              type="month"
-              value={edu.start}
-              onChange={e => handleEducationChange(idx, e)}
-            />
-            {!edu.present && (
-              <Input
-                label="End Date"
-                name="end"
-                type="month"
-                value={edu.end}
-                onChange={e => handleEducationChange(idx, e)}
-              />
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={edu.present}
-              onChange={() => togglePresent(idx)}
-              id={`present-${idx}`}
-            />
-            <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
-              I currently study here
-            </label>
-          </div>
-        </div>
-      ))}
-
-      <div className="mt-4 flex justify-between">
-        <button
-          type="button"
-          onClick={addEducation}
-          className="self-start flex items-center gap-2 text-accent2 hover:underline"
-        >
-          <Plus className="w-5 h-5" />
-          Add Education
-        </button>
+      <div className="bg-white p-4 rounded-lg shadow-sm">
+        <label htmlFor="summary" className="block mb-2 font-semibold text-accent2">
+          Personal Summary or Objective
+        </label>
+        <textarea
+          id="summary"
+          name="summary"
+          rows="6"
+          placeholder="e.g. Highly motivated and detail-oriented graduate seeking an entry-level position where I can apply my skills in..."
+          className="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:outline-accent2 text-sm"
+          value={formData.summary}
+          onChange={handleChange}
+        />
+        <p className="text-xs text-gray-500 mt-2">
+          Tip: Keep it 2–4 sentences summarizing your goals and strengths.
+        </p>
       </div>
-    </div>
-  );
-};
 
-// Certifications Form
-export const StepFive = ({ formData, setFormData, prevStep, nextStep }) => {
-  const handleCertChange = (idx, e) => {
-    const updated = [...formData.certifications];
-    updated[idx][e.target.name] = e.target.value;
-    setFormData({ ...formData, certifications: updated });
-  };
-
-  const addCertification = () => {
-    setFormData({
-      ...formData,
-      certifications: [
-        ...formData.certifications,
-        {
-          name: '',
-          issuer: '',
-          date: '',
-          credentialId: '',
-          credentialUrl: '',
-        },
-      ],
-    });
-  };
-
-  const removeCertification = idx => {
-    const updated = [...formData.certifications];
-    updated.splice(idx, 1);
-    setFormData({ ...formData, certifications: updated });
-  };
-
-  return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold text-accent2 text-center">Certifications</h2>
-
-      {formData.certifications.map((cert, idx) => (
-        <div
-          key={idx}
-          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
-        >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-1 text-accent2 font-semibold">
-              <BadgeCheck className="w-5 h-5" />
-              <span>Certificate #{idx + 1}</span>
-            </div>
-            <button type="button" onClick={() => removeCertification(idx)}>
-              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
-            </button>
-          </div>
-
-          <Input
-            label="Certificate Name"
-            name="name"
-            value={cert.name}
-            placeholder={"e.g. AWS Certified Cloud Practitioner"}
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Issuing Organization"
-            name="issuer"
-            value={cert.issuer}
-            placeholder={"e.g. AWS"}
-            
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Date Earned"
-            name="date"
-            type="month"
-            value={cert.date}
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Credential ID (optional)"
-            name="credentialId"
-            value={cert.credentialId}
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Credential URL (optional)"
-            name="credentialUrl"
-            type="url"
-            value={cert.credentialUrl}
-            onChange={e => handleCertChange(idx, e)}
-          />
-        </div>
-      ))}
-
-      <div className="mt-4 flex justify-between">
-        <button
-          type="button"
-          onClick={addCertification}
-          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Certification
-        </button>
-      </div>
     </div>
   );
 };

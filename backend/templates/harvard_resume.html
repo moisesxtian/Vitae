@@ -81,12 +81,12 @@
     </p>
   </header>
 
-  <div class="two-col">
     {% if data.summary %}
-    <section>
+    <section class="col-span-2">
       <h2>Summary</h2>
       <p>{{ data.summary }}</p>
     </section>
+  <div class="two-col">
     {% endif %}
 
     {% if data.skills %}

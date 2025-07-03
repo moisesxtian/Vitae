@@ -14,19 +14,18 @@ const useForm = (formData) => {
 
     try {
 
-      const response = await axios.post(`${API_BASE_URL}/submit`, formData);
+      const response = await axios.post(`${API_BASE_URL}/submit`, formData,{responseType: 'blob'});
       if (response.status === 200) {
-        setSuccessMessage(response.data.message || "Form submitted successfully!");
-        return response.data; // Return the response data for further processing if needed
+        return response.data;
       } else {
-        setErrorMessage("Failed to submit the form. Please try again.");
+        throw new Error("Failed to submit the form.", response.status);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       setErrorMessage("An error occurred while submitting the form.");
     }
   };
-
+  
   return {
     sendFormData,
   };
