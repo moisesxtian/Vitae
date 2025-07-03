@@ -18,7 +18,7 @@ def clean_data(obj):
 async def submit_resume(data: Resume):
     raw_data = data.dict()
     cleaned_data = clean_data(raw_data)
-
+    print("Cleaned Data:", cleaned_data)
     template = await run_in_threadpool(env.get_template, "harvard_resume.html")
     html_content = await run_in_threadpool(template.render, data=cleaned_data)
 

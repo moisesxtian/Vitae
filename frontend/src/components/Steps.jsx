@@ -160,6 +160,7 @@ export const StepTwo = ({ formData, setFormData}) => {
 
 
 // Education
+
 export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
   const handleEducationChange = (idx, e) => {
     const updated = [...formData.education];
@@ -167,10 +168,10 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
     setFormData({ ...formData, education: updated });
   };
 
-  const togglePresent = idx => {
+  const togglePresent = (idx) => {
     const updated = [...formData.education];
     updated[idx].present = !updated[idx].present;
-    if (updated[idx].present) updated[idx].end = '';
+    if (updated[idx].present) updated[idx].end = "";
     setFormData({ ...formData, education: updated });
   };
 
@@ -179,14 +180,41 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
       ...formData,
       education: [
         ...formData.education,
-        { school: '', degree: '', field: '', start: '', end: '', present: false },
-      ]
+        {
+          school: "",
+          degree: "",
+          field: "",
+          start: "",
+          end: "",
+          present: false,
+          bullets: [""],
+        },
+      ],
     });
   };
 
-  const removeEducation = idx => {
+  const removeEducation = (idx) => {
     const updated = [...formData.education];
     updated.splice(idx, 1);
+    setFormData({ ...formData, education: updated });
+  };
+
+  const handleBulletChange = (eduIdx, bulletIdx, value) => {
+    const updated = [...formData.education];
+    updated[eduIdx].bullets[bulletIdx] = value;
+    setFormData({ ...formData, education: updated });
+  };
+
+  const addBullet = (eduIdx) => {
+    const updated = [...formData.education];
+    updated[eduIdx].bullets.push("");
+    setFormData({ ...formData, education: updated });
+    console.log("Added bullet point to education index:", formData.education);
+  };
+
+  const removeBullet = (eduIdx, bulletIdx) => {
+    const updated = [...formData.education];
+    updated[eduIdx].bullets.splice(bulletIdx, 1);
     setFormData({ ...formData, education: updated });
   };
 
@@ -197,7 +225,7 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
       {formData.education.map((edu, idx) => (
         <div
           key={idx}
-          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
+          className="border border-gray-200 p-4 rounded-lg space-y-4 bg-white shadow-sm"
         >
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-1 text-accent2 font-semibold">
@@ -209,36 +237,36 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <Input
               label="School / University"
               name="school"
               value={edu.school}
-              onChange={e => handleEducationChange(idx, e)}
+              onChange={(e) => handleEducationChange(idx, e)}
             />
             <Input
               label="Degree"
               name="degree"
               value={edu.degree}
-              placeholder={"e.g. Bachelor of Science"}
-              onChange={e => handleEducationChange(idx, e)}
+              placeholder="e.g. Bachelor of Science"
+              onChange={(e) => handleEducationChange(idx, e)}
             />
             <Input
               label="Field of Study"
               name="field"
-              placeholder={"e.g. Computer Science"}
               value={edu.field}
-              onChange={e => handleEducationChange(idx, e)}
+              placeholder="e.g. Computer Science"
+              onChange={(e) => handleEducationChange(idx, e)}
             />
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <Input
               label="Start Date"
               name="start"
               type="month"
               value={edu.start}
-              onChange={e => handleEducationChange(idx, e)}
+              onChange={(e) => handleEducationChange(idx, e)}
             />
             {!edu.present && (
               <Input
@@ -246,7 +274,7 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
                 name="end"
                 type="month"
                 value={edu.end}
-                onChange={e => handleEducationChange(idx, e)}
+                onChange={(e) => handleEducationChange(idx, e)}
               />
             )}
           </div>
@@ -261,6 +289,39 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
             <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
               I currently study here
             </label>
+          </div>
+
+          <div className="mt-2">
+            <h4 className="font-semibold text-sm text-gray-700 mb-1">Highlights / Achievements</h4>
+            {edu.bullets &&
+              edu.bullets.map((bullet, bulletIdx) => (
+                <div key={bulletIdx} className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={bullet}
+                    onChange={(e) =>
+                      handleBulletChange(idx, bulletIdx, e.target.value)
+                    }
+                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                    placeholder={`Bullet point ${bulletIdx + 1}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeBullet(idx, bulletIdx)}
+                    className="text-red-500 hover:text-red-700"
+                    title="Remove bullet"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            <button
+              type="button"
+              onClick={() => addBullet(idx)}
+              className="text-accent2 text-sm hover:underline"
+            >
+              + Add bullet point
+            </button>
           </div>
         </div>
       ))}
@@ -278,6 +339,7 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
     </div>
   );
 };
+
 
 // Certifications Form
 export const StepFour = ({ formData, setFormData, prevStep, nextStep }) => {

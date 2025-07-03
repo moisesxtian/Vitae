@@ -12,6 +12,9 @@
       font-size: 11pt;
       line-height: 1.15;
       color: #000;
+      /* Ensure text wrapping for the entire body */
+      word-wrap: break-word; /* Legacy property, good for compatibility */
+      overflow-wrap: break-word; /* Modern standard */
     }
 
     /* Header Styling */
@@ -23,8 +26,26 @@
     section {
       margin-bottom: .7cm;
       page-break-inside: avoid;
-      min-height: 4cm;
+      /* min-height can sometimes implicitly give too much space if not constrained,
+         but usually it's fine. Keep if needed for layout. */
+      /* min-height: 4cm; */
     }
+
+    /* Ensure summary text (which is a <p> tag in your template) wraps */
+    .summary {
+      white-space: normal; /* Allow normal wrapping */
+      word-break: break-word; /* Break words if they overflow */
+      overflow-wrap: break-word; /* Modern alternative to word-break: break-word */
+    }
+
+    /* Apply general wrapping to all paragraphs and list items */
+    section p, ul li {
+        margin-bottom: 4pt;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
     section h2 {
       font-size: 13pt;
       font-weight: bold;
@@ -33,19 +54,40 @@
       padding-bottom: 2pt;
       border-bottom: 1px solid #000;
     }
-    section p, ul li { margin-bottom: 4pt; }
 
     /* Two-Column Container */
-    .two-col { display: flex; gap: 1cm; }
-    .two-col section { flex: 1; }
+    .two-col {
+        display: flex;
+        gap: 1cm;
+        /* Ensure the two-col container spans the available width to force flex items to constrain */
+        width: 100%;
+    }
+    .two-col section {
+        flex: 1;
+        /* Add max-width to ensure flex items don't grow beyond half of their container (minus gap) */
+        max-width: calc(50% - 0.5cm); /* 50% for each column minus half of the gap for each */
+    }
 
     /* Flex Header/Detail Layout */
     .flexed {
       display: flex;
       justify-content: space-between;
       font-weight: bold;
+      /* Ensure flexed items also respect wrapping in case their content is long */
+      flex-wrap: wrap; /* Allow items to wrap to the next line if space runs out */
     }
-    .flexed .dates { font-style: italic; }
+    .flexed span {
+        /* Allow individual spans within flexed to shrink and wrap */
+        flex-shrink: 1;
+        min-width: 0; /* Allows content to shrink below its intrinsic width */
+    }
+    .flexed .dates {
+      font-style: italic;
+      /* Add some flexibility for dates as well, in case they are long */
+      white-space: normal; /* Important if the date string itself is long */
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
 
     /* Lists */
     ul {
@@ -53,14 +95,24 @@
       padding: 0;
       list-style-type: disc;
     }
-    ul li { margin-bottom: 2pt; }
+    /* ul li already covered by 'section p, ul li' rule above */
 
     /* Skills Multi-Column */
     .skills ul {
       columns: 3;
       column-gap: 1.5cm;
       margin-left: 1cm;
+      /* Ensure the UL itself has a defined max-width so columns can be calculated correctly */
+      max-width: calc(100% - 1cm); /* 100% of parent minus its own left margin */
     }
+    /* Individual skills (li) within the columns */
+    .skills ul li {
+        /* Applying aggressive word break for skills, as they can be technical terms */
+        word-break: break-all; /* Forces breaks even in long continuous words if necessary */
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+
 
     /* Footer Anchor */
     footer {
@@ -81,28 +133,30 @@
     </p>
   </header>
 
-    {% if data.summary %}
-    <section class="col-span-2">
-      <h2>Summary</h2>
-      <p>{{ data.summary }}</p>
-    </section>
-  <div class="two-col">
-    {% endif %}
+{% if data.summary %}
+<div>
+<section>
+  <h2>Summary</h2>
+  <p class="summary">{{ data.summary }}</p>
+</section>
+</div>
+{% endif %}
 
-    {% if data.skills %}
-    {% set clean_skills = data.skills | select('string') | list %}
-    {% if clean_skills %}
-    <section class="skills">
-      <h2>Skills</h2>
-      <ul>
-        {% for skill in clean_skills %}
-        <li>{{ skill }}</li>
-        {% endfor %}
-      </ul>
-    </section>
-    {% endif %}
-    {% endif %}
-  </div>
+<div class="two-col">
+  {% if data.skills %}
+  {% set clean_skills = data.skills | select('string') | list %}
+  {% if clean_skills %}
+  <section class="skills">
+    <h2>Skills</h2>
+    <ul>
+      {% for skill in clean_skills %}
+      <li>{{ skill }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+  {% endif %}
+</div>
 
   {% if data.experience %}
   <section>
@@ -128,24 +182,35 @@
   </section>
   {% endif %}
 
-  {% if data.education %}
+{% if data.education %}
   <section>
     <h2>Education</h2>
     {% for edu in data.education %}
       {% if edu.school or edu.degree or edu.field %}
       <div class="mb-2">
         <div class="flexed">
-          <span>{% if edu.degree %}{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}{% endif %}</span>
+          <span>
+            {% if edu.degree %}{{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}{% endif %}
+          </span>
           <span class="dates">{{ edu.start }} – {{ "Present" if edu.present else edu.end }}</span>
         </div>
         {% if edu.school %}
         <div><em>{{ edu.school }}</em></div>
         {% endif %}
       </div>
+
+      {% if edu.bullets %}
+        <ul>
+          {% for bullet in edu.bullets %}
+          <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
       {% endif %}
     {% endfor %}
   </section>
-  {% endif %}
+{% endif %}
+
 
   {% if data.certifications %}
   {% set certs = data.certifications | selectattr('name') | list %}

@@ -16,6 +16,7 @@ class EducationEntry(BaseModel):
     start: str
     end: Optional[str]
     present: bool
+    bullets: List[str]
 
 class CertificationEntry(BaseModel):
     name: str
