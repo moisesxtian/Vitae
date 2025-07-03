@@ -109,6 +109,7 @@ const ManualBuild = () => {
     try {
       const response = await sendFormData();
       setPdfBlob(response);
+      console.log("Response:", formData);
       if (response) {
         console.log("Form submitted successfully!");
       } else {

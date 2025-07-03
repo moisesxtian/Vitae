@@ -133,11 +133,14 @@ footer {
 <body>
   <header>
     <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}{% endif %} {{ data.lastName }}</h1>
-    <p>
-      {% if data.email %}{{ data.email }}{% endif %}
-      {% if data.phone %} · {{ data.phone }}{% endif %}
-      {% if data.linkedin %} · {{ data.linkedin }}{% endif %}
-    </p>
+<p>
+  {% if data.email %}{{ data.email }}{% endif %}
+  {% if data.phone %} · {{ data.phone }}{% endif %}
+  {% if data.city or data.state %}
+    {% if data.email or data.phone %} · {% endif %}
+    {% if data.city %}{{ data.city }}{% endif %}{% if data.city and data.state %}, {% endif %}{% if data.state %}{{ data.state }}{% endif %}
+  {% endif %}
+</p>
   </header>
 
 {% if data.summary %}
