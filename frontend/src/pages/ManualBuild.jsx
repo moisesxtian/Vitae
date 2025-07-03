@@ -1,6 +1,6 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import {StepOne, StepTwo, StepThree,StepFour,StepFive,StepSix} from "../components/Steps";
+import {InformationForm, SummaryForm, EducationForm, ExperienceForm, SkillsForm, CertificationsForm, ProjectsForm} from "../components/Steps";
 import PDFViewer from "../components/PDFViewer";
 import useForm from "../hooks/useForm";
 
@@ -80,21 +80,33 @@ const handleSubmit = async (e) => {
   }
 };
 
+useEffect(() => {
+  //WHen Enter key is pressed, go to next step
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      nextStep();
+    }
+  };
+  window.addEventListener("keydown", handleKeyDown);
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, [step]);
 
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <StepOne formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+        return <InformationForm formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       case 2:
-        return <StepTwo formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+        return <SkillsForm formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       case 3:
-        return <StepThree formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+        return <EducationForm formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       case 4:
-        return <StepFour formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+        return <ExperienceForm formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       case 5:
-        return <StepFive formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+        return <ProjectsForm formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       case 6:
-        return <StepSix formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
+        return <SummaryForm formData={formData} setFormData={setFormData} nextStep={nextStep}/>;
       default:
         return null;
     }

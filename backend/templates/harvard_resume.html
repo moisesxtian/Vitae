@@ -4,121 +4,130 @@
   <meta charset="UTF-8">
   <title>{{ data.firstName }} {{ data.lastName }} – Resume</title>
   <style>
-    /* Page & Body Setup */
-    @page { size: A4; margin: 1.9cm; }
-    body, html { margin: 0; padding: 0; }
-    body {
-      font-family: "Times New Roman", serif;
-      font-size: 11pt;
-      line-height: 1.15;
-      color: #000;
-      /* Ensure text wrapping for the entire body */
-      word-wrap: break-word; /* Legacy property, good for compatibility */
-      overflow-wrap: break-word; /* Modern standard */
-    }
+  @page { size: A4; margin: 2cm; }
+body, html {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Times New Roman", serif;
+  font-size: 11pt;
+  line-height: 1.4;
+  color: #000;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
 
-    /* Header Styling */
-    header { text-align: center; margin-bottom: .5cm; }
-    header h1 { font-size: 24pt; margin: .1cm 0 .1cm; font-weight: bold; }
-    header p { font-size: 10pt; margin: 0 .2cm; }
+/* Header Styling */
+header {
+  text-align: center;
+  margin-bottom: 0.8cm;
+}
+header h1 {
+  font-size: 22pt;
+  margin: 0.1cm 0;
+  font-weight: bold;
+}
+header p {
+  font-size: 10pt;
+  margin: 0;
+  line-height: 1.2;
+}
 
-    /* Basic Section Styling */
-    section {
-      margin-bottom: .7cm;
-      page-break-inside: avoid;
-      /* min-height can sometimes implicitly give too much space if not constrained,
-         but usually it's fine. Keep if needed for layout. */
-      /* min-height: 4cm; */
-    }
+/* Section Formatting */
+section {
+  margin-bottom: 1cm;
+  page-break-inside: avoid;
+}
+section h2 {
+  font-size: 13pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 0.3cm;
+  padding-bottom: 2pt;
+  border-bottom: 1px solid #000;
+}
 
-    /* Ensure summary text (which is a <p> tag in your template) wraps */
-    .summary {
-      white-space: normal; /* Allow normal wrapping */
-      word-break: break-word; /* Break words if they overflow */
-      overflow-wrap: break-word; /* Modern alternative to word-break: break-word */
-    }
+/* Paragraphs & Lists */
+section p,
+ul li {
+  margin-bottom: 4pt;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+ul {
+  margin: 6pt 0 0 1cm;
+  padding: 0;
+  list-style-type: disc;
+}
 
-    /* Apply general wrapping to all paragraphs and list items */
-    section p, ul li {
-        margin-bottom: 4pt;
-        white-space: normal;
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
+/* Summary */
+.summary {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
-    section h2 {
-      font-size: 13pt;
-      font-weight: bold;
-      text-transform: uppercase;
-      margin-bottom: .2cm;
-      padding-bottom: 2pt;
-      border-bottom: 1px solid #000;
-    }
+/* Flex Layout for Experience/Education */
+.flexed {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-weight: bold;
+  margin-bottom: 2pt;
+}
+.flexed span {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.flexed .dates {
+  font-style: italic;
+  white-space: normal;
+  font-weight: normal;
+}
 
-    /* Two-Column Container */
-    .two-col {
-        display: flex;
-        gap: 1cm;
-        /* Ensure the two-col container spans the available width to force flex items to constrain */
-        width: 100%;
-    }
-    .two-col section {
-        flex: 1;
-        /* Add max-width to ensure flex items don't grow beyond half of their container (minus gap) */
-        max-width: calc(50% - 0.5cm); /* 50% for each column minus half of the gap for each */
-    }
+/* Two-Column Section (e.g., Skills) */
+.two-col {
+  display: flex;
+  gap: 1cm;
+  width: 100%;
+  margin-bottom: 1cm;
+}
+.two-col section {
+  flex: 1;
+  max-width: calc(50% - 0.5cm);
+}
 
-    /* Flex Header/Detail Layout */
-    .flexed {
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
-      /* Ensure flexed items also respect wrapping in case their content is long */
-      flex-wrap: wrap; /* Allow items to wrap to the next line if space runs out */
-    }
-    .flexed span {
-        /* Allow individual spans within flexed to shrink and wrap */
-        flex-shrink: 1;
-        min-width: 0; /* Allows content to shrink below its intrinsic width */
-    }
-    .flexed .dates {
-      font-style: italic;
-      /* Add some flexibility for dates as well, in case they are long */
-      white-space: normal; /* Important if the date string itself is long */
-      word-break: break-word;
-      overflow-wrap: break-word;
-    }
+/* Skills Section */
+.skills ul {
+  margin: 0.2cm 0 0.3cm;
+  padding: 0;
+  column-width: 5cm;
+  column-gap: 1cm;
+}
+.skills ul li {
+  font-size: 11pt;
+  font-style: italic;
+  padding: 2pt 4pt;
+  margin-bottom: 4pt;
+  break-inside: avoid;
+}
 
-    /* Lists */
-    ul {
-      margin: 4pt 0 .3cm 1cm;
-      padding: 0;
-      list-style-type: disc;
-    }
-    /* ul li already covered by 'section p, ul li' rule above */
+/* Certifications/Projects */
+section ul li,
+section p {
+  margin-left: 0.3cm;
+  margin-right: 0.3cm;
+}
 
-    /* Skills Multi-Column */
-    .skills ul {
-    margin: 0.2cm 0 0.4cm;
-    padding: 0;
-    column-width: 5cm;
-    column-gap: 1cm;
-    }
-    /* Individual skills (li) within the columns */
-    .skills ul li {
-    font-size: 12pt;
-    font-style: italic;
-    padding:2pt 6pt;
-    }
-
-
-    /* Footer Anchor */
-    footer {
-      margin-top: 2cm;
-      text-align: center;
-      font-size: 9pt;
-      color: #666;
-    }
+/* Footer */
+footer {
+  margin-top: 2cm;
+  text-align: center;
+  font-size: 9pt;
+  color: #666;
+}
   </style>
 </head>
 <body>

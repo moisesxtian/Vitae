@@ -27,7 +27,7 @@ def clean_data(obj):
 
 async def submit_resume(data: Resume):
     #convert date strings to datetime objects
-    for entry in data.education:
+    for entry in data.education + data.experience:
         if isinstance(entry.start, str):
             entry.start = datetimeformat(entry.start)
         if isinstance(entry.end, str):

@@ -1,10 +1,11 @@
 import {useState} from "react";
 import Input from "../components/Input";
+
 import { Plus, X,Briefcase, GraduationCap,BadgeCheck,ChevronDown,ChevronUp} from "lucide-react";
 
 
 // Information Form
-export const StepOne = ({ formData, setFormData}) => {
+export const InformationForm = ({ formData, setFormData}) => {
   const [errorMessage, setErrorMessage] = useState("");
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -94,7 +95,7 @@ export const StepOne = ({ formData, setFormData}) => {
 };
 
 // Skills Form
-export const StepTwo = ({ formData, setFormData}) => {
+export const SkillsForm = ({ formData, setFormData}) => {
   const handleSkillChange = (index, value) => {
     const updatedSkills = [...formData.skills];
     updatedSkills[index] = value;
@@ -160,7 +161,7 @@ export const StepTwo = ({ formData, setFormData}) => {
 
 
 // Education
-export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
+export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => {
   const [expandedIdx, setExpandedIdx] = useState(null);
 
   const handleEducationChange = (idx, e) => {
@@ -390,7 +391,7 @@ export const StepThree = ({ formData, setFormData, prevStep, nextStep }) => {
 
 
 // Certifications Form
-export const StepFour = ({ formData, setFormData, prevStep, nextStep }) => {
+export const CertificationsForm = ({ formData, setFormData, prevStep, nextStep }) => {
   const handleCertChange = (idx, e) => {
     const updated = [...formData.certifications];
     updated[idx][e.target.name] = e.target.value;
@@ -489,8 +490,8 @@ export const StepFour = ({ formData, setFormData, prevStep, nextStep }) => {
     </div>
   );
 };
-//Work  Experience Form
-export const StepFive = ({ formData, setFormData, prevStep, nextStep }) => {
+//work experience
+export const ExperienceForm= ({ formData, setFormData, prevStep, nextStep }) => {
   const handleExperienceChange = (idx, e) => {
     const updated = [...formData.experience];
     updated[idx][e.target.name] = e.target.value;
@@ -651,9 +652,118 @@ export const StepFive = ({ formData, setFormData, prevStep, nextStep }) => {
     </div>
   );
 };
+export const ProjectsForm = ({ formData, setFormData }) => {
+  const [expandedIdx, setExpandedIdx] = useState(null);
 
+  const handleProjectChange = (idx, e) => {
+    const updated = [...formData.projects];
+    updated[idx][e.target.name] = e.target.value;
+    setFormData({ ...formData, projects: updated });
+  };
 
-export const StepSix = ({ formData, setFormData, prevStep, nextStep }) => {
+  const addProject = () => {
+    setFormData({
+      ...formData,
+      projects: [
+        {
+          name: "",
+          description: "",
+          technologies: "",
+        },
+        ...formData.projects,
+      ],
+    });
+    setExpandedIdx(0);
+  };
+
+  const removeProject = (idx) => {
+    const updated = [...formData.projects];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, projects: updated });
+    if (expandedIdx === idx) setExpandedIdx(null);
+  };
+
+  const toggleCollapse = (idx) => {
+    setExpandedIdx(expandedIdx === idx ? null : idx);
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Personal Projects</h2>
+
+      <button
+        type="button"
+        onClick={addProject}
+        className="self-start flex items-center gap-2 text-accent2 hover:underline"
+      >
+        <Plus className="w-5 h-5" />
+        Add Project
+      </button>
+
+      {formData.projects.map((project, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-300 rounded-lg bg-white shadow-md"
+        >
+          {/* Header */}
+          <div
+            className="flex justify-between items-center p-4 cursor-pointer bg-gray-50"
+            onClick={() => toggleCollapse(idx)}
+          >
+            <div className="flex items-center gap-2 font-medium text-accent2">
+              <span>Project – {project.name || "Untitled"}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeProject(idx);
+                }}
+              >
+                <X className="w-4 h-4 text-red-500 hover:text-red-700" />
+              </button>
+              {expandedIdx === idx ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
+            </div>
+          </div>
+
+          {/* Content */}
+          {expandedIdx === idx && (
+            <div className="p-4 space-y-4">
+              <Input
+                label="Project Name"
+                name="name"
+                value={project.name}
+                placeholder="e.g. Personal Budget Tracker"
+                onChange={(e) => handleProjectChange(idx, e)}
+              />
+              <Input
+                label="Description"
+                name="description"
+                value={project.description}
+                placeholder="Brief overview of what this project does"
+                onChange={(e) => handleProjectChange(idx, e)}
+              />
+              <Input
+                label="Technologies Used"
+                name="technologies"
+                value={project.technologies}
+                placeholder="e.g. React, Tailwind, Node.js"
+                onChange={(e) => handleProjectChange(idx, e)}
+              />
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Summary Form
+export const SummaryForm = ({ formData, setFormData, prevStep, nextStep }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, summary: e.target.value });
   };
