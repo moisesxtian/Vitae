@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Input from "../components/Input";
 
 import { Plus, X, Briefcase, GraduationCap, BadgeCheck, ChevronDown, ChevronUp } from "lucide-react";
@@ -150,7 +150,7 @@ export const SkillsForm = ({ formData, setFormData }) => {
               onClick={() => handleRemoveSkill(index)}
               className="p-2 rounded-full bg-red-100 hover:bg-red-200 transition"
             >
-              <X className="text-red-600 w-4 h-4" />
+              <X className="text-red-600 w-6 h-6" />
             </button>
           </div>
         ))}
@@ -320,7 +320,7 @@ export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => 
             </div>
             <div className="flex items-center gap-2">
               <button onClick={(e) => { e.stopPropagation(); removeEducation(idx); }}>
-                <X className="w-4 h-4 text-red-500 hover:text-red-700" />
+                <X className="w-6 h-6 text-red-500 hover:text-red-700" />
               </button>
               {expandedIdx === idx ? (
                 <ChevronUp className="w-4 h-4" />
@@ -425,7 +425,7 @@ export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => 
                       className="text-red-500 hover:text-red-700"
                       title="Remove bullet"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-6 h-6" />
                     </button>
                   </div>
                 ))}
@@ -447,306 +447,389 @@ export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => 
 
 
 // Certifications Form (no changes needed for this specific request)
-export const CertificationsForm = ({ formData, setFormData, prevStep, nextStep }) => {
-  const handleCertChange = (idx, e) => {
-    const updated = [...formData.certifications];
-    updated[idx][e.target.name] = e.target.value;
-    setFormData({ ...formData, certifications: updated });
-  };
+export const CertificationsForm = ({ formData, setFormData }) => {
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [expandedIdx, setExpandedIdx] = useState(null);
 
-  const addCertification = () => {
-    setFormData({
-      ...formData,
-      certifications: [
-        ...formData.certifications,
-        {
-          name: '',
-          issuer: '',
-          date: '',
-          credentialId: '',
-          credentialUrl: '',
-        },
-      ],
-    });
-  };
+  useEffect(() => {
+    // Always expand the latest added item
+    if (formData.certifications.length > 0) {
+      setExpandedIdx(0);
+    }
+  }, [formData.certifications.length]);
 
-  const removeCertification = idx => {
-    const updated = [...formData.certifications];
-    updated.splice(idx, 1);
-    setFormData({ ...formData, certifications: updated });
-  };
+  const handleCertChange = (idx, e) => {
+    const updated = [...formData.certifications];
+    updated[idx][e.target.name] = e.target.value;
+    setFormData({ ...formData, certifications: updated });
+  };
 
-  return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold text-accent2 text-center">Certifications</h2>
+  const addCertification = () => {
+    const newCert = {
+      name: "",
+      issuer: "",
+      date: "",
+      credentialId: "",
+      credentialUrl: "",
+    };
+    setFormData({
+      ...formData,
+      certifications: [newCert, ...formData.certifications],
+    });
+    setExpandedIdx(0); // Auto expand the newly added
+  };
 
-      {formData.certifications.map((cert, idx) => (
-        <div
-          key={idx}
-          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm"
-        >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-1 text-accent2 font-semibold">
-              <BadgeCheck className="w-5 h-5" />
-              <span>Certificate #{idx + 1}</span>
-            </div>
-            <button type="button" onClick={() => removeCertification(idx)}>
-              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
-            </button>
-          </div>
+  const removeCertification = (idx) => {
+    const updated = [...formData.certifications];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, certifications: updated });
+    if (expandedIdx === idx) setExpandedIdx(null);
+  };
 
-          <Input
-            label="Certificate Name"
-            name="name"
-            value={cert.name}
-            placeholder={"e.g. AWS Certified Cloud Practitioner"}
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Issuing Organization"
-            name="issuer"
-            value={cert.issuer}
-            placeholder={"e.g. AWS"}
+  const toggleCollapse = (idx) => {
+    setExpandedIdx(expandedIdx === idx ? null : idx);
+  };
 
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Date Earned"
-            name="date"
-            type="month"
-            value={cert.date}
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Credential ID (optional)"
-            name="credentialId"
-            value={cert.credentialId}
-            onChange={e => handleCertChange(idx, e)}
-          />
-          <Input
-            label="Credential URL (optional)"
-            name="credentialUrl"
-            type="url"
-            value={cert.credentialUrl}
-            onChange={e => handleCertChange(idx, e)}
-          />
-        </div>
-      ))}
+  // Drag and Drop Handlers
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index);
+  };
 
-      <div className="mt-4 flex justify-between">
-        <button
-          type="button"
-          onClick={addCertification}
-          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Certification
-        </button>
-      </div>
-    </div>
-  );
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const updated = [...formData.certifications];
+    const [draggedItem] = updated.splice(draggedIndex, 1);
+    updated.splice(targetIndex, 0, draggedItem);
+
+    setFormData({ ...formData, certifications: updated });
+    setDraggedIndex(null);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Certifications</h2>
+
+      {formData.certifications.map((cert, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-300 rounded-lg bg-white shadow-md relative"
+          onDragStart={(e) => handleDragStart(e, idx)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, idx)}
+        >
+          <div
+            draggable="true"
+            className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 pl-10 relative"
+            onClick={() => toggleCollapse(idx)}
+          >
+            {/* Drag Handle */}
+            <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-1 w-5 h-4 cursor-grab active:cursor-grabbing">
+              <span className="block h-0.5 bg-gray-500 w-full rounded" />
+              <span className="block h-0.5 bg-gray-500 w-full rounded" />
+              <span className="block h-0.5 bg-gray-500 w-full rounded" />
+            </div>
+            <div className="flex items-center gap-2 font-medium text-accent2">
+              <BadgeCheck className="w-5 h-5" />
+              <span>
+                {cert.name?.trim() ? cert.name : `Certification #${idx + 1}`}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={(e) => { e.stopPropagation(); removeCertification(idx); }}>
+                <X className="w-6 h-6 text-red-500 hover:text-red-700" />
+              </button>
+
+            </div>
+          </div>
+
+          {expandedIdx === idx && (
+            <div className="p-4 space-y-4">
+              <Input
+                label="Certificate Name"
+                name="name"
+                value={cert.name}
+                placeholder="e.g. AWS Certified Cloud Practitioner"
+                onChange={(e) => handleCertChange(idx, e)}
+              />
+              <Input
+                label="Issuer"
+                name="issuer"
+                value={cert.issuer}
+                placeholder="e.g. Amazon Web Services"
+                onChange={(e) => handleCertChange(idx, e)}
+              />
+              <Input
+                label="Date Earned"
+                name="date"
+                type="month"
+                value={cert.date}
+                onChange={(e) => handleCertChange(idx, e)}
+              />
+              <Input
+                label="Credential ID (optional)"
+                name="credentialId"
+                value={cert.credentialId}
+                onChange={(e) => handleCertChange(idx, e)}
+              />
+              <Input
+                label="Credential URL (optional)"
+                name="credentialUrl"
+                type="url"
+                value={cert.credentialUrl}
+                onChange={(e) => handleCertChange(idx, e)}
+              />
+            </div>
+          )}
+        </div>
+      ))}
+
+      <div className="mt-4 flex justify-between">
+        <button
+          type="button"
+          onClick={addCertification}
+          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
+        >
+          <Plus className="w-5 h-5" />
+          Add Certification
+        </button>
+      </div>
+    </div>
+  );
 };
 
 // Work Experience Form (with drag and drop)
-export const ExperienceForm = ({ formData, setFormData, prevStep, nextStep }) => {
-  const [draggedItemIndex, setDraggedItemIndex] = useState(null);
+export const ExperienceForm = ({ formData, setFormData }) => {
+  const [draggedItemIndex, setDraggedItemIndex] = useState(null);
+  const [expandedIdx, setExpandedIdx] = useState(null);
 
-  const handleExperienceChange = (idx, e) => {
-    const updated = [...formData.experience];
-    updated[idx][e.target.name] = e.target.value;
-    setFormData({ ...formData, experience: updated });
-  };
+  useEffect(() => {
+    if (formData.experience.length > 0) {
+      setExpandedIdx(0);
+    }
+  }, [formData.experience.length]);
 
-  const togglePresent = idx => {
-    const updated = [...formData.experience];
-    updated[idx].present = !updated[idx].present;
-    if (updated[idx].present) updated[idx].end = '';
-    setFormData({ ...formData, experience: updated });
-  };
+  const handleExperienceChange = (idx, e) => {
+    const updated = [...formData.experience];
+    updated[idx][e.target.name] = e.target.value;
+    setFormData({ ...formData, experience: updated });
+  };
 
-  const addExperience = () => {
-    setFormData({
-      ...formData,
-      experience: [
-        ...formData.experience,
-        { company: '', jobtitle: '', start: '', end: '', present: false, bullets: [''] },
-      ]
-    });
-  };
+  const togglePresent = idx => {
+    const updated = [...formData.experience];
+    updated[idx].present = !updated[idx].present;
+    if (updated[idx].present) updated[idx].end = '';
+    setFormData({ ...formData, experience: updated });
+  };
 
-  const removeExperience = idx => {
-    const updated = [...formData.experience];
-    updated.splice(idx, 1);
-    setFormData({ ...formData, experience: updated });
-  };
+  const addExperience = () => {
+    const newExp = {
+      company: '',
+      jobtitle: '',
+      start: '',
+      end: '',
+      present: false,
+      bullets: ['']
+    };
+    setFormData({
+      ...formData,
+      experience: [newExp, ...formData.experience]
+    });
+    setExpandedIdx(0);
+  };
 
-  const handleBulletChange = (expIdx, bIdx, value) => {
-    const updated = [...formData.experience];
-    updated[expIdx].bullets[bIdx] = value;
-    setFormData({ ...formData, experience: updated });
-  };
+  const removeExperience = idx => {
+    const updated = [...formData.experience];
+    updated.splice(idx, 1);
+    setFormData({ ...formData, experience: updated });
+    if (expandedIdx === idx) setExpandedIdx(null);
+  };
 
-  const addBullet = expIdx => {
-    const updated = [...formData.experience];
-    updated[expIdx].bullets.push('');
-    setFormData({ ...formData, experience: updated });
-  };
+  const handleBulletChange = (expIdx, bIdx, value) => {
+    const updated = [...formData.experience];
+    updated[expIdx].bullets[bIdx] = value;
+    setFormData({ ...formData, experience: updated });
+  };
 
-  const removeBullet = (expIdx, bIdx) => {
-    const updated = [...formData.experience];
-    updated[expIdx].bullets.splice(bIdx, 1);
-    setFormData({ ...formData, experience: updated });
-  };
+  const addBullet = expIdx => {
+    const updated = [...formData.experience];
+    updated[expIdx].bullets.push('');
+    setFormData({ ...formData, experience: updated });
+  };
 
-  // Drag and Drop Handlers
-  const handleDragStart = (e, index) => {
-    setDraggedItemIndex(index);
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", index);
-  };
+  const removeBullet = (expIdx, bIdx) => {
+    const updated = [...formData.experience];
+    updated[expIdx].bullets.splice(bIdx, 1);
+    setFormData({ ...formData, experience: updated });
+  };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  };
+  const handleDragStart = (e, index) => {
+    setDraggedItemIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index);
+  };
 
-  const handleDrop = (e, targetIndex) => {
-    e.preventDefault();
-    if (draggedItemIndex === null || draggedItemIndex === targetIndex) {
-      return;
-    }
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
 
-    const updatedExperience = [...formData.experience];
-    const [draggedItem] = updatedExperience.splice(draggedItemIndex, 1);
-    updatedExperience.splice(targetIndex, 0, draggedItem);
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedItemIndex === null || draggedItemIndex === targetIndex) return;
 
-    setFormData({ ...formData, experience: updatedExperience });
-    setDraggedItemIndex(null);
-  };
+    const updated = [...formData.experience];
+    const [draggedItem] = updated.splice(draggedItemIndex, 1);
+    updated.splice(targetIndex, 0, draggedItem);
 
-  return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold text-accent2 text-center">Work Experience</h2>
+    setFormData({ ...formData, experience: updated });
+    setDraggedItemIndex(null);
+  };
 
-      {formData.experience.map((exp, idx) => (
-        <div
-          key={idx}
-          className="border border-gray-200 p-4 rounded-lg space-y-2 bg-white shadow-sm relative" /* Added relative positioning */
-          draggable="true"
-          onDragStart={(e) => handleDragStart(e, idx)}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, idx)}
-        >
-          <div className="flex justify-between items-center pl-10 relative"> {/* Adjusted padding for hamburger and made header relative */}
-            {/* Hamburger Icon */}
-            <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-1 w-5 h-4 cursor-grab active:cursor-grabbing">
-              <span className="block h-0.5 bg-gray-500 w-full rounded"></span>
-              <span className="block h-0.5 bg-gray-500 w-full rounded"></span>
-              <span className="block h-0.5 bg-gray-500 w-full rounded"></span>
-            </div>
-            <div className="flex items-center gap-1 text-accent2 font-semibold">
-              <Briefcase className="w-5 h-5" />
-              <span>Experience #{idx + 1}</span>
-            </div>
-            <button type="button" onClick={() => removeExperience(idx)}>
-              <X className="w-5 h-5 text-red-600 hover:text-red-800 transition" />
-            </button>
-          </div>
+  const toggleCollapse = (idx) => {
+    setExpandedIdx(expandedIdx === idx ? null : idx);
+  };
 
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-            <Input
-              label="Job Title"
-              name="jobtitle"
-              value={exp.jobtitle}
-              onChange={e => handleExperienceChange(idx, e)}
-            />
-            <Input
-              label="Company Name"
-              name="company"
-              value={exp.company}
-              onChange={e => handleExperienceChange(idx, e)}
-            />
-          </div>
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold text-accent2 text-center">Professional Experience</h2>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Start Date"
-              name="start"
-              type="month"
-              value={exp.start}
-              onChange={e => handleExperienceChange(idx, e)}
-            />
-            {!exp.present && (
-              <Input
-                label="End Date"
-                name="end"
-                type="month"
-                value={exp.end}
-                onChange={e => handleExperienceChange(idx, e)}
-              />
-            )}
-          </div>
+      {formData.experience.map((exp, idx) => (
+        <div
+          key={idx}
+          className="border border-gray-300 rounded-lg bg-white shadow-md relative"
+          onDragStart={(e) => handleDragStart(e, idx)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, idx)}
+        >
+          <div
+            className="flex justify-between items-center p-4 bg-gray-50 pl-10 relative"
+            draggable={true}
+            onClick={() => toggleCollapse(idx)}
+          >
+            <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-1 w-5 h-4 cursor-grab active:cursor-grabbing">
+              <span className="block h-0.5 bg-gray-500 w-full rounded" />
+              <span className="block h-0.5 bg-gray-500 w-full rounded" />
+              <span className="block h-0.5 bg-gray-500 w-full rounded" />
+            </div>
+            <div className="flex items-center gap-2 font-medium text-accent2">
+              <Briefcase className="w-5 h-5" />
+              <span>{exp.jobtitle?.trim() ? exp.jobtitle : `Experience #${idx + 1}`}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={(e) => { e.stopPropagation(); removeExperience(idx); }}>
+                <X className="w-6 h-6 text-red-500 hover:text-red-700" />
+              </button>
+            </div>
+          </div>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={exp.present}
-              onChange={() => togglePresent(idx)}
-              id={`present-${idx}`}
-            />
-            <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
-              I currently work here
-            </label>
-          </div>
+          {expandedIdx === idx && (
+            <div className="p-4 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+                <Input
+                  label="Job Title"
+                  name="jobtitle"
+                  value={exp.jobtitle}
+                  onChange={e => handleExperienceChange(idx, e)}
+                />
+                <Input
+                  label="Company Name"
+                  name="company"
+                  value={exp.company}
+                  onChange={e => handleExperienceChange(idx, e)}
+                />
+              </div>
 
-          {exp.bullets.map((bullet, bIdx) => (
-            <div key={bIdx} className="flex p-2 rounded-lg items-center gap-2 overflow-auto">
-              <div className="flex-1">
-                <Input
-                  label={`Responsibilities / Accomplishment #${bIdx + 1}`}
-                  name={`bullet-${bIdx}`}
-                  type="text"
-                  value={bullet}
-                  placeholder="e.g. Spearheaded the development of..."
-                  onChange={e => handleBulletChange(idx, bIdx, e.target.value)}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() => removeBullet(idx, bIdx)}
-                className="p-2 rounded-full hover:bg-gray-200 transition"
-              >
-                <X className="w-5 h-5 text-red-600 hover:text-red-800" />
-              </button>
-            </div>
-          ))}
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label="Start Date"
+                  name="start"
+                  type="month"
+                  value={exp.start}
+                  onChange={e => handleExperienceChange(idx, e)}
+                />
+                {!exp.present && (
+                  <Input
+                    label="End Date"
+                    name="end"
+                    type="month"
+                    value={exp.end}
+                    onChange={e => handleExperienceChange(idx, e)}
+                  />
+                )}
+              </div>
 
-          <div className="flex items-center gap-2 mt-2">
-            <button
-              type="button"
-              onClick={() => addBullet(idx)}
-              className="flex gap-2 text-accent2 hover:underline"
-            >
-              <Plus className="w-5 h-5" />
-              Add Bullet Point
-            </button>
-          </div>
-        </div>
-      ))}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={exp.present}
+                  onChange={() => togglePresent(idx)}
+                  id={`present-${idx}`}
+                />
+                <label htmlFor={`present-${idx}`} className="text-sm text-gray-700">
+                  I currently work here
+                </label>
+              </div>
 
-      <div className="mt-4 flex justify-between">
-        <button
-          type="button"
-          onClick={addExperience}
-          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Work Experience
-        </button>
-      </div>
-    </div>
-  );
+              {exp.bullets.map((bullet, bIdx) => (
+                <div key={bIdx} className="flex p-2 rounded-lg items-center gap-2 overflow-auto">
+                  <div className="flex-1">
+                    <Input
+                      label={`Responsibilities / Accomplishment #${bIdx + 1}`}
+                      name={`bullet-${bIdx}`}
+                      type="text"
+                      value={bullet}
+                      placeholder="e.g. Spearheaded the development of..."
+                      onChange={e => handleBulletChange(idx, bIdx, e.target.value)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeBullet(idx, bIdx)}
+                    className="p-2 rounded-full hover:bg-gray-200 transition"
+                  >
+                    <X className="w-6 h-6 text-red-600 hover:text-red-800" />
+                  </button>
+                </div>
+              ))}
+
+              <div className="flex items-center gap-2 mt-2">
+                <button
+                  type="button"
+                  onClick={() => addBullet(idx)}
+                  className="flex gap-2 text-accent2 hover:underline"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add Bullet Point
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      <div className="mt-4 flex justify-between">
+        <button
+          type="button"
+          onClick={addExperience}
+          className="self-start flex items-center gap-2 text-accent2 hover:underline mb-2"
+        >
+          <Plus className="w-5 h-5" />
+          Add Work Experience
+        </button>
+      </div>
+    </div>
+  );
 };
+
 
 // Projects Form (with drag and drop)
 export const ProjectsForm = ({ formData, setFormData }) => {
@@ -830,13 +913,13 @@ export const ProjectsForm = ({ formData, setFormData }) => {
         <div
           key={idx}
           className={`border border-gray-300 rounded-lg bg-white shadow-md relative ${expandedIdx !== idx ? 'cursor-pointer' : ''}`} /* Added conditional cursor-pointer */
-          draggable="true"
           onDragStart={(e) => handleDragStart(e, idx)}
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, idx)}
         >
           {/* Header */}
           <div
+            draggable="true"
             className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 pl-10 relative" /* Adjusted padding for hamburger and made header relative */
             onClick={() => toggleCollapse(idx)}
           >
@@ -847,7 +930,7 @@ export const ProjectsForm = ({ formData, setFormData }) => {
               <span className="block h-0.5 bg-gray-500 w-full rounded"></span>
             </div>
             <div className="flex items-center gap-2 font-medium text-accent2">
-              <span>Project – {project.name || "Untitled"}</span>
+              <span>{project.name || "Project #"+(idx+1)}</span>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -856,13 +939,8 @@ export const ProjectsForm = ({ formData, setFormData }) => {
                   removeProject(idx);
                 }}
               >
-                <X className="w-4 h-4 text-red-500 hover:text-red-700" />
+                <X className="w-6 h-6 text-red-500 hover:text-red-700" />
               </button>
-              {expandedIdx === idx ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
             </div>
           </div>
 
