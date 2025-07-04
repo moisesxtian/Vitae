@@ -8,14 +8,51 @@ from datetime import datetime
 
 env = Environment(loader=FileSystemLoader("templates"))
 
-from datetime import datetime
+def count_total_entries(data: dict) -> int:
+    """Counts weighted entries across all resume sections for density control."""
+    count = 0
+
+    if data.get("summary"):
+        count += 1  # Summary block
+
+    # Skills
+    count += len(data.get("skills", [])) * .5  # Each skill is a short item
+
+    # Experience
+    for exp in data.get("experience", []):
+        if exp.get("jobtitle") or exp.get("company"):
+            count += 1.5  # Main entry
+        count += len(exp.get("bullets", [])) * 1  # Each bullet counts as 1
+
+    # Education
+    for edu in data.get("education", []):
+        if edu.get("school") or edu.get("degree"):
+            count += 1.2  # Main entry
+        count += len(edu.get("bullets", [])) * 0.8  # Less dense than experience
+
+    # Certifications
+    for cert in data.get("certifications", []):
+        if cert.get("name"):
+            count += 0.8  # Compact items
+
+    # Projects
+    for proj in data.get("projects", []):
+        if proj.get("name"):
+            count += 1
+        if proj.get("description"):
+            count += 0.5
+    #    if proj.get("technologies"): Add in the future
+    #        count += 0.5
+    print(count)
+    return round(count)
+
 
 def datetimeformat(value, format="%B %Y"):
     try:
-        date_obj = datetime.strptime(value, "%Y-%m")  # input: '2021-08'
-        return date_obj.strftime(format)              # output: 'August 2021'
+        date_obj = datetime.strptime(value, "%Y-%m")
+        return date_obj.strftime(format)
     except Exception:
-        return value  # return original value if parsing fails
+        return value
 
 def clean_data(obj):
     if isinstance(obj, dict):
@@ -26,25 +63,41 @@ def clean_data(obj):
         return obj
 
 async def submit_resume(data: Resume):
-    #convert date strings to datetime objects
-    for entry in data.education + data.experience:
-        if isinstance(entry.start, str):
-            entry.start = datetimeformat(entry.start)
-        if isinstance(entry.end, str):
-            entry.end = datetimeformat(entry.end)
-    raw_data = data.dict()
+    raw_data = data.model_dump()
+    print("test")
+    # Format dates in experience and education
+    for entry in raw_data.get("education", []) + raw_data.get("experience", []):
+        if isinstance(entry.get("start"), str):
+            entry["start"] = datetimeformat(entry["start"])
+        if isinstance(entry.get("end"), str):
+            entry["end"] = datetimeformat(entry["end"])
+
     cleaned_data = clean_data(raw_data)
-    print("Cleaned Data:", cleaned_data)
+
+    # Compute detailed resume density
+    total_items = count_total_entries(cleaned_data)
+
+    # Wider range for resume density with new categories
+    if total_items <= 5:
+        cleaned_data["resume_density"] = "super_sparse"
+    elif total_items <= 10:
+        cleaned_data["resume_density"] = "sparse"
+    elif total_items <= 15:
+        cleaned_data["resume_density"] = "medium"
+    elif total_items <= 20:
+        cleaned_data["resume_density"] = "dense"
+    else:
+        cleaned_data["resume_density"] = "super_dense"
+    # Render template
     template = await run_in_threadpool(env.get_template, "harvard_resume.html")
     html_content = await run_in_threadpool(template.render, data=cleaned_data)
-
+    print(cleaned_data["resume_density"])
+    # Generate PDF
     with NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
         await run_in_threadpool(HTML(string=html_content, base_url=".").write_pdf, temp_file.name)
 
         return FileResponse(
             path=temp_file.name,
-
-            #file name is extracted from the first name and last name
             filename=f"{cleaned_data.get('firstName', 'resume')}_{cleaned_data.get('lastName', 'resume')}.pdf",
             media_type="application/pdf"
         )

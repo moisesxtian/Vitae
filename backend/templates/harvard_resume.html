@@ -3,263 +3,289 @@
 <head>
   <meta charset="UTF-8" />
   <title>{{ data.firstName }} {{ data.lastName }} – Resume</title>
-<style>
-  @page {
-    size: A4;
-    margin: 1.5cm; /* Slightly reduced margin */
-  }
+  <style>
+    @page {
+      size: A4;
+      margin: 1.5cm;
+    }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Times New Roman", serif;
-    font-size: 10.5pt; /* Slightly smaller base font size */
-    line-height: 1.35; /* Slightly tighter line height */
-    color: #000;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    max-width: 100%;
-    overflow-x: hidden;
-    height: 100%;
-    box-sizing: border-box;
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Times New Roman", serif;
+      font-size: 10.5pt;
+      line-height: 1.2;
+      color: #000;
+      height: 100%;
+    }
 
-  body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+    table.layout {
+      width: 100%;
+      height: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .mb-2{
+      margin-bottom: 0.25cm;
+    }
 
-  header {
-    text-align: center;
-    margin-bottom: 0.15cm; /* Reduced margin for tighter space below personal info */
-  }
+    /* Dynamic spacing based on density */
+    table.super_sparse .section { padding-bottom: 3cm; }
+    table.sparse .section { padding-bottom: 1.5cm; }
+    table.medium .section { padding-bottom: 1cm; }
+    table.dense .section { padding-bottom: 0.5cm; }
+    table.dense .section { padding-bottom: 0.0cm; }
 
-  header h1 {
-    font-size: 22pt; /* Slightly smaller header font size */
-    margin: 0;
-    font-weight: bold;
-  }
+    header, footer {
+      text-align: center;
+    }
 
-  header p {
-    font-size: 9.5pt; /* Slightly smaller contact info font size */
-    margin: 0.1cm 0 0; /* Reduced margin */
-  }
+    header h1 {
+      font-size: 22pt;
+      margin: 0;
+      font-weight: bold;
+    }
 
-  section {
-    margin-bottom: 0.4cm; /* Reduced section margin */
-    page-break-inside: avoid;
-  }
+    header p {
+      font-size: 9.5pt;
+      margin: 0.1cm 0 0;
+    }
 
-  section h2 {
-    font-size: 12.5pt; /* Slightly smaller section heading font size */
-    font-weight: bold;
-    border-bottom: 1px solid #000;
-    margin-bottom: 0.2cm;
-    text-transform: uppercase;
-  }
+    section h2 {
+      font-size: 12.5pt;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+      text-transform: uppercase;
+      margin-bottom: 0.4cm;
+    }
+    .item-bullets{
+      font-size: 10pt;
+      font-style: italic;
+      
+    }
+    .summary p, ul li, .projects p {
+      margin: 0.15cm 0;
+    }
+    .summary p{
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
 
-  .summary p {
-    margin: 0;
-    white-space: normal;
-  }
+    .flexed {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+    }
 
-  .flexed {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    gap: 0.15cm; /* Slightly smaller gap */
-    word-break: break-word; /* Ensure words break within the container */
-  }
+    .flexed .title-group {
+      flex: 1;
+      min-width: 0;
+    }
 
-  .flexed .title-group {
-    /* New container for title and company/school */
-    flex: 1; /* Allows it to take up available space */
-    min-width: 0; /* Prevents overflow with long content */
-  }
+    .flexed .title-group .title {
+      display: block;
+    }
 
-  .flexed .title-group .title {
-    display: block; /* Forces title onto its own line */
-  }
+    .flexed .title-group .sub-title {
+      display: block;
+      font-weight:lighter;
+      font-style: italic;
+      font-size: 11;
+    }
 
-  .flexed .title-group .sub-title {
-    display: block; /* Forces company/school onto its own line */
-    font-weight: normal; /* Company/school name can be regular weight */
-    margin-top: 0.05cm; /* Small space between title and company/school */
-  }
+    .flexed .dates {
+      font-style: italic;
+      white-space: nowrap;
+      margin-left: 0.5cm;
+    }
 
-  .flexed .dates {
-    font-style: italic;
-    text-align: right;
-    flex-shrink: 0; /* Prevents dates from shrinking */
-    flex-grow: 0; /* Prevents dates from growing */
-    white-space: nowrap; /* Ensures dates stay on a single line */
-    margin-left: 0.5cm; /* Added margin to push dates away from title */
-  }
-.mb-2 {
-  margin-bottom: 0.5cm; /* Increased space between individual experience/education items */
-}
-  ul {
-    margin: 3pt 0 0 0.8cm; /* Slightly reduced indent */
-    padding: 0;
-  }
+    ul {
+      margin: 0.2cm 0 0 0.8cm;
+      padding: 0;
+    }
 
-  ul li {
-    margin-bottom: 1pt; /* Tighter list item spacing */
-    white-space: normal;
-  }
+    ul li {
+      white-space: normal;
+    }
 
-  .skills ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    columns: {{ 3 if data.skills|length > 8 else 2 }};
-    column-gap: 0.8cm; /* Reduced column gap */
-    width: 100%;
-    max-width: 100%;
-    word-break: break-word;
-  }
+    .skills ul {
+      margin: 0;
+      margin-left: 1cm;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(
+      {{
+              1 if data.skills|length <= 2 else
+              2 if data.skills|length <= 4 else
+              3 if data.skills|length <= 6 else 4
+            }},
+        1fr
+      );
+    }
 
-  .skills ul li {
-    font-size: 10.5pt; /* Match base font size */
-    font-style: italic;
-    margin-bottom: 3pt; /* Slightly tighter skill item spacing */
-    break-inside: avoid;
-  }
 
-  footer {
-    margin-top: 0.8cm; /* Reduced margin */
-    font-size: 8.5pt; /* Slightly smaller footer font size */
-    color: #666;
-    text-align: center;
-  }
-</style>
-
+    footer {
+      font-size: 8pt;
+      color: #666;
+      padding-top: 1cm;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}{% endif %} {{ data.lastName }}</h1>
-    <p>
-      {% if data.email %}{{ data.email }}{% endif %}
-      {% if data.phone %} · {{ data.phone }}{% endif %}
-      {% if data.city or data.state %}
-        {% if data.email or data.phone %} · {% endif %}
-        {% if data.city %}{{ data.city }}{% endif %}{% if data.city and data.state %}, {% endif %}{% if data.state %}{{ data.state }}{% endif %}
-      {% endif %}
-      {% if data.linkedin %} · {{ data.linkedin }}{% endif %}
-    </p>
-  </header>
-
-  <main>
-    {% if data.summary %}
-    <section class="summary">
-      <h2>Summary</h2>
-      <p>{{ data.summary }}</p>
-    </section>
-    {% endif %}
-
-    {% if data.skills %}
-    <section class="skills">
-      <h2>Skills</h2>
-      <ul>
-        {% for skill in data.skills %}
-        <li>{{ skill }}</li>
-        {% endfor %}
-      </ul>
-    </section>
-    {% endif %}
-
-    {% if data.experience %}
-    <section>
-      <h2>Experience</h2>
-      {% for job in data.experience %}
-      {% if job.jobtitle or job.company %}
-      <div class="mb-2">
-        <div class="flexed">
-          <span class="title-group">
-            <span class="title">{{ job.jobtitle }}</span>
-            {% if job.company %}
-            <span class="sub-title">{{ job.company }}</span>
+  <table class="layout {{ data.resume_density }}">
+    <tr>
+      <td class>
+        <header>
+          <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}{% endif %} {{ data.lastName }}</h1>
+          <p>
+            {% if data.email %}{{ data.email }}{% endif %}
+            {% if data.phone %} · {{ data.phone }}{% endif %}
+            {% if data.city or data.state %}
+              {% if data.email or data.phone %} · {% endif %}
+              {% if data.city %}{{ data.city }}{% endif %}{% if data.city and data.state %}, {% endif %}{% if data.state %}{{ data.state }}{% endif %}
             {% endif %}
-          </span>
-          <span class="dates">{{ job.start }} – {{ "Present" if job.present else job.end }}</span>
-        </div>
-        {% if job.bullets %}
-        <ul>
-          {% for bullet in job.bullets %}
-          <li>{{ bullet }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </div>
-      {% endif %}
-      {% endfor %}
-    </section>
+            {% if data.linkedin %} · {{ data.linkedin }}{% endif %}
+          </p>
+        </header>
+      </td>
+    </tr>
+
+    {% if data.summary %}
+    <tr>
+      <td class="section">
+        <section class="summary">
+          <h2>Summary</h2>
+          <p>{{ data.summary }}</p>
+        </section>
+      </td>
+    </tr>
     {% endif %}
 
     {% if data.education %}
-    <section>
-      <h2>Education</h2>
-      {% for edu in data.education %}
-      {% if edu.school or edu.degree or edu.field %}
-      <div class="mb-2">
-        <div class="flexed">
-          <span class="title-group">
-            <span class="title">{{ edu.school }}</span>
-            {% if edu.degree or edu.field %}
-            <span class="sub-title">
-    <em>
-      {% if edu.level == "College" %}
-        {{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}
-      {% elif edu.level == "Senior High" %}
-        {{ edu.field }}
-      {% else %}
-        {{ edu.degree or edu.field }}
-      {% endif %}
-    </em>
-            </span>
+    <tr>
+      <td class="section">
+        <section>
+          <h2>Education</h2>
+          {% for edu in data.education %}
+          <div class="mb-2">
+            <div class="flexed">
+              <span class="title-group">
+                <span class="title">{{ edu.school }}</span>
+                {% if edu.degree or edu.field %}
+                <span class="sub-title">
+                  <em>
+                    {% if edu.level == "College" %}
+                      {{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}
+                    {% elif edu.level == "Senior High" %}
+                      {{ edu.field }}
+                    {% else %}
+                      {{ edu.degree or edu.field }}
+                    {% endif %}
+                  </em>
+                </span>
+                {% endif %}
+              </span>
+              <span class="dates">{{ edu.start }} – {{ "Present" if edu.present else edu.end }}</span>
+            </div>
+            {% if edu.bullets %}
+            <ul class="item-bullets">
+              {% for bullet in edu.bullets %}
+              <li>{{ bullet }}</li>
+              {% endfor %}
+            </ul>
             {% endif %}
-          </span>
-          <span class="dates">{{ edu.start }} – {{ "Present" if edu.present else edu.end }}</span>
-        </div>
-        {% if edu.bullets %}
-        <ul>
-          {% for bullet in edu.bullets %}
-          <li>{{ bullet }}</li>
+          </div>
           {% endfor %}
-        </ul>
-        {% endif %}
-      </div>
-      {% endif %}
-      {% endfor %}
-    </section>
+        </section>
+      </td>
+    </tr>
     {% endif %}
 
-    {% if data.certifications %}
-    <section>
-      <h2>Certifications</h2>
-      <ul>
-        {% for cert in data.certifications %}
-        <li>{{ cert.name }}{% if cert.issuer %} – {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</li>
-        {% endfor %}
-      </ul>
-    </section>
+    {% if data.experience %}
+    <tr>
+      <td class="section">
+        <section>
+          <h2>Experience</h2>
+          {% for job in data.experience %}
+          <div class="mb-2">
+            <div class="flexed">
+              <span class="title-group">
+                <span class="title">{{ job.jobtitle }}</span>
+                {% if job.company %}
+                <span class="sub-title">{{ job.company }}</span>
+                {% endif %}
+              </span>
+              <span class="dates">{{ job.start }} – {{ "Present" if job.present else job.end }}</span>
+            </div>
+            {% if job.bullets %}
+            <ul class="item-bullets">
+              {% for bullet in job.bullets %}
+              <li>{{ bullet }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </section>
+      </td>
+    </tr>
+    {% endif %}
+
+    {% if data.skills %}
+    <tr>
+      <td class="section">
+        <section class="skills">
+          <h2>Skills</h2>
+          <ul>
+            {% for skill in data.skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+      </td>
+    </tr>
     {% endif %}
 
     {% if data.projects %}
-    <section>
-      <h2>Projects</h2>
-      {% for p in data.projects %}
-      <div>
-        <strong>{{ p.name }}</strong>
-        {% if p.description %}
-        <p>{{ p.description }}</p>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </section>
+    <tr>
+      <td class="section">
+        <section>
+          <h2>Projects</h2>
+          {% for p in data.projects %}
+          <div>
+            <strong>{{ p.name }}</strong>
+            {% if p.description %}
+            <p>{{ p.description }}</p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </section>
+      </td>
+    </tr>
     {% endif %}
-  </main>
 
+    {% if data.certifications %}
+    <tr>
+      <td class="section">
+        <section>
+          <h2>Certifications</h2>
+          <ul>
+            {% for cert in data.certifications %}
+            <li>{{ cert.name }}{% if cert.issuer %} – {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</li>
+            {% endfor %}
+          </ul>
+        </section>
+      </td>
+    </tr>
+    {% endif %}
+
+    <tr>
+      <td class="section">
+        <footer>
+          <!-- Optional footer -->
+        </footer>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
