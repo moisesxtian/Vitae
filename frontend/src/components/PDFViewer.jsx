@@ -1,30 +1,28 @@
-const PDFViewer = ({ pdfBlob, onClose }) => {
-  if (!pdfBlob) return null;
+// PDFViewer.jsx
+import { useEffect, useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
+import pdfWorkerURL from 'pdfjs-dist/build/pdf.worker.min?url';
 
-  const blobUrl = URL.createObjectURL(pdfBlob);
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(pdfWorkerURL, import.meta.url).toString();
 
+const PDFViewer = ({ pdfBlob }) => {
+  const [blobURL, setBlobURL] = useState(null);
+
+  useEffect(() => {
+    if (pdfBlob) {
+      const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+      setBlobURL(URL.createObjectURL(blob));
+    }
+  }, [pdfBlob]);
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm bg-black/40">
-      {/* Close Button */}
-      <button
-        onClick={() => {
-          URL.revokeObjectURL(blobUrl);
-          onClose();
-        }}
-        className="absolute top-6 right-6 bg-red-500 text-black  hover:bg-red-700 hover:text-white transition-all px-4 py-2 rounded-full shadow-md z-50"
-      >
-        ✕ Close
-      </button>
-
-      {/* PDF Viewer Container */}
-      <div className="w-11/12 md:w-3/4 h-5/6  rounded-2xl overflow-hidden shadow-2xl ">
-        <iframe
-          src={blobUrl}
-          title="PDF Preview"
-          className="w-full h-full"
-        />
-      </div>
-    </div>
+    <Document file={blobURL} onLoadError={console.error}>
+      <Page 
+        pageNumber={1} 
+        renderTextLayer={false}
+        renderAnnotationLayer={false}
+        customTextRenderer={false}
+      />
+    </Document>
   );
 };
 

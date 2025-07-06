@@ -1,87 +1,43 @@
-import { useEffect, useState } from "react";
 import { useFormContext } from "../context/FormContext";
 
+import PDFViewer from "../components/PDFViewer";
+import useAnalyze from "../hooks/useAnalyze";
+import { useEffect } from "react";
 export default function Analyze() {
-  const { pdfBlob, formData, setFormData } = useFormContext();
-  const [analysis, setAnalysis] = useState("");
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [hasApplied, setHasApplied] = useState(false);
+  const {formdata, pdfBlob} = useFormContext();
 
-  const handleAnalyze = async () => {
-    setIsAnalyzing(true);
-    // Simulate OpenAI call — replace with real API call
-    const response = await fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ resume: formData }),
-    });
-    const result = await response.json();
-    setAnalysis(result.analysis);
-    setIsAnalyzing(false);
-  };
-
-  const handleApply = () => {
-    // In real case, you'd update `formData` if OpenAI returns improved fields
-    setHasApplied(true);
-  };
-
-  const handleFindJobs = () => {
-    // Navigate to your job matching page
-    window.location.href = "/jobs";
-  };
+    const { analyzeResume, overview, loading, error } = useAnalyze();
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Left: PDF */}
-      <div className="w-1/2 border-r border-gray-300">
-        {pdfBlob ? (
-          <iframe
-            src={URL.createObjectURL(pdfBlob)}
-            title="Resume PDF"
-            className="w-full h-full"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <p>No PDF available</p>
-          </div>
-        )}
+    <div className="flex flex-col lg:flex-row gap-10 m-6 lg:m-20">
+      {/* Left Section */}
+      <div className="flex flex-col gap-6 w-full lg:w-1/2">
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button 
+          onClick={() => analyzeResume(formdata)}
+          className="w-full sm:w-40 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+            Analyze 
+          </button>
+          <button className="w-full sm:w-40 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+            Download PDF
+          </button>
+        </div>
+
+        {/* Overview */}
+        <div className="border border-gray-200 rounded-lg p-4 shadow">
+          <h2 className="text-lg font-semibold mb-2">Overview</h2>
+          <p className="text-gray-700">
+           {/* if overview is empty, show a message */
+           overview ? overview : "Click Analyze to see Overview."
+           }
+          </p>
+        </div>
       </div>
 
-      {/* Right: Analyzer */}
-      <div className="w-1/2 p-6 flex flex-col gap-4 overflow-y-auto">
-        <h2 className="text-2xl font-bold text-accent2">AI Resume Analyzer</h2>
-
-        <button
-          onClick={handleAnalyze}
-          disabled={isAnalyzing}
-          className="bg-blue-500 text-white py-2 px-4 rounded-full hover:opacity-90 transition disabled:opacity-50"
-        >
-          {isAnalyzing ? "Analyzing..." : "Auto Analyze"}
-        </button>
-
-        {analysis && (
-          <div className="bg-gray-100 p-4 rounded-lg shadow text-sm whitespace-pre-line">
-            {analysis}
-          </div>
-        )}
-
-        {analysis && !hasApplied && (
-          <button
-            onClick={handleApply}
-            className="bg-green-500 text-white py-2 px-4 rounded-full hover:opacity-90 transition"
-          >
-            Apply Suggestions
-          </button>
-        )}
-
-        {hasApplied && (
-          <button
-            onClick={handleFindJobs}
-            className="bg-accent2 text-white py-2 px-4 rounded-full hover:opacity-90 transition"
-          >
-            See Job Opportunities
-          </button>
-        )}
+      {/* PDF Preview */}
+      <div className="w-full lg:w-fit border border-gray-300 shadow rounded p-2">
+        <PDFViewer pdfBlob={pdfBlob} />
       </div>
     </div>
   );

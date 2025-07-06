@@ -1,7 +1,10 @@
 /* 1. If using Google Fonts for body, import before tailwindcss */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
 @import "tailwindcss";
+@plugin "tailwind-scrollbar" {
+  nocompatible: true;
+  preferredStrategy: "pseudoelements";
+}
 
 /* 2. Load your custom logo font */
 @font-face {
@@ -11,7 +14,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @layer base {
   :root {
     /* Font stacks */
@@ -32,7 +34,6 @@
   }
 }
 
-/* 4. Register theme variables so Tailwind can generate utilities */
 @theme {
   /* Font families */
   --font-logo: var(--font-logo);

@@ -105,7 +105,6 @@ const ManualBuild = () => {
       if (response) {
         console.log("Form submitted successfully!");
         setPdfBlob(response);
-        
         navigate("/analyze");
       } else {
         setErrorMessage("Failed to submit the form. Please try again.");

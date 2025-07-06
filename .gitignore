@@ -13,6 +13,7 @@ env/
 __pycache__/
 
 # Environment & secrets
+venv
 .env
 .env.*
 
