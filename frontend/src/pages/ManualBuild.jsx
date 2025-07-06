@@ -11,38 +11,33 @@ import {
 } from "../components/Steps";
 import PDFViewer from "../components/PDFViewer";
 import useForm from "../hooks/useForm";
-
+import {useFormContext} from "../context/FormContext"
 const ManualBuild = () => {
-  const [formData, setFormData] = useState(() => {
-    const savedData= localStorage.getItem("formData");
-    return savedData ? JSON.parse(savedData) : {
-    firstName: "",
-    middleInitial: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    city: "",
-    state: "",
-    summary: "",
-    linkedin: "",
-    projects: [],
-    certifications: [],
-    education: [],
-    experience: [],
-    skills: [],
-    };
-  }
-  );
+  const { formData, setFormData } = useFormContext();
 
   const navigate = useNavigate();
+  const{pdfBlob,setPdfBlob}=useFormContext();
   const { sendFormData } = useForm(formData);
   const [step, setStep] = useState(1);
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => (prev > 1 ? prev - 1 : prev));
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [pdfBlob, setPdfBlob] = useState(null);
+  const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
+  const handleDataFormat = (data)=>{
+
+     const formattedData = {
+      ...data,
+    firstName: data.firstName.toUpperCase(),
+    middleInitial: data.middleInitial.toUpperCase(),
+    lastName: data.lastName.toUpperCase(),
+    city: capitalizeFirstLetter(data.city),
+    state: capitalizeFirstLetter(data.state),
+    summary: capitalizeFirstLetter(data.summary),
+    };
+    setFormData(formattedData);
+  };
   const isCurrentStepDataEmpty = () => {
     switch (step) {
       case 2: // SkillsForm
@@ -102,16 +97,16 @@ const ManualBuild = () => {
   //handle submit for the final step
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Processing Request...");
     setIsLoading(true);
-    setErrorMessage("");
+    handleDataFormat(formData);
 
     try {
       const response = await sendFormData();
-      setPdfBlob(response);
-      console.log("Response:", formData);
       if (response) {
         console.log("Form submitted successfully!");
+        setPdfBlob(response);
+        
+        navigate("/analyze");
       } else {
         setErrorMessage("Failed to submit the form. Please try again.");
       }
@@ -127,13 +122,13 @@ const ManualBuild = () => {
     localStorage.setItem("formData", JSON.stringify(formData));
     const handleKeyDown = (e) => {
       // Only proceed with Enter key if not on the last step or a modal is open
-      if (e.key === "Enter" && step < 7 && !pdfBlob && !isLoading) {
+      if (e.key === "Enter" && step < 7  && !isLoading) {
         // Prevent default form submission if it's an input field
         if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
           e.preventDefault();
         }
         handleNextStepClick();
-      } else if (e.key === "Enter" && step === 7 && !pdfBlob && !isLoading) {
+      } else if (e.key === "Enter" && step === 7 && !isLoading) {
         // For the last step, trigger submit on Enter
         e.preventDefault(); // Prevent default form submission
         handleSubmit(e); // Pass the event object
@@ -143,15 +138,13 @@ const ManualBuild = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [step, pdfBlob, isLoading, formData]);
+  }, [step , isLoading, formData]);
 
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
           <InformationForm
-            formData={formData}
-            setFormData={setFormData}
             nextStep={handleNextStepClick} 
           />
         );
@@ -248,10 +241,6 @@ const ManualBuild = () => {
             </button>
           )}
 
-          {/* PDF Modal Viewer */}
-          {pdfBlob && (
-            <PDFViewer pdfBlob={pdfBlob} onClose={() => setPdfBlob(null)} />
-          )}
         </div>
       </div>
     </div>

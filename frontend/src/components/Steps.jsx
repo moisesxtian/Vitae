@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import Input from "../components/Input";
 
 import { Plus, X, Briefcase, GraduationCap, BadgeCheck, ChevronDown, ChevronUp } from "lucide-react";
-
+import { useFormContext } from "../context/FormContext";
 
 // Information Form (no changes needed for this specific request)
-export const InformationForm = ({ formData, setFormData }) => {
+export const InformationForm = () => {
+  const { formData, setFormData } = useFormContext();
   const [errorMessage, setErrorMessage] = useState("");
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -19,7 +20,7 @@ export const InformationForm = ({ formData, setFormData }) => {
               value={formData.firstName}
               onChange={(e) => {
                 const value = e.target.value;
-                if (/^[a-zA-Z]*$/.test(value) || value === "") {
+                if (/^[a-zA-Z ]*$/.test(value) || value === "") {
                   setFormData({ ...formData, firstName: value });
                 } else {
                   setErrorMessage("First name can only contain letters.");
@@ -108,7 +109,8 @@ export const InformationForm = ({ formData, setFormData }) => {
 };
 
 // Skills Form (no changes needed for this specific request)
-export const SkillsForm = ({ formData, setFormData }) => {
+export const SkillsForm = () => {
+  const {formData, setFormData} = useFormContext();
   const [errorMessage, setErrorMessage] = useState(""); // Added errorMessage state
   const handleSkillChange = (index, value) => {
     const updatedSkills = [...formData.skills];
@@ -175,7 +177,8 @@ export const SkillsForm = ({ formData, setFormData }) => {
 
 
 // Education Form (with drag and drop)
-export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => {
+export const EducationForm = () => {
+  const {formData, setFormData} = useFormContext();
   const [expandedIdx, setExpandedIdx] = useState(null);
   const [draggedItemIndex, setDraggedItemIndex] = useState(null);
 
@@ -447,7 +450,8 @@ export const EducationForm = ({ formData, setFormData, prevStep, nextStep }) => 
 
 
 // Certifications Form (no changes needed for this specific request)
-export const CertificationsForm = ({ formData, setFormData }) => {
+export const CertificationsForm = () => {
+  const {formData, setFormData} = useFormContext();
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [expandedIdx, setExpandedIdx] = useState(null);
 
@@ -607,7 +611,8 @@ export const CertificationsForm = ({ formData, setFormData }) => {
 };
 
 // Work Experience Form (with drag and drop)
-export const ExperienceForm = ({ formData, setFormData }) => {
+export const ExperienceForm = () => {
+  const {formData, setFormData} = useFormContext();
   const [draggedItemIndex, setDraggedItemIndex] = useState(null);
   const [expandedIdx, setExpandedIdx] = useState(null);
 
@@ -832,7 +837,8 @@ export const ExperienceForm = ({ formData, setFormData }) => {
 
 
 // Projects Form (with drag and drop)
-export const ProjectsForm = ({ formData, setFormData }) => {
+export const ProjectsForm = () => {
+  const {formData, setFormData} = useFormContext();
   const [expandedIdx, setExpandedIdx] = useState(null);
   const [draggedItemIndex, setDraggedItemIndex] = useState(null);
 
@@ -977,7 +983,8 @@ export const ProjectsForm = ({ formData, setFormData }) => {
 };
 
 // Summary Form (no changes needed for this specific request)
-export const SummaryForm = ({ formData, setFormData, prevStep, nextStep }) => {
+export const SummaryForm = () => {
+  const {formData, setFormData} = useFormContext();
   const handleChange = (e) => {
     setFormData({ ...formData, summary: e.target.value });
   };
