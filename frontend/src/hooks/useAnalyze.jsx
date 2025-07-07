@@ -12,20 +12,14 @@ const useAnalyze = () => {
   const [error, setError] = useState(null);
 
   const analyzeResume = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await axios.post(`${API_BASE_URL}/analyze`, formData);
+    try{
+      const response=await axios.post(`${API_BASE_URL}/analyze`, formData);
       const parsed=JSON.parse(response.data);
-      const { overview,...finalFormData } = parsed;
-      console.log("finalFormData",finalFormData);
-      setOverview(overview);
-      return response.data;
-    } catch (error) {
-      console.error("Error analyzing resume:", error); // Log the full error for debugging
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      console.log(parsed);
+      return response
+    }
+    catch(err){
+      console.log(err);
     }
   };
 
