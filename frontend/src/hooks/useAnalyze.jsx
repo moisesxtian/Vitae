@@ -6,9 +6,8 @@ const API_BASE_URL = import.meta.env.VITE_SERVER_API_URL;
 
 const useAnalyze = () => {
 
-  const { formData } = useFormContext();
+  const { formData, setPdfBlob } = useFormContext();
   const [overview, setOverview] = useState(null);
-  const [finalFormData, setFinalFormData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -16,14 +15,16 @@ const useAnalyze = () => {
   const analyzeResume = async () => {
     try{
       const response=await axios.post(`${API_BASE_URL}/analyze`, formData);
+      console.log(response)
       const parsed=await JSON.parse(response.data);
       console.log(parsed);
       setOverview(parsed.overview);
-      setFinalFormData(parsed.revisedFormData);
+
       //PROCESS GROKK RESPONSE TO PDF BLOB
-      const {sendFormData}=useForm(finalFormData);
+      const {sendFormData}=useForm(parsed.revisedFormData);
       const blob=await sendFormData()
-      console.log(blob)
+      setPdfBlob(blob)
+      console.log("BLOB:",blob)
       return response
     }
     catch(err){
@@ -31,7 +32,7 @@ const useAnalyze = () => {
     }
   };
 
-  return { analyzeResume, overview, loading, error, finalFormData }; // Also return finalFormData if you need it
+  return { analyzeResume, overview, loading, error}; // Also return finalFormData if you need it
 };
 
 export default useAnalyze;

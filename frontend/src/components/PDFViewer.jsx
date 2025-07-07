@@ -7,7 +7,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(pdfWorkerURL, import.meta.url).toS
 const PDFViewer = ({ pdfBlob }) => {
   const [blobURL, setBlobURL] = useState(null);
 
-  useEffect(() => {
+  useEffect(() => { 
     if (pdfBlob) {
       const blob = new Blob([pdfBlob], { type: 'application/pdf' });
       setBlobURL(URL.createObjectURL(blob));
