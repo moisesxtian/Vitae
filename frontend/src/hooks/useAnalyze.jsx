@@ -35,7 +35,7 @@ const useAnalyze = () => {
     }
   };
 
-  return { analyzeResume, overview, loading, error}; // Also return finalFormData if you need it
+  return { analyzeResume, overview, loading,setLoading, error}; // Also return finalFormData if you need it
 };
 
 export default useAnalyze;

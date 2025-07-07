@@ -9,17 +9,22 @@ export default function Analyze() {
   const { formData, pdfBlob } = useFormContext();
   const [revisedUsed, setRevisedUsed] = useState(false);
   const navigate = useNavigate();
-  const handleAnalyze = () => {
-
-    analyzeResume();
+  const handleAnalyze = async() => {
+    setLoading(true);
+    await analyzeResume();
+    setLoading(false);
     setRevisedUsed(true);
   };
+
   useEffect(() => {
+    console.log("loadingState:", loading);
     if (!pdfBlob) {
+      //NAVIGATE to CREATE PAGE if Theres no PDF
       navigate("/create");
     }
   }, [pdfBlob]);
-  const { analyzeResume, overview, loading, error } = useAnalyze();
+
+  const { analyzeResume, overview,loading,setLoading} = useAnalyze();
   const formattedOverview = overview
     ? overview.replace(/\\n/g, "\n")
     : "Click Auto Revise Resume to get automatically improve your resume!";
@@ -51,10 +56,10 @@ export default function Analyze() {
               <RefreshCw className="w-8 h-8 text-blue-500 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">
-                  Analyze Resume
+                  Revise Resume
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Let AI review and suggest improvements.
+                  Let AI improve resume for you.
                 </p>
               </div>
             </div>
@@ -63,7 +68,9 @@ export default function Analyze() {
           <div className="lg:col-span-1 flex flex-col gap-6">
             <div className="p-6 bg-white border border-gray-300 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-4">Overview</h2>
-              <ReactMarkdown>{formattedOverview}</ReactMarkdown>
+              <ReactMarkdown>{
+              loading ? "Generating resume..." : formattedOverview
+              }</ReactMarkdown>
             </div>
 
             {/* PDF Preview for mobile below overview */}
