@@ -43,4 +43,4 @@ class Resume(BaseModel):
     certifications: List[CertificationEntry]
 
     skills: List[str]
-    projects: List[dict]  # Update this if you have a fixed project schema
+    projects: Optional[List[dict]]  # Update this if you have a fixed project schema

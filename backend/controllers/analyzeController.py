@@ -44,36 +44,92 @@ The JSON output must contain two top-level keys:
 ### Output Format (example):
 
 {
-   "revisedFormData":{
-      "firstName":"John",
-      "middleInitial":null,
-      "lastName":"Doe",
-      "city":"New York",
-      "state":"NY",
-      "email":"john.doe@example.com",
-      "phone":"555-123-4567",
-      "linkedin":"https://linkedin.com/in/johndoe",
-      "summary":"Motivated software engineer with 3+ years of experience...",
-      "education":[
-         "..."
-      ],
-      "experience":[
-         "..."
-      ],
-      "certifications":[
-         "..."
-      ],
-      "skills":[
-         "..."
-      ],
-      "projects":[
-         "..."
-      ]
-   },
-   "feedback":{
-      "text":"Hello John! I’ve enhanced your bullet points to be more results-focused and reordered your experience and education. I also corrected minor typos and added missing tech stacks to your projects. Consider adding a stronger summary and more quantifiable achievements in your older roles.",
-      "rating":4
-   }
+    "revisedFormData":{
+        "firstName":"John",
+        "middleInitial":null,
+        "lastName":"Doe",
+        "city":"New York",
+        "state":"NY",
+        "email":"john.doe@example.com",
+        "phone":"555-123-4567",
+        "linkedin":"https://linkedin.com/in/johndoe",
+        "summary":"Motivated software engineer with 3+ years of experience in full-stack development, seeking to leverage expertise in scalable web applications.",
+        "education":[
+            {
+                "school":"University of Tech",
+                "degree":"Master of Science",
+                "field":"Computer Science",
+                "start":"2018-09",
+                "level":"Graduate",
+                "end":"2020-05",
+                "present":false,
+                "bullets":[
+                    "Completed thesis on advanced machine learning algorithms, achieving a distinction grade.",
+                    "Developed a real-time data visualization tool for research projects using D3.js."
+                ]
+            }
+        ],
+        "experience":[
+            {
+                "company":"Innovate Solutions Inc.",
+                "jobtitle":"Software Engineer",
+                "start":"2022-01",
+                "end":null,
+                "present":true,
+                "bullets":[
+                    "Designed and implemented RESTful APIs for new product features, supporting over 10,000 daily users.",
+                    "Optimized database queries, reducing average response time by 25% for critical operations.",
+                    "Collaborated with cross-functional teams to deliver robust software solutions on schedule."
+                ]
+            },
+            {
+                "company":"Startup X",
+                "jobtitle":"Junior Developer",
+                "start":"2020-06",
+                "end":"2021-12",
+                "present":false,
+                "bullets":[
+                    "Contributed to the development of a user-facing dashboard, enhancing user experience.",
+                    "Performed unit and integration testing to ensure code quality and system reliability."
+                ]
+            }
+        ],
+        "certifications":[
+            {
+                "name":"Certified Kubernetes Administrator",
+                "issuer":"Cloud Native Computing Foundation",
+                "date":"2023-08",
+                "credentialId":"CKA12345",
+                "credentialUrl":"https://examly.io/verify/CKA12345"
+            }
+        ],
+        "skills":[
+            "Python",
+            "JavaScript",
+            "React",
+            "Node.js",
+            "SQL",
+            "AWS",
+            "Docker",
+            "Kubernetes"
+        ],
+        "projects":[
+            {
+                "title":"E-commerce Platform",
+                "description":"Developed a full-stack e-commerce platform with user authentication, product catalog, and payment processing.",
+                "techStacks":["Django", "React", "PostgreSQL", "Stripe API"]
+            },
+            {
+                "title":"Personal Blog",
+                "description":"Created a personal blog using a modern static site generator and deployed on a CDN.",
+                "techStacks":["Gatsby", "GraphQL", "Netlify"]
+            }
+        ]
+    },
+    "feedback":{
+        "text":"Hello John! I've significantly enhanced your bullet points to be more results-focused and impactful, adding quantifiable achievements. I also ensured your experience and education are ordered from latest to oldest. For your projects, I've added specific tech stacks which greatly improves their clarity. Consider expanding your summary to highlight key skills and career goals more explicitly.",
+        "rating":4
+    }
 }
 
 ---
@@ -85,6 +141,7 @@ The JSON output must contain two top-level keys:
 - Use **lowercase booleans** (`true` / `false`).
 - Do **not** escape line breaks (`\\n`) or use smart quotes.
 - Do **not** include backticks, markdown blocks, or any text outside the JSON object.
+- STRICTLY FOLLOW THE OUTPUT FORMAT SPECIFIED ABOVE.
 """
 def analyzeResume(data):
     load_dotenv()
