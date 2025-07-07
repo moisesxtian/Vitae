@@ -5,7 +5,9 @@
   nocompatible: true;
   preferredStrategy: "pseudoelements";
 }
-
+.markdown > * {
+  all: revert;
+}
 /* 2. Load your custom logo font */
 @font-face {
   font-family: 'BucklaneScript';

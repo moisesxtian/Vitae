@@ -36,9 +36,9 @@ The JSON output must contain two top-level keys:
 
 2. `feedback`: an object containing your friendly but detailed advice and a numeric rating.
 
-   - `feedback.text`: A friendly and constructive explanation of what you improved and why. This should still be JSON-safe and not contain special characters, escape sequences, or smart quotes.
+   - `feedback.text`: A friendly and constructive explanation of what you improved and why. This should still be JSON-safe and not contain special characters, escape sequences, or smart quotes. Make the things that you change in a numbered list and add extra spaces to make your.
    - `feedback.rating`: Integer from 1 to 5 indicating your assessment of the resume quality **after** your edits.
-
+   -  Generate a structured text summary using `\\n` (double backslash-n) to indicate line breaks instead of actual newlines. Do not insert real line breaks — output the entire response as a single-line string.
 ---
 
 ### Output Format (example):
@@ -127,7 +127,7 @@ The JSON output must contain two top-level keys:
         ]
     },
     "feedback":{
-        "text":"Hello John! I've significantly enhanced your bullet points to be more results-focused and impactful, adding quantifiable achievements. I also ensured your experience and education are ordered from latest to oldest. For your projects, I've added specific tech stacks which greatly improves their clarity. Consider expanding your summary to highlight key skills and career goals more explicitly.",
+        "text":"Hello Nicky, Here are some revisions I made, 1. Corrected typo for State (Bingangonan to Binangonan) 2. Rephrased Bullet points to be more professional",
         "rating":4
     }
 }
@@ -141,6 +141,7 @@ The JSON output must contain two top-level keys:
 - Use **lowercase booleans** (`true` / `false`).
 - Do **not** escape line breaks (`\\n`) or use smart quotes.
 - Do **not** include backticks, markdown blocks, or any text outside the JSON object.
+- If a section is Empty, Do no include it in the JSON object.
 - STRICTLY FOLLOW THE OUTPUT FORMAT SPECIFIED ABOVE.
 """
 def analyzeResume(data):
@@ -162,7 +163,7 @@ def analyzeResume(data):
             "content":f"Analyze This Data: {data}"
         }
         ],
-        temperature=1,
+        temperature=.5,
         max_completion_tokens=1024,
         top_p=1,
         response_format={"type": "json_object"},

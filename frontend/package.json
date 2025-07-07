@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-hook/resize-observer": "^2.0.2",
     "@react-pdf/renderer": "^4.3.0",
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.10.0",
@@ -17,6 +18,7 @@
     "pdfjs-dist": "^5.3.31",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "react-pdf": "^10.0.1",
     "react-router-dom": "^7.6.2",
     "tailwind-scrollbar": "^4.0.2",
