@@ -14,17 +14,19 @@ const useAnalyze = () => {
   //SEND FORM DATA TO GROKK AI
   const analyzeResume = async () => {
     try{
+      setLoading(true);
       const response=await axios.post(`${API_BASE_URL}/analyze`, formData);
       console.log(response)
       const parsed=await JSON.parse(response.data);
       console.log(parsed);
-      setOverview(parsed.overview);
+      setOverview(parsed.feedback.text);
 
       //PROCESS GROKK RESPONSE TO PDF BLOB
       const {sendFormData}=useForm(parsed.revisedFormData);
       const blob=await sendFormData()
       setPdfBlob(blob)
       console.log("BLOB:",blob)
+      setLoading(false);
       return response
     }
     catch(err){
