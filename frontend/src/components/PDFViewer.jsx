@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import pdfWorkerURL from 'pdfjs-dist/build/pdf.worker.min?url';
-
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(pdfWorkerURL, import.meta.url).toString();
 
 const PDFViewer = ({ pdfBlob }) => {
