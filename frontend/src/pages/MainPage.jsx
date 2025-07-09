@@ -29,10 +29,10 @@ export default function MainPage() {
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center px-8 h-full">
         {/* Left Content */}
         <div className="space-y-6 py-12 md:py-0">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight animate-fade-up">
             Build your resume Instantly
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-600 animate-fade-up">
             Answer a few questions and get a polished, professional resume generated in minutes.
           </p>
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg transition duration-300 ease-in-out" onClick={() => navigate("/create")}>

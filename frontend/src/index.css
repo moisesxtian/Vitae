@@ -34,6 +34,9 @@
   .animate-shake {
     animation: shake 0.5s ease-in-out;
   }
+  .animate-fade-up{
+    animation: fadeInUp 0.5s ease-in-out;
+  }
 }
 
 @theme {
@@ -59,6 +62,17 @@
     75% { transform: translateX(-5px); }
     100% { transform: translateX(0); }
   }
+  @keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 }
 
 /* 5. Tailwind utilities layer to generate classes */
