@@ -1,23 +1,39 @@
 import { useFormContext } from "../context/FormContext";
-import { Download, RefreshCw } from "lucide-react";
+import { Download, RefreshCw,BriefcaseBusiness } from "lucide-react";
 import PDFViewer from "../components/PDFViewer";
 import useAnalyze from "../hooks/useAnalyze";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
+import useJobs from "../hooks/useJobs";
+import { useAiContext } from "../context/AiContext";
 export default function Analyze() {
+  const{job_listing,setJobListing,setJobRole}=useAiContext()
+  const {getJobListing}=useJobs()
   const { formData, pdfBlob } = useFormContext();
-  const [revisedUsed, setRevisedUsed] = useState(false);
+  const [revisedUsed, setRevisedUsed] = useState(false)
+  const [parsed,setParsed]=useState(null)
   const navigate = useNavigate();
+
+
   const handleAnalyze = async() => {
+    console.log("Revising Resume....")
     setLoading(true);
-    await analyzeResume();
-    setLoading(false);
+
+    const parsed=await analyzeResume();
+    setParsed(parsed)
     setRevisedUsed(true);
+    setLoading(false);
+
+    const job_role=parsed.recommended_job_category
+    const job_location=`${formData.city}, ${formData.state}`
+
+    const get_job_listing_response=await getJobListing(job_role,job_location)
+    setJobListing(get_job_listing_response.data)
+    setJobRole(job_role)
   };
 
   useEffect(() => {
-    console.log("loadingState:", loading);
     if (!pdfBlob) {
       //NAVIGATE to CREATE PAGE if Theres no PDF
       navigate("/create");
@@ -92,6 +108,25 @@ export default function Analyze() {
               </p>
             </div>
           </div>
+
+          {/* Look for Jobs */}
+          {
+          revisedUsed &&
+          <div
+            onClick={() => navigate("/jobs")}
+            className="cursor-pointer flex items-start gap-3 border border-gray-300 rounded-xl p-6 shadow hover:shadow-md transition-transform transform hover:scale-[1.02] bg-white"
+          >
+            <BriefcaseBusiness className="w-8 h-8 text-blue-500 flex-shrink-0" />
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Look for Jobs
+              </h3>
+              <p className="text-sm text-gray-600">
+                Look for jobs related to your resume.
+              </p>
+            </div>
+          </div>
+          }
         </div>
 
         {/* Right: PDF Preview on desktop only */}

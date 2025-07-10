@@ -15,6 +15,6 @@ async def get_job_recommendations(job_role:str, job_location:str):
         "num_pages": "2"
     }
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30) as client:
         response=await client.get(url, headers=headers, params=params)
         return response.json()
