@@ -66,7 +66,6 @@ const ManualBuild = () => {
       formData.email.trim() !== "" &&
       formData.phone.trim() !== "";
     const isLettersOnly =
-      containsOnlyLetters(formData.firstName) &&
       containsOnlyLetters(formData.middleInitial) &&
       containsOnlyLetters(formData.lastName);
 
