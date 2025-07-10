@@ -38,9 +38,9 @@ class Resume(BaseModel):
     linkedin: Optional[str] = None
     summary: Optional[str] = ""
 
-    education: List[EducationEntry]
-    experience: List[ExperienceEntry]
-    certifications: List[CertificationEntry]
+    education: Optional[List[EducationEntry]]=[]
+    experience: Optional[List[ExperienceEntry]]=[]
+    certifications: Optional[List[CertificationEntry]]=[]
 
-    skills: List[str]
-    projects: Optional[List[dict]]  # Update this if you have a fixed project schema
+    skills: List[str]=[]
+    projects: Optional[List[dict]]=[]

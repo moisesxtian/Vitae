@@ -17,12 +17,12 @@ export default function Analyze() {
 
 
   const handleAnalyze = async() => {
+    setRevisedUsed(true);
     console.log("Revising Resume....")
     setLoading(true);
 
     const parsed=await analyzeResume();
     setParsed(parsed)
-    setRevisedUsed(true);
     setLoading(false);
 
     const job_role=parsed.recommended_job_category

@@ -1,7 +1,5 @@
-from groq import Groq
-from dotenv import load_dotenv
-import os
-import json
+from google import genai
+from google.genai import types
 prompt = """
 You are an expert resume revision assistant. Your goal is to help users enhance their resumes by providing specific, actionable feedback and a revised version of their resume data. You also give Recommended Job Roles based on the informations they provided
 
@@ -9,7 +7,7 @@ Your tone should always be **friendly, encouraging, and helpful** — but only i
 
 You will receive resume data in a Pydantic-model-like structure. Your tasks include, but are not limited to:
 
-1. **Proofreading:** Identify and correct any typos, misspellings, or grammatical errors.
+1. **Proofreading:** Identify and correct any typos, misspellings, or grammatical errors. DO NOT CHANGE THE STRUCTURE OF THE FIRST NAME, MIDDLE INITIAL, LAST NAME
 
 2. **Order & Structure:**
    - Ensure the 'experience' array is ordered from **latest to oldest**.
@@ -28,7 +26,7 @@ You will receive resume data in a Pydantic-model-like structure. Your tasks incl
 
 ---
 
-You must return your response in **strict JSON format only**. Do NOT include greetings, markdown formatting (like ```json), or any text outside the JSON.
+You must return your response in **strict JSON format only**. Do NOT include greetings, markdown formatting (like ```json),Gemini Response:, or any text outside the JSON.
 
 The JSON output must contain two top-level keys:
 
@@ -149,34 +147,17 @@ The JSON output must contain two top-level keys:
 - If a section is Empty, Do no include it in the JSON object.
 - STRICTLY FOLLOW THE OUTPUT FORMAT SPECIFIED ABOVE.
 """
+
 def analyzeResume(data):
-    load_dotenv()
-    api=os.environ.get("GROQ_API_KEY")
-
-    try:
-        #call LLM
-        client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-        completion=client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[
-        {
-            "role": "system",
-            "content": prompt
+    client = genai.Client(api_key="AIzaSyA8MVNrnvq8J11Im_Glyte2WrSBr4EqcJ0")
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=f"Follow Sytem Instruction and return a valid JSON object. {data}",
+        config={
+            "response_mime_type": "application/json",
+            "system_instruction": prompt,
+            "temperature":0,
+            "thinking_config":types.ThinkingConfig(thinking_budget=0)
         },
-        {
-            "role": "user",
-            "content":f"Analyze This Data: {data}"
-        }
-        ],
-        temperature=.5,
-        max_completion_tokens=1024,
-        top_p=1,
-        response_format={"type": "json_object"},
-        stop=None,
-        )
-        #Return the JSON FORMAT RESPONSE FROM LLM
-        llama_response_content=completion.choices[0].message.content
-        return llama_response_content
-
-    except Exception as e:
-        return {"error": str(e)}
+    )
+    return response.text

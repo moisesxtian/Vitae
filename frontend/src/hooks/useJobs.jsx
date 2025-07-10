@@ -9,7 +9,6 @@ const useJobs = () => {
     const getJobListing = async (job_role, job_location) => {
     const formatted_job_role = job_role.map(role => role.replaceAll(' ', '')).join(', ');
         try{
-        print("SENDING THIS DATA:",job_role[0])
         //set the globalAIcontext loading true
         setJobLoading(true);
 

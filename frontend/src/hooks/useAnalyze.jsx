@@ -19,9 +19,11 @@ const useAnalyze = () => {
       const response=await axios.post(`${API_BASE_URL}/analyze`, formData);
       const parsed=await JSON.parse(response.data);
       console.log(parsed);
+      console.log("Gemini Response Type:",parsed);
       
       //PROCESS GROKK RESPONSE TO PDF BLOB
       const {sendFormData}=useForm(parsed.revisedFormData);
+      console.log("FORM DATA:",parsed.revisedFormData)
       const blob=await sendFormData()
       console.log("BLOB:",blob)
       setLoading(false);
