@@ -32,9 +32,9 @@ The JSON output must contain two top-level keys:
 
 1. `revisedFormData`: the full, revised version of the resume data. This should reflect all your edits — spelling fixes, ordering, bullet enhancements, added technologies, etc.
 
-2. `feedback`: an object containing your friendly but detailed advice and a numeric rating.
+2. `feedback`: an object containing your friendly advice and a numeric rating.
 
-   - `feedback.text`: A friendly and constructive explanation of what you improved and why. This should still be JSON-safe and not contain special characters, escape sequences, or smart quotes. Make the things that you change in a numbered list and add extra spaces to make your.
+   - `feedback.text`: A friendly short explanation of what you improved. This should still be JSON-safe and not contain special characters, escape sequences, or smart quotes. Make the things that you change in a numbered list and add extra spaces to make your. Make your response as SHORT as POSSIBLE, Direct to the point.
    - `feedback.rating`: Integer from 1 to 5 indicating your assessment of the resume quality **after** your edits.
    -  Generate a structured text summary using `\\n` (double backslash-n) to indicate line breaks instead of actual newlines. Do not insert real line breaks — output the entire response as a single-line string.
 3. `recommended_job_category`: A list of recommended job categories based on the resume data.
@@ -114,7 +114,7 @@ The JSON output must contain two top-level keys:
         ],
         "projects":[
             {
-                "title":"E-commerce Platform",
+                "name":"E-commerce Platform",
                 "description":"Developed a full-stack e-commerce platform with user authentication, product catalog, and payment processing.",
                 "techStacks":["Django", "React", "PostgreSQL", "Stripe API"]
             },
