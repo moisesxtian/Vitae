@@ -18,11 +18,11 @@ const Jobs = () => {
       </h1>
 
 <div className="mb-6 text-lg text-gray-700">
-  <span className="font-medium block sm:inline">Recommended Fields: </span>
+  <span className="font-medium block sm:inline">Predicted Job Role: </span>
   <span className="text-accent2 font-semibold text-base sm:text-lg">
-    {job_roles?.length
-      ? job_roles.join(", ")
-      : "—"}
+    {
+      job_roles ? job_roles[0] : "None, try adding more details on your resume!"
+    }
   </span>
 </div>
 
