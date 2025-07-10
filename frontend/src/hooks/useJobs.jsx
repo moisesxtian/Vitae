@@ -9,13 +9,13 @@ const useJobs = () => {
     const getJobListing = async (job_role, job_location) => {
     const formatted_job_role = job_role.map(role => role.replaceAll(' ', '')).join(', ');
         try{
-        print("SENDING THIS DATA:",formatted_job_role)
+        print("SENDING THIS DATA:",job_role[0])
         //set the globalAIcontext loading true
         setJobLoading(true);
 
         const response= await axios.get(`${API_BASE_URL}/job-recommendations`,{
             params: {
-                job_role:formatted_job_role,
+                job_role:job_role[0],
                 job_location
             }
         });
