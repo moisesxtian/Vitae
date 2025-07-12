@@ -279,7 +279,7 @@ export const EducationForm = () => {
         Educational Background
       </h2>
 
-      <div className="grid grid-cols-4 gap-2 w-full m-auto">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 w-full m-auto">
         {["College", "Senior High", "High School", "Elementary"].map((level) => (
           <button
             key={level}

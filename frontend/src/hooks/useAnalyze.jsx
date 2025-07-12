@@ -7,7 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_SERVER_API_URL;
 
 const useAnalyze = () => {
   const {setJobRole}=useAiContext()
-  const { formData, setPdfBlob } = useFormContext();
+  const { formData,setFormData, setPdfBlob } = useFormContext();
   const [overview, setOverview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,6 +23,9 @@ const useAnalyze = () => {
       
       //PROCESS GROKK RESPONSE TO PDF BLOB
       const {sendFormData}=useForm(parsed.revisedFormData);
+      //Update FormData
+      localStorage.setItem("formData", JSON.stringify(parsed.revisedFormData));
+      setFormData(parsed.revisedFormData);
       console.log("FORM DATA:",parsed.revisedFormData)
       const blob=await sendFormData()
       console.log("BLOB:",blob)

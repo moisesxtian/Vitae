@@ -9,6 +9,16 @@ const PDFViewer = ({ pdfBlob }) => {
   const [blobURL, setBlobURL] = useState(null);
   const [scale, setScale] = useState(1);
 
+ useEffect(() => {
+  const handleResize = () => {
+    const isMobile = window.innerWidth <= 640;
+    setScale(isMobile ? 0.6 : 1);
+  };
+
+  handleResize(); // Set once on mount
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
   useEffect(() => { 
     if (pdfBlob) {
       const blob = new Blob([pdfBlob], { type: 'application/pdf' });

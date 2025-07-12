@@ -31,7 +31,7 @@ You must return your response in **strict JSON format only**. Do NOT include gre
 The JSON output must contain two top-level keys:
 
 1. `revisedFormData`: the full, revised version of the resume data. This should reflect all your edits — spelling fixes, ordering, bullet enhancements, added technologies, etc.
-
+    Do not return a null value, if there is no value, use an empty string "".
 2. `feedback`: an object containing your friendly advice and a numeric rating.
 
    - `feedback.text`: A friendly short explanation of what you improved. This should still be JSON-safe and not contain special characters, escape sequences, or smart quotes. Make the things that you change in a numbered list and add extra spaces to make your. Make your response as SHORT as POSSIBLE, Direct to the point.
@@ -45,13 +45,12 @@ The JSON output must contain two top-level keys:
 {
     "revisedFormData":{
         "firstName":"John",
-        "middleInitial":null,
+        "middleInitial":"",
         "lastName":"Doe",
         "city":"New York",
         "state":"NY",
         "email":"john.doe@example.com",
         "phone":"555-123-4567",
-        "linkedin":"https://linkedin.com/in/johndoe",
         "summary":"Motivated software engineer with 3+ years of experience in full-stack development, seeking to leverage expertise in scalable web applications.",
         "education":[
             {
@@ -73,7 +72,7 @@ The JSON output must contain two top-level keys:
                 "company":"Innovate Solutions Inc.",
                 "jobtitle":"Software Engineer",
                 "start":"2022-01",
-                "end":null,
+                "end":"",
                 "present":true,
                 "bullets":[
                     "Designed and implemented RESTful APIs for new product features, supporting over 10,000 daily users.",

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import useJobs from "../hooks/useJobs";
 import { useAiContext } from "../context/AiContext";
 export default function Analyze() {
-  const{job_listing,setJobListing,setJobRole}=useAiContext()
+  const{job_listing,setJobListing,setJobRole,job_roles}=useAiContext()
   const {getJobListing}=useJobs()
   const { formData, pdfBlob } = useFormContext();
   const [revisedUsed, setRevisedUsed] = useState(false)
@@ -34,6 +34,7 @@ export default function Analyze() {
   };
 
   useEffect(() => {
+    console.log("Job_roles", job_roles);
     if (!pdfBlob) {
       //NAVIGATE to CREATE PAGE if Theres no PDF
       navigate("/create");
@@ -64,7 +65,7 @@ export default function Analyze() {
 
         {/* Left: Buttons/cards */}
         <div className="flex flex-col h-fit gap-4">
-          {!revisedUsed && (
+          {(!revisedUsed || !job_roles.length>1) && (
             <div
               onClick={handleAnalyze}
               className="cursor-pointer flex items-start gap-3 border border-gray-300 rounded-xl p-6 shadow hover:shadow-md transition-transform transform hover:scale-[1.02] bg-white"
@@ -85,7 +86,8 @@ export default function Analyze() {
             <div className="p-6 bg-white border border-gray-300 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-4">Overview</h2>
               <ReactMarkdown>{
-              loading ? "Generating resume..." : formattedOverview
+                job_roles.length>1 ? "You have revised your resume already."
+                : loading ? "Generating resume..." : formattedOverview
               }</ReactMarkdown>
             </div>
 
@@ -111,7 +113,7 @@ export default function Analyze() {
 
           {/* Look for Jobs */}
           {
-          revisedUsed &&
+          (revisedUsed || job_roles>1) &&
           <div
             onClick={() => navigate("/jobs")}
             className="cursor-pointer flex items-start gap-3 border border-gray-300 rounded-xl p-6 shadow hover:shadow-md transition-transform transform hover:scale-[1.02] bg-white"

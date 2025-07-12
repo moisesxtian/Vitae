@@ -200,8 +200,8 @@ const ManualBuild = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] w-full ">
-      <div className="w-full h max-w-xl bg-white rounded-xl p-6 m-6 border border-dark/10 overflow-y-auto">
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)] w-full">
+      <div className="w-full h max-w-xl bg-white rounded-xl p-6  md:p-8 border border-dark/10 overflow-y-auto">
         {renderStep()}
         {errorMessage && (
           <p className="text-red-500 flex justify-center text-sm mt-2 animate-shake">
