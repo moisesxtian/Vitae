@@ -9,8 +9,9 @@ export default function Create() {
     {
       title: 'Smart AI Build',
       description: 'Answer a few questions, and let our AI craft your resume.',
-      icon: <Sparkles className="w-8 h-8 text-primary" />,
+      icon: <Sparkles className="w-8 h-8 text-gray-400" />,
       route: '/create/ai',
+      disabled: true, // Mark as in-progress
     },
     {
       title: 'Manual Build',
@@ -23,6 +24,7 @@ export default function Create() {
       description: 'Fetch and parse your LinkedIn profile into a resume.',
       icon: <Linkedin className="w-8 h-8 text-primary" />,
       route: '/create/linkedin',
+      disabled: true,
     },
   ];
 
@@ -40,12 +42,21 @@ export default function Create() {
         {buildOptions.map((option, idx) => (
           <div
             key={idx}
-            onClick={() => navigate(option.route)}
-            className="cursor-pointer border border-dark/10 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all duration-200 bg-bgcolor"
+            onClick={() => {
+              if (!option.disabled) navigate(option.route);
+            }}
+            className={`cursor-pointer border rounded-2xl p-5 sm:p-6 shadow-sm transition-all duration-200 
+              ${option.disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200' : 'hover:shadow-lg hover:scale-[1.02] bg-bgcolor border-dark/10'}
+            `}
           >
             <div className="mb-3">{option.icon}</div>
-            <h2 className="text-lg sm:text-xl font-semibold text-accent2">{option.title}</h2>
-            <p className="text-sm text-dark/60 mt-2">{option.description}</p>
+            <h2 className={`text-lg sm:text-xl font-semibold ${option.disabled ? 'text-gray-400' : 'text-accent2'}`}>
+              {option.title}
+            </h2>
+            <p className="text-sm text-dark/60 mt-2">
+              {option.description}
+              {option.disabled && <span className="block text-xs mt-1 text-gray-400">(Coming Soon)</span>}
+            </p>
           </div>
         ))}
       </div>
