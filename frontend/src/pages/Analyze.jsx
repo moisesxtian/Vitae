@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import useJobs from "../hooks/useJobs";
 import { useAiContext } from "../context/AiContext";
+import PayPalButton from "../components/PaypalButton";
 export default function Analyze() {
   const { job_listing, setJobListing, setJobRole, job_roles } = useAiContext();
   const { getJobListing } = useJobs();
@@ -135,6 +136,9 @@ export default function Analyze() {
                   Look for jobs related to your resume.
                 </p>
               </div>
+            </div>
+            <div>
+              <PayPalButton />
             </div>
         </div>
 
