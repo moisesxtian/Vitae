@@ -1,5 +1,5 @@
 import { useFormContext } from "../context/FormContext";
-import { Download, RefreshCw, BriefcaseBusiness,ArrowLeft } from "lucide-react";
+import { Download, RefreshCw, BriefcaseBusiness,ArrowLeft ,Loader} from "lucide-react";
 import PDFViewer from "../components/PDFViewer";
 import useAnalyze from "../hooks/useAnalyze";
 import { useEffect, useState } from "react";
@@ -17,8 +17,8 @@ export default function Analyze() {
 
   const handleAnalyze = async () => {
     setRevisedUsed(true);
-    console.log("Revising Resume....");
     setLoading(true);
+    console.log("Revising Resume....");
 
     const parsed = await analyzeResume();
     setParsed(parsed);
@@ -92,9 +92,13 @@ export default function Analyze() {
           <div className="lg:col-span-1 flex flex-col gap-6">
             <div className="p-6 bg-white border border-gray-300 rounded-xl shadow">
               <h2 className="text-xl font-semibold mb-4">Overview</h2>
-              <ReactMarkdown>
-                {loading ? "Generating resume..." : formattedOverview}
-              </ReactMarkdown>
+              {!loading ? (
+                <ReactMarkdown>{formattedOverview}</ReactMarkdown>
+              ) : (
+                <div className="flex justify-center items-center py-4">
+                  <Loader className="w-6 h-6 animate-spin text-accent2 mr-2" /> Generating Revisions..
+                </div>
+              )}
             </div>
 
             {/* PDF Preview for mobile below overview */}
@@ -118,7 +122,6 @@ export default function Analyze() {
           </div>
 
           {/* Look for Jobs */}
-          {(revisedUsed || job_roles.length > 1) && (
             <div
               onClick={() => navigate("/jobs")}
               className="cursor-pointer flex items-start gap-3 border border-gray-300 rounded-xl p-6 shadow hover:shadow-md transition-transform transform hover:scale-[1.02] bg-white"
@@ -133,7 +136,6 @@ export default function Analyze() {
                 </p>
               </div>
             </div>
-          )}
         </div>
 
         {/* Right: PDF Preview on desktop only */}

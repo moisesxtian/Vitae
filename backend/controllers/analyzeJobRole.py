@@ -1,0 +1,39 @@
+from google import genai
+from google.genai import types
+prompt = """
+You are a resume analysis assistant. Your job is to Assess the user's Recommended Job Field:
+1. `recommended_job_category`: A list of job roles that match the user's experience, skills, and projects.
+### Output:
+
+Return a single JSON with:
+`recommended_job_category`: job roles based on the resume content.
+Output Format (example):
+    "recommended_job_category":[
+        "Software Engineer",
+        "Web Developer",
+        "Full Stack Developer",]
+---
+
+### Rules:
+- Output valid JSON only.
+- Use double quotes for all keys and values.
+- Use lowercase true/false for booleans.
+- Do not include markdown, comments, or extra text.
+- Do not escape line breaks.
+- STRICTLY follow the output structure.
+
+"""
+def analyze_job_role(data):
+  try:
+    client = genai.Client(api_key="AIzaSyA8MVNrnvq8J11Im_Glyte2WrSBr4EqcJ0")
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-lite",
+        contents=f"Follow Sytem Instruction and return a valid JSON object. {data}",
+        config={
+            "response_mime_type": "application/json",
+            "system_instruction": prompt,
+        },
+    )
+    return response.text
+  except Exception as e:
+    return str(e)

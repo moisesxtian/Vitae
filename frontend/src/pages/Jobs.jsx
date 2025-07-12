@@ -1,15 +1,46 @@
-import { useEffect } from "react";
-import { useAiContext } from "../context/AiContext";
+import { useEffect,useRef,useState} from "react";
 import { Briefcase, Building2, ExternalLink, Loader } from "lucide-react";
-
+import { useFormContext } from "../context/FormContext";
+import { useAiContext } from "../context/AiContext";
+import useGetRole from "../hooks/useGetRole";
+import useJobs from "../hooks/useJobs";
 const Jobs = () => {
+  const hasCalledRef = useRef(false);
+  const {getJobListing}=useJobs()
+  const { getRole } = useGetRole();
+  const {setJobRole,setJobListing}=useAiContext()
+  const { formData } = useFormContext();
   const { job_listing, job_roles, job_loading } = useAiContext();
 
-  useEffect(() => {
-    console.log("MY JOB ROLE:", job_roles);
-    console.log("Jobs", job_listing);
-  }, [job_listing]);
+  const [job_role_loading, setJobRoleLoading] = useState(false);
+  const addJobRole=async ()=>{
+    setJobRoleLoading(true);
+    const response=await getRole(formData);
+    const parsed=await JSON.parse(response);
+    setJobRole(parsed.recommended_job_category);
 
+    console.log("API RESPONSE:",typeof response)
+
+    const job_role = parsed.recommended_job_category;
+    setJobRoleLoading(false);
+    console.log("JOB ROLE:",job_role)
+    const job_location = `${formData.city}, ${formData.state}`;
+
+    const get_job_listing_response = await getJobListing(
+      job_role,
+      job_location
+    );
+    setJobListing(get_job_listing_response.data);
+  }
+useEffect(() => {
+  if (!hasCalledRef.current && !job_roles.length) {
+    hasCalledRef.current = true; // prevent second call
+    console.log("No Job Roles found");
+    console.log(formData);
+    console.log("Running Add Job Role function:");
+    addJobRole();
+  }
+}, []);
   return (
     <div className="px-4 py-8 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">
@@ -17,13 +48,15 @@ const Jobs = () => {
         Recommended Jobs
       </h1>
 
-<div className="mb-6 text-lg text-gray-700">
-  <span className="font-medium block sm:inline">Predicted Job Role: </span>
-  <span className="text-accent2 font-semibold text-base sm:text-lg">
-    {
-      job_roles ? job_roles[0] : "None, try adding more details on your resume!"
-    }
-  </span>
+<div className="flex mb-6 text-lg text-gray-700">
+  <span className="font-medium block sm:inline mr-2">Predicted Job Role: </span>
+  {
+    job_role_loading ? (
+      <Loader className="animate-spin w-6 h-6 mb-2 text-accent2" />
+    ) : (
+      <span className="font-semibold">{job_roles[0]}</span>
+    )
+  }
 </div>
 
       {/* Loading State */}
