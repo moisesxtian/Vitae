@@ -12,7 +12,7 @@ async def get_job_recommendations(job_role:str, job_location:str):
     params={
         "query": job_role,
         "location": job_location,
-        "num_pages": "2"
+        "num_pages": "1"
     }
 
     async with httpx.AsyncClient(timeout=30) as client:
