@@ -137,7 +137,7 @@ export default function Analyze() {
                 </p>
               </div>
             </div>
-            <div>
+            <div className="flex items-center justify-center md:justify-start">
               <PayPalButton />
             </div>
         </div>
