@@ -27,7 +27,7 @@ class CertificationEntry(BaseModel):
     credentialUrl: Optional[str] = ""
 
 class Resume(BaseModel):
-    profileImage:str
+    profileImage:Optional[str] = ""
     firstName: str
     middleInitial: Optional[str]
     lastName: str

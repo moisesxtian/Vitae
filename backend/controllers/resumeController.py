@@ -5,7 +5,7 @@ from tempfile import NamedTemporaryFile
 from models.resumeModel import ResumeWrapper
 from fastapi.concurrency import run_in_threadpool
 from datetime import datetime
-
+import os
 env = Environment(loader=FileSystemLoader("templates"))
 
 def count_total_entries(data: dict) -> int:
@@ -89,7 +89,9 @@ async def submit_resume(wrapper:ResumeWrapper):
     else:
         cleaned_data["resume_density"] = "super_dense"
     # Render template
+    print("Templates directory content:", os.listdir("templates"))
     template = await run_in_threadpool(env.get_template, f"{wrapper.selected_template}.html")
+    print("Using template:", f"{wrapper.selected_template}.html")
     html_content = await run_in_threadpool(template.render, data=cleaned_data)
     print(cleaned_data["resume_density"])
     # Generate PDF

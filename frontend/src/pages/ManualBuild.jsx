@@ -89,7 +89,7 @@ const ManualBuild = () => {
       if (validateStepOne()) {
         nextStep();
       }
-    } else if (step < 7) {
+    } else if (step < 8) {
       nextStep();
     }
   };
@@ -112,7 +112,7 @@ const ManualBuild = () => {
           e.preventDefault();
         }
         handleNextStepClick();
-      } else if (e.key === "Enter" && step === 7 && !isLoading) {
+      } else if (e.key === "Enter" && step === 8 && !isLoading) {
         // For the last step, trigger submit on Enter
         e.preventDefault(); // Prevent default form submission
         handleSubmit(e); // Pass the event object
@@ -214,7 +214,7 @@ const ManualBuild = () => {
           ) : (
             <div className="w-24"></div>
           )}
-          {step < 7 ? (
+          {step < 8 ? (
             <button
               type="button"
               onClick={handleNextStepClick} // Use the new handler here
