@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ data.firstName }} {{ data.lastName }} – Creative Resume</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    html, body {
+      margin: 0; padding: 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 10pt; color: #333;
+      background: #f4f4f4;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      width: 100%; max-width: 21cm;
+      margin: auto; background: #fff;
+      box-shadow: 0 0 1cm rgba(0,0,0,0.1);
+    }
+    .sidebar {
+      background: #2b2d42; color: #edf2f4;
+      padding: 2cm 1cm; box-sizing: border-box;
+      display: flex; flex-direction: column; gap: 1cm;
+    }
+    .sidebar img {
+      width: 100%; border-radius: 8px;
+      object-fit: cover; position: sticky; top: 2cm;
+      margin-bottom: 1cm;
+    }
+    .sidebar h2 {
+      margin: 0 0 0.5cm; font-size: 12pt;
+      text-transform: uppercase; letter-spacing: 1px;
+      border-bottom: 1px solid #8d99ae; padding-bottom: 0.2cm;
+    }
+    .sidebar p, .sidebar ul { margin: 0; padding: 0; }
+    .sidebar ul { list-style: none; display: grid; gap: 0.4cm; }
+    .sidebar li::before { content: "•"; color: #ef233c; margin-right: 0.5ch; }
+    .sidebar a { color: #ef233c; text-decoration: none; }
+
+    .main {
+      padding: 2cm 2cm;
+      box-sizing: border-box;
+      display: flex; flex-direction: column; gap: 1.5cm;
+      background: #fff;
+      text-align: left;
+    }
+    header {
+      border-bottom: 2px solid #8d99ae;
+      padding-bottom: 0.5cm;
+    }
+    header h1 {
+      margin: 0; font-size: 24pt; color: #2b2d42;
+      text-align: left;
+    }
+    header p {
+      margin: 0.2cm 0 0;
+      font-size: 10pt; color: #6c757d;
+      text-align: left;
+    }
+    section h2 {
+      margin: 0 0 0.5cm;
+      font-size: 14pt; color: #2b2d42;
+      text-transform: uppercase;
+      border-bottom: 1px solid #d8e2dc;
+      padding-bottom: 0.3cm;
+      text-align: left;
+    }
+    .item {
+      margin-bottom: 0.6cm;
+    }
+    .item .flexed {
+      display: flex; justify-content: space-between;
+      font-weight: bold; font-size: 11pt;
+    }
+    .item .sub { font-style: italic; font-weight: normal; }
+    .item ul { margin: 0.3cm 0 0 1cm; list-style: disc; }
+    .item ul li { margin-bottom: 0.2cm; font-size: 10pt; }
+
+    /* density spacing */
+    .super_sparse .section { padding-bottom: 3cm; }
+    .sparse       .section { padding-bottom: 1.5cm; }
+    .medium       .section { padding-bottom: 1cm; }
+    .dense        .section { padding-bottom: 0.3cm; }
+
+    footer {
+      text-align: center; font-size: 8pt; color: #adb5bd;
+      margin-top: auto; padding-top: 1cm;
+      border-top: 1px solid #e9ecef;
+    }
+  </style>
+</head>
+<body class="{{ data.resume_density }}">
+  <div class="container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      {% if data.profileImage %}
+        <img src="{{ data.profileImage }}" alt="Profile Photo">
+      {% endif %}
+
+      <h2>Contact</h2>
+      <p>
+        {% if data.email %}✉ {{ data.email }}<br>{% endif %}
+        {% if data.phone %}☎ {{ data.phone }}<br>{% endif %}
+        {% if data.city or data.state %}📍 {{ data.city }}{% if data.city and data.state %}, {% endif %}{{ data.state }}<br>{% endif %}
+        {% if data.linkedin %}🔗 <a href="{{ data.linkedin }}">LinkedIn</a>{% endif %}
+      </p>
+
+      {% if data.skills %}
+      <h2>Skills</h2>
+      <ul>
+        {% for skill in data.skills %}
+        <li>{{ skill }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if data.certifications %}
+      <h2>Certs</h2>
+      <ul>
+        {% for cert in data.certifications %}
+        <li>{{ cert.name }}{% if cert.issuer %}, {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <header>
+        <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}.{% endif %} {{ data.lastName }}</h1>
+        {% if data.summary %}
+        <p>{{ data.summary }}</p>
+        {% endif %}
+      </header>
+
+      {% if data.experience %}
+      <section class="section">
+        <h2>Experience</h2>
+        {% for job in data.experience %}
+        <div class="item">
+          <div class="flexed">
+            <div>
+              {{ job.jobtitle }}<br>
+              <span class="sub">{{ job.company }}</span>
+            </div>
+            <div class="dates">
+              {{ job.start }} – {{ "Present" if job.present else job.end }}
+            </div>
+          </div>
+          {% if job.bullets %}
+          <ul>
+            {% for b in job.bullets %}
+            <li>{{ b }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {% if data.education %}
+      <section class="section">
+        <h2>Education</h2>
+        {% for edu in data.education %}
+        <div class="item">
+          <div class="flexed">
+            <div>
+              {{ edu.school }}<br>
+              <span class="sub">
+                {% if edu.level == "College" %}
+                  {{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}
+                {% else %}
+                  {{ edu.field or edu.degree }}
+                {% endif %}
+              </span>
+            </div>
+            <div class="dates">
+              {{ edu.start }} – {{ "Present" if edu.present else edu.end }}
+            </div>
+          </div>
+          {% if edu.bullets %}
+          <ul>
+            {% for b in edu.bullets %}
+            <li>{{ b }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {% if data.projects %}
+      <section class="section">
+        <h2>Projects</h2>
+        {% for p in data.projects %}
+        <div class="item">
+          <div class="flexed">
+            <strong>{{ p.name }}</strong>
+          </div>
+          {% if p.description %}
+          <p>{{ p.description }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      <footer>
+        <!-- Footer or page numbers here -->
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
