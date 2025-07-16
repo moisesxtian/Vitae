@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useFormContext } from "../context/FormContext";
 import useForm from "../hooks/useForm";
 const Templates = () => {
   const navigate = useNavigate();
   const {setResumeTemplate,formData,setPdfBlob} = useFormContext();
   const {sendFormData,}=useForm();
+  const [loading, setLoading] = useState(false);
 
   const buildOptions = [
     {
@@ -31,6 +33,7 @@ const Templates = () => {
   ];
 
   const handleSelectedTemplate = async (selected_template) => {
+    setLoading(true);
     await setResumeTemplate(selected_template);
     const sendingData={formData,selected_template};
     console.log(sendingData)
@@ -50,8 +53,13 @@ const Templates = () => {
       <p className="text-dark/70 mb-8 text-center max-w-lg text-sm sm:text-base">
         How would you like your Resume to Look?
       </p>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-5xl">
+      {loading ? (
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <span className="ml-2 text-primary">Loading...</span>
+        </div>
+      ): 
+(      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-5xl">
         {buildOptions.map((option, idx) => (
           <div
             key={idx}
@@ -80,8 +88,8 @@ const Templates = () => {
             </p>
           </div>
         ))}
-      </div>
-
+      </div>)
+      }
       <button
         onClick={() => navigate('/')}
         className="mt-10 text-sm text-primary hover:underline"

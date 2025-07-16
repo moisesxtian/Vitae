@@ -8,7 +8,6 @@ from models.resumeModel import ResumeWrapper
 router = APIRouter()    
 @router.post("/submit") 
 async def submit_resume_router(wrapper: ResumeWrapper):
-    print("wrapper,",wrapper.selected_template)
     return await submit_resume(wrapper)
 
 @router.post("/analyze")

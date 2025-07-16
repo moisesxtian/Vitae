@@ -2,131 +2,445 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>{{ data.firstName }} {{ data.lastName }} – Creative Resume</title>
+  <title>{{ data.firstName }} {{ data.lastName }} – Resume</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
   <style>
-    @page { size: A4; margin: 0; }
-    html, body {
-      margin: 0; padding: 0;
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      font-size: 10pt; color: #333;
-      background: #f4f4f4;
+    @page {
+      size: A4;
+      margin: 0;
     }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 10pt;
+      color: #333;
+      background: #fff;
+      line-height: 1.4;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
     .container {
       display: grid;
-      grid-template-columns: 1fr 3fr;
-      width: 100%; max-width: 21cm;
-      margin: auto; background: #fff;
-      box-shadow: 0 0 1cm rgba(0,0,0,0.1);
+      grid-template-columns: 0.35fr 1.65fr;
+      width: 210mm;
+      height: 297mm;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0 auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      overflow: hidden;
     }
+    
     .sidebar {
-      background: #2b2d42; color: #edf2f4;
-      padding: 2cm 1cm; box-sizing: border-box;
-      display: flex; flex-direction: column; gap: 1cm;
+      background: #242950;
+      color: #edf2f4;
+      padding: 1cm 0.8cm;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8cm;
+      overflow-y: auto;
     }
-    .sidebar img {
-      width: 100%; border-radius: 8px;
-      object-fit: cover; position: sticky; top: 2cm;
+    
+    .profile-section {
+      text-align: center;
       margin-bottom: 1cm;
     }
+    
+    .profile-image-container {
+      width: 200px;
+      height: 200px;
+      border-radius: 10%;
+      overflow: hidden;
+      margin: 0 auto 0.5cm;
+      border: 3px solid #3e6bff;
+    }
+    
+    .profile-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-name {
+      font-size: 12pt;
+      font-weight: 600;
+      margin: 0;
+      text-align: center;
+      color: #edf2f4;
+    }
+    
+    .profile-title {
+      font-size: 9pt;
+      font-weight: 300;
+      margin: 0.2cm 0 0;
+      text-align: center;
+      color: #8d99ae;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1cm;
+    }
+    
     .sidebar h2 {
-      margin: 0 0 0.5cm; font-size: 12pt;
-      text-transform: uppercase; letter-spacing: 1px;
-      border-bottom: 1px solid #8d99ae; padding-bottom: 0.2cm;
+      margin: 0 0 0.5cm;
+      font-size: 11pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-bottom: 1px solid #8d99ae;
+      padding-bottom: 0.2cm;
     }
-    .sidebar p, .sidebar ul { margin: 0; padding: 0; }
-    .sidebar ul { list-style: none; display: grid; gap: 0.4cm; }
-    .sidebar li::before { content: "•"; color: #ef233c; margin-right: 0.5ch; }
-    .sidebar a { color: #ef233c; text-decoration: none; }
-
+    
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3cm;
+      font-size: 9pt;
+      font-weight: 300;
+    }
+    
+    .sidebar ul li {
+      word-break: break-word;
+      line-height: 1.3;
+    }
+    
+    .sidebar ul li a {
+      color: #ef233c;
+      text-decoration: none;
+    }
+    
+    .sidebar ul li a:hover {
+      text-decoration: underline;
+    }
+    
+    .skill-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3cm;
+    }
+    
+    .skill-bar {
+      width: 60%;
+      height: 4px;
+      background: #8d99ae;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .skill-fill {
+      height: 100%;
+      background: #ef233c;
+      transition: width 0.3s ease;
+    }
+    
     .main {
-      padding: 2cm 2cm;
-      box-sizing: border-box;
-      display: flex; flex-direction: column; gap: 1.5cm;
-      background: #fff;
-      text-align: left;
+      padding: 1.2cm 1.5cm;
+      display: flex;
+      flex-direction: column;
+      gap: 1cm;
+      overflow-y: auto;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
+      min-width: 0;
+      width: 100%;
     }
+    
     header {
       border-bottom: 2px solid #8d99ae;
       padding-bottom: 0.5cm;
     }
+    
     header h1 {
-      margin: 0; font-size: 24pt; color: #2b2d42;
-      text-align: left;
+      margin: 0;
+      font-size: 22pt;
+      color: #2b2d42;
+      font-weight: 600;
+      line-height: 1.2;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
+    
     header p {
-      margin: 0.2cm 0 0;
-      font-size: 10pt; color: #6c757d;
-      text-align: left;
+      margin: 0.3cm 0 0;
+      font-size: 10pt;
+      color: #6c757d;
+      line-height: 1.3;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
     }
-    section h2 {
+    
+    .main-section {
+      margin-bottom: 1cm;
+    }
+    
+    .main-section h2 {
       margin: 0 0 0.5cm;
-      font-size: 14pt; color: #2b2d42;
+      font-size: 12pt;
+      color: #2b2d42;
       text-transform: uppercase;
       border-bottom: 1px solid #d8e2dc;
-      padding-bottom: 0.3cm;
-      text-align: left;
+      padding-bottom: 0.2cm;
+      font-weight: 600;
     }
+    
     .item {
-      margin-bottom: 0.6cm;
+      margin-bottom: 0.8cm;
+      page-break-inside: avoid;
     }
-    .item .flexed {
-      display: flex; justify-content: space-between;
-      font-weight: bold; font-size: 11pt;
+    
+    .item:last-child {
+      margin-bottom: 0;
     }
-    .item .sub { font-style: italic; font-weight: normal; }
-    .item ul { margin: 0.3cm 0 0 1cm; list-style: disc; }
-    .item ul li { margin-bottom: 0.2cm; font-size: 10pt; }
-
-    /* density spacing */
-    .super_sparse .section { padding-bottom: 3cm; }
-    .sparse       .section { padding-bottom: 1.5cm; }
-    .medium       .section { padding-bottom: 1cm; }
-    .dense        .section { padding-bottom: 0.3cm; }
-
-    footer {
-      text-align: center; font-size: 8pt; color: #adb5bd;
-      margin-top: auto; padding-top: 1cm;
-      border-top: 1px solid #e9ecef;
+    
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.2cm;
+      min-width: 0;
+    }
+    
+    .item-header > div:first-child {
+      flex: 1;
+      min-width: 0;
+      margin-right: 0.5cm;
+    }
+    
+    .item-title {
+      font-weight: 600;
+      font-size: 10pt;
+      color: #2b2d42;
+      margin: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.2;
+    }
+    
+    .item-company {
+      font-style: italic;
+      font-weight: 300;
+      font-size: 9.5pt;
+      color: #6c757d;
+      margin: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.3;
+    }
+    
+    .item-dates {
+      color: #6c757d;
+      white-space: nowrap;
+      font-size: 9pt;
+      flex-shrink: 0;
+      margin-left: 1cm;
+      font-weight: 300;
+    }
+    
+    .item-description {
+      font-size: 9.5pt;
+      color: #333;
+      margin-top: 0.3cm;
+      line-height: 1.4;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      max-width: 100%;
+    }
+    
+    .detail-list {
+      padding-left: 1em;
+      margin: 0.3cm 0 0;
+      font-weight: 300;
+    }
+    
+    .detail-list li {
+      position: relative;
+      margin-bottom: 0.2cm;
+      font-size: 9pt;
+      line-height: 1.3;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+    
+    .detail-list li::before {
+      content: '•';
+      position: absolute;
+      left: -1em;
+      color: #ef233c;
+    }
+    
+    .education-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3cm;
+    }
+    
+    .education-details h3 {
+      margin: 0;
+      font-size: 10pt;
+      font-weight: 600;
+    }
+    
+    .education-details p {
+      margin: 0.1cm 0 0;
+      font-size: 9pt;
+      color: #6c757d;
+    }
+    
+    .certifications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.5cm;
+    }
+    
+    .certification-item {
+      background: #f8f9fa;
+      padding: 0.4cm;
+      border-radius: 4px;
+      border-left: 3px solid #ef233c;
+    }
+    
+    .certification-item h4 {
+      margin: 0 0 0.2cm;
+      font-size: 9.5pt;
+      font-weight: 600;
+    }
+    
+    .certification-item p {
+      margin: 0;
+      font-size: 8.5pt;
+      color: #6c757d;
+    }
+    
+    /* Responsive adjustments */
+    @media screen and (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        width: 100vw;
+        height: auto;
+        max-height: none;
+      }
+      
+      .sidebar {
+        order: 2;
+        padding: 1cm;
+      }
+      
+      .main {
+        order: 1;
+        padding: 1cm;
+      }
+      
+      .profile-image-container {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .item-dates {
+        margin-left: 0;
+        margin-top: 0.2cm;
+      }
+      
+      .certifications-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media print {
+      html, body {
+        height: auto;
+        overflow: visible;
+      }
+      
+      .container {
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
+      
+      .sidebar, .main {
+        overflow: visible;
+      }
+      
+      .item {
+        page-break-inside: avoid;
+      }
     }
   </style>
 </head>
-<body class="{{ data.resume_density }}">
+<body>
   <div class="container">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      {% if data.profileImage %}
-        <img src="{{ data.profileImage }}" alt="Profile Photo">
-      {% endif %}
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="profile-section">
+        {% if data.profileImage %}
+        <div class="profile-image-container">
+          <img src="{{ data.profileImage }}" alt="{{ data.firstName }} {{ data.lastName }}" />
+        </div>
+        {% endif %}
+        <h1 class="profile-name">
+          {{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}.{% endif %} {{ data.lastName }}
+        </h1>
+      </div>
 
-      <h2>Contact</h2>
-      <p>
-        {% if data.email %}✉ {{ data.email }}<br>{% endif %}
-        {% if data.phone %}☎ {{ data.phone }}<br>{% endif %}
-        {% if data.city or data.state %}📍 {{ data.city }}{% if data.city and data.state %}, {% endif %}{{ data.state }}<br>{% endif %}
-        {% if data.linkedin %}🔗 <a href="{{ data.linkedin }}">LinkedIn</a>{% endif %}
-      </p>
+      <!-- Contact Information -->
+      <div class="sidebar-section">
+        <h2>Contact</h2>
+        <ul>
+          {% if data.email %}
+          <li><a href="mailto:{{ data.email }}">{{ data.email }}</a></li>
+          {% endif %}
+          {% if data.phone %}
+          <li>{{ data.phone }}</li>
+          {% endif %}
+          {% if data.city and data.state %}
+          <li>{{ data.city }}, {{ data.state }}</li>
+          {% elif data.city %}
+          <li>{{ data.city }}</li>
+          {% elif data.state %}
+          <li>{{ data.state }}</li>
+          {% endif %}
+          {% if data.linkedin %}
+          <li><a href="{{ data.linkedin }}" target="_blank">LinkedIn</a></li>
+          {% endif %}
+        </ul>
+      </div>
 
+      <!-- Skills -->
       {% if data.skills %}
-      <h2>Skills</h2>
-      <ul>
-        {% for skill in data.skills %}
-        <li>{{ skill }}</li>
-        {% endfor %}
-      </ul>
+      <div class="sidebar-section">
+        <h2>Skills</h2>
+        <ul>
+          {% for skill in data.skills %}
+          <li>{{ skill }}</li>
+          {% endfor %}
+        </ul>
+      </div>
       {% endif %}
+    </div>
 
-      {% if data.certifications %}
-      <h2>Certs</h2>
-      <ul>
-        {% for cert in data.certifications %}
-        <li>{{ cert.name }}{% if cert.issuer %}, {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="main">
+    <!-- Main Content -->
+    <div class="main">
       <header>
         <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}.{% endif %} {{ data.lastName }}</h1>
         {% if data.summary %}
@@ -134,84 +448,110 @@
         {% endif %}
       </header>
 
+      <!-- Work Experience -->
       {% if data.experience %}
-      <section class="section">
-        <h2>Experience</h2>
+      <div class="main-section">
+        <h2>Work Experience</h2>
         {% for job in data.experience %}
         <div class="item">
-          <div class="flexed">
+          <div class="item-header">
             <div>
-              {{ job.jobtitle }}<br>
-              <span class="sub">{{ job.company }}</span>
+              <h3 class="item-title">{{ job.jobtitle }}</h3>
+              <p class="item-company">{{ job.company }}</p>
             </div>
-            <div class="dates">
-              {{ job.start }} – {{ "Present" if job.present else job.end }}
+            <div class="item-dates">
+              {{ job.start }}{% if job.present %} - Present{% elif job.end %} - {{ job.end }}{% endif %}
             </div>
           </div>
           {% if job.bullets %}
-          <ul>
-            {% for b in job.bullets %}
-            <li>{{ b }}</li>
+          <ul class="detail-list">
+            {% for bullet in job.bullets %}
+            <li>{{ bullet }}</li>
             {% endfor %}
           </ul>
           {% endif %}
         </div>
         {% endfor %}
-      </section>
+      </div>
       {% endif %}
 
+      <!-- Education -->
       {% if data.education %}
-      <section class="section">
+      <div class="main-section">
         <h2>Education</h2>
         {% for edu in data.education %}
         <div class="item">
-          <div class="flexed">
-            <div>
-              {{ edu.school }}<br>
-              <span class="sub">
-                {% if edu.level == "College" %}
-                  {{ edu.degree }}{% if edu.field %} in {{ edu.field }}{% endif %}
-                {% else %}
-                  {{ edu.field or edu.degree }}
-                {% endif %}
-              </span>
+          <div class="education-item">
+            <div class="education-details">
+              <h3>{{ edu.degree }}</h3>
+              <p>{{ edu.school }}</p>
+              <p>{{ edu.field }} • {{ edu.level }}</p>
             </div>
-            <div class="dates">
-              {{ edu.start }} – {{ "Present" if edu.present else edu.end }}
+            <div class="item-dates">
+              {{ edu.start }}{% if edu.present %} - Present{% elif edu.end %} - {{ edu.end }}{% endif %}
             </div>
           </div>
           {% if edu.bullets %}
-          <ul>
-            {% for b in edu.bullets %}
-            <li>{{ b }}</li>
+          <ul class="detail-list">
+            {% for bullet in edu.bullets %}
+            <li>{{ bullet }}</li>
             {% endfor %}
           </ul>
           {% endif %}
         </div>
         {% endfor %}
-      </section>
+      </div>
       {% endif %}
 
+      <!-- Projects -->
       {% if data.projects %}
-      <section class="section">
+      <div class="main-section">
         <h2>Projects</h2>
-        {% for p in data.projects %}
+        {% for project in data.projects %}
         <div class="item">
-          <div class="flexed">
-            <strong>{{ p.name }}</strong>
+          <div class="item-header">
+            <div>
+              <h3 class="item-title">{{ project.name }}</h3>
+              {% if project.technologies %}
+              <p class="item-company">{{ project.technologies | join(', ') }}</p>
+              {% endif %}
+            </div>
+            {% if project.date %}
+            <div class="item-dates">{{ project.date }}</div>
+            {% endif %}
           </div>
-          {% if p.description %}
-          <p>{{ p.description }}</p>
+          {% if project.description %}
+          <div class="item-description">{{ project.description }}</div>
           {% endif %}
         </div>
         {% endfor %}
-      </section>
+      </div>
       {% endif %}
 
-      <footer>
-        <!-- Footer or page numbers here -->
-      </footer>
-    </main>
+      <!-- Certifications -->
+      {% if data.certifications %}
+      <div class="main-section">
+        <h2>Certifications</h2>
+        {% for cert in data.certifications %}
+        <div class="item">
+          <div class="item-header">
+            <div>
+              <h3 class="item-title">{{ cert.name }}</h3>
+              <p class="item-company">{{ cert.issuer }}</p>
+            </div>
+            <div class="item-dates">{{ cert.date }}</div>
+          </div>
+          {% if cert.credentialId or cert.credentialUrl %}
+          <div class="item-description">
+            {% if cert.credentialId %}Credential ID: {{ cert.credentialId }}<br>{% endif %}
+            {% if cert.credentialUrl %}<a href="{{ cert.credentialUrl }}" target="_blank">{{ cert.credentialUrl }}</a>{% endif %}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
   </div>
 </body>
 </html>
