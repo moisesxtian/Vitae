@@ -37,7 +37,6 @@ export default function Analyze() {
   };
 
   useEffect(() => {
-    console.log("Job_roles", job_roles);
     if (!pdfBlob) {
       //NAVIGATE to CREATE PAGE if Theres no PDF
       navigate("/create");
