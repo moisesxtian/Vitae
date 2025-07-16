@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -10,24 +9,24 @@
       size: A4;
       margin: 0;
     }
-    
+
     * {
       box-sizing: border-box;
     }
-    
+
     html, body {
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
       font-size: 10pt;
       color: #333;
-      background: #fff;
+      background: #f8fcff;
       line-height: 1.4;
       width: 100%;
       height: 100vh;
       overflow: hidden;
     }
-    
+
     .container {
       display: grid;
       grid-template-columns: 0.35fr 1.65fr;
@@ -39,7 +38,7 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
       overflow: hidden;
     }
-    
+
     .sidebar {
       background: #242950;
       color: #edf2f4;
@@ -49,12 +48,12 @@
       gap: 0.8cm;
       overflow-y: auto;
     }
-    
+
     .profile-section {
       text-align: center;
       margin-bottom: 1cm;
     }
-    
+
     .profile-image-container {
       width: 200px;
       height: 200px;
@@ -63,33 +62,38 @@
       margin: 0 auto 0.5cm;
       border: 3px solid #3e6bff;
     }
-    
+
     .profile-image-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    
+
     .profile-name {
-      font-size: 12pt;
-      font-weight: 600;
+      font-size: 16pt;
+      font-weight: 900;
       margin: 0;
-      text-align: center;
+      text-align: left;
       color: #edf2f4;
     }
-    
+
     .profile-title {
-      font-size: 9pt;
-      font-weight: 300;
+      font-size: 20pt;
+      font-weight: 600;
       margin: 0.2cm 0 0;
       text-align: center;
       color: #8d99ae;
     }
-    
+
     .sidebar-section {
       margin-bottom: 1cm;
     }
-    
+    .sidebar-section-title{
+      margin: 0 0 0.5cm;
+      font-size: 16pt;
+      font-weight: 600;
+    }
+
     .sidebar h2 {
       margin: 0 0 0.5cm;
       font-size: 11pt;
@@ -98,7 +102,7 @@
       border-bottom: 1px solid #8d99ae;
       padding-bottom: 0.2cm;
     }
-    
+
     .sidebar ul {
       list-style: none;
       padding: 0;
@@ -109,84 +113,56 @@
       font-size: 9pt;
       font-weight: 300;
     }
-    
+
     .sidebar ul li {
       word-break: break-word;
       line-height: 1.3;
     }
-    
+
     .sidebar ul li a {
       color: #ef233c;
       text-decoration: none;
     }
-    
+
     .sidebar ul li a:hover {
       text-decoration: underline;
     }
-    
-    .skill-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.3cm;
-    }
-    
-    .skill-bar {
-      width: 60%;
-      height: 4px;
-      background: #8d99ae;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    
-    .skill-fill {
-      height: 100%;
-      background: #ef233c;
-      transition: width 0.3s ease;
-    }
-    
+
     .main {
       padding: 1.2cm 1.5cm;
       display: flex;
       flex-direction: column;
       gap: 1cm;
       overflow-y: auto;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-      hyphens: auto;
       min-width: 0;
       width: 100%;
     }
-    
+
     header {
       border-bottom: 2px solid #8d99ae;
       padding-bottom: 0.5cm;
     }
-    
+
     header h1 {
       margin: 0;
       font-size: 22pt;
       color: #2b2d42;
       font-weight: 600;
       line-height: 1.2;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
     }
-    
+
     header p {
       margin: 0.3cm 0 0;
       font-size: 10pt;
       color: #6c757d;
       line-height: 1.3;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
       white-space: pre-wrap;
     }
-    
+
     .main-section {
-      margin-bottom: 1cm;
+      margin-bottom: 0.2cm;
     }
-    
+
     .main-section h2 {
       margin: 0 0 0.5cm;
       font-size: 12pt;
@@ -196,51 +172,34 @@
       padding-bottom: 0.2cm;
       font-weight: 600;
     }
-    
+
     .item {
       margin-bottom: 0.8cm;
       page-break-inside: avoid;
     }
-    
-    .item:last-child {
-      margin-bottom: 0;
-    }
-    
+
     .item-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 0.2cm;
-      min-width: 0;
     }
-    
-    .item-header > div:first-child {
-      flex: 1;
-      min-width: 0;
-      margin-right: 0.5cm;
-    }
-    
+
     .item-title {
       font-weight: 600;
       font-size: 10pt;
       color: #2b2d42;
       margin: 0;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      line-height: 1.2;
     }
-    
+
     .item-company {
       font-style: italic;
       font-weight: 300;
       font-size: 9.5pt;
       color: #6c757d;
       margin: 0;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      line-height: 1.3;
     }
-    
+
     .item-dates {
       color: #6c757d;
       white-space: nowrap;
@@ -249,148 +208,99 @@
       margin-left: 1cm;
       font-weight: 300;
     }
-    
+
     .item-description {
       font-size: 9.5pt;
       color: #333;
       margin-top: 0.3cm;
       line-height: 1.4;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
-      max-width: 100%;
     }
-    
+
     .detail-list {
       padding-left: 1em;
       margin: 0.3cm 0 0;
       font-weight: 300;
     }
-    
+
     .detail-list li {
       position: relative;
       margin-bottom: 0.2cm;
       font-size: 9pt;
       line-height: 1.3;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
     }
-    
+
     .detail-list li::before {
       content: '•';
       position: absolute;
       left: -1em;
       color: #ef233c;
     }
-    
+
+    /* DENSITY SPACING CLASSES */
+    body.super_sparse .main-section,
+    body.super_sparse .item {
+      margin-bottom: 2.5cm;
+    }
     .education-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.3cm;
+      align-items: flex-start;
     }
-    
-    .education-details h3 {
-      margin: 0;
-      font-size: 10pt;
-      font-weight: 600;
+    .education-item > div:first-child {
+      flex-grow: 1;
     }
-    
-    .education-details p {
-      margin: 0.1cm 0 0;
-      font-size: 9pt;
-      color: #6c757d;
+    .item-dates {
+    margin-top: 0.15cm;
+    white-space: nowrap;
+    font-size: 9pt;
+    font-weight: 300;
+    align-self: flex-start;
+  }
+
+    body.sparse .main-section,
+    body.sparse .item {
+      margin-bottom: 1.5cm;
     }
-    
-    .certifications-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 0.5cm;
+
+    body.medium .main-section,
+    body.medium .item {
+      margin-bottom: 1cm;
     }
-    
-    .certification-item {
-      background: #f8f9fa;
-      padding: 0.4cm;
-      border-radius: 4px;
-      border-left: 3px solid #ef233c;
+
+    body.dense .main-section,
+    body.dense .item {
+      margin-bottom: 0.5cm;
     }
-    
-    .certification-item h4 {
-      margin: 0 0 0.2cm;
-      font-size: 9.5pt;
-      font-weight: 600;
+
+    body.super_dense .main-section,
+    body.super_dense .item {
+      margin-bottom: 0.1cm;
     }
-    
-    .certification-item p {
-      margin: 0;
-      font-size: 8.5pt;
-      color: #6c757d;
-    }
-    
-    /* Responsive adjustments */
-    @media screen and (max-width: 768px) {
-      .container {
-        grid-template-columns: 1fr;
-        width: 100vw;
-        height: auto;
-        max-height: none;
-      }
-      
-      .sidebar {
-        order: 2;
-        padding: 1cm;
-      }
-      
-      .main {
-        order: 1;
-        padding: 1cm;
-      }
-      
-      .profile-image-container {
-        width: 80px;
-        height: 80px;
-      }
-      
-      .item-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .item-dates {
-        margin-left: 0;
-        margin-top: 0.2cm;
-      }
-      
-      .certifications-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
+
     @media print {
       html, body {
         height: auto;
         overflow: visible;
       }
-      
+
       .container {
         box-shadow: none;
         page-break-inside: avoid;
       }
-      
+
       .sidebar, .main {
         overflow: visible;
       }
-      
+
       .item {
         page-break-inside: avoid;
       }
     }
   </style>
 </head>
-<body>
+<body class="{{data.resumeDensity}}">
   <div class="container">
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="profile-section">
         {% if data.profileImage %}
@@ -402,53 +312,34 @@
           {{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}.{% endif %} {{ data.lastName }}
         </h1>
       </div>
-
-      <!-- Contact Information -->
       <div class="sidebar-section">
-        <h2>Contact</h2>
+        <h2 class="sidebar-section-title">Contact</h2>
         <ul>
-          {% if data.email %}
-          <li><a href="mailto:{{ data.email }}">{{ data.email }}</a></li>
+          {% if data.email %}<li><a href="mailto:{{ data.email }}">{{ data.email }}</a></li>{% endif %}
+          {% if data.phone %}<li>{{ data.phone }}</li>{% endif %}
+          {% if data.city or data.state %}
+            <li>{{ data.city }}{% if data.state %}, {{ data.state }}{% endif %}</li>
           {% endif %}
-          {% if data.phone %}
-          <li>{{ data.phone }}</li>
-          {% endif %}
-          {% if data.city and data.state %}
-          <li>{{ data.city }}, {{ data.state }}</li>
-          {% elif data.city %}
-          <li>{{ data.city }}</li>
-          {% elif data.state %}
-          <li>{{ data.state }}</li>
-          {% endif %}
-          {% if data.linkedin %}
-          <li><a href="{{ data.linkedin }}" target="_blank">LinkedIn</a></li>
-          {% endif %}
+          {% if data.linkedin %}<li><a href="{{ data.linkedin }}" target="_blank">LinkedIn</a></li>{% endif %}
         </ul>
       </div>
-
-      <!-- Skills -->
       {% if data.skills %}
       <div class="sidebar-section">
-        <h2>Skills</h2>
+        <h2 class="sidebar-section-title">Skills</h2>
         <ul>
-          {% for skill in data.skills %}
-          <li>{{ skill }}</li>
-          {% endfor %}
+          {% for skill in data.skills %}<li>{{ skill }}</li>{% endfor %}
         </ul>
       </div>
       {% endif %}
     </div>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <div class="main">
       <header>
         <h1>{{ data.firstName }}{% if data.middleInitial %} {{ data.middleInitial }}.{% endif %} {{ data.lastName }}</h1>
-        {% if data.summary %}
-        <p>{{ data.summary }}</p>
-        {% endif %}
+        {% if data.summary %}<p>{{ data.summary }}</p>{% endif %}
       </header>
 
-      <!-- Work Experience -->
       {% if data.experience %}
       <div class="main-section">
         <h2>Work Experience</h2>
@@ -459,15 +350,11 @@
               <h3 class="item-title">{{ job.jobtitle }}</h3>
               <p class="item-company">{{ job.company }}</p>
             </div>
-            <div class="item-dates">
-              {{ job.start }}{% if job.present %} - Present{% elif job.end %} - {{ job.end }}{% endif %}
-            </div>
+            <div class="item-dates">{{ job.start }}{% if job.present %} - Present{% elif job.end %} - {{ job.end }}{% endif %}</div>
           </div>
           {% if job.bullets %}
           <ul class="detail-list">
-            {% for bullet in job.bullets %}
-            <li>{{ bullet }}</li>
-            {% endfor %}
+            {% for bullet in job.bullets %}<li>{{ bullet }}</li>{% endfor %}
           </ul>
           {% endif %}
         </div>
@@ -475,27 +362,29 @@
       </div>
       {% endif %}
 
-      <!-- Education -->
       {% if data.education %}
-      <div class="main-section">
+      <div class="main-section {{ data.resume_density }}">
         <h2>Education</h2>
         {% for edu in data.education %}
         <div class="item">
-          <div class="education-item">
-            <div class="education-details">
-              <h3>{{ edu.degree }}</h3>
-              <p>{{ edu.school }}</p>
-              <p>{{ edu.field }} • {{ edu.level }}</p>
+          <div class="item-header">
+            <div>
+              <h3 class="item-title">{{ edu.school }}</h3>
+              
+              {% if edu.degree %}
+              <p class="item-company">{{ edu.degree }}</p>
+              {% endif %}
+              {% if edu.field and edu.level != "College" %}
+                <p class="item-company">{{ edu.field }} • {{ edu.level }}</p>
+              {% endif %}
+
             </div>
-            <div class="item-dates">
-              {{ edu.start }}{% if edu.present %} - Present{% elif edu.end %} - {{ edu.end }}{% endif %}
-            </div>
+
+            <div class="item-dates">{{ edu.start }}{% if edu.present %} - Present{% elif edu.end %} - {{ edu.end }}{% endif %}</div>
           </div>
           {% if edu.bullets %}
           <ul class="detail-list">
-            {% for bullet in edu.bullets %}
-            <li>{{ bullet }}</li>
-            {% endfor %}
+            {% for bullet in edu.bullets %}<li>{{ bullet }}</li>{% endfor %}
           </ul>
           {% endif %}
         </div>
@@ -503,7 +392,8 @@
       </div>
       {% endif %}
 
-      <!-- Projects -->
+
+
       {% if data.projects %}
       <div class="main-section">
         <h2>Projects</h2>
@@ -512,23 +402,15 @@
           <div class="item-header">
             <div>
               <h3 class="item-title">{{ project.name }}</h3>
-              {% if project.technologies %}
-              <p class="item-company">{{ project.technologies | join(', ') }}</p>
-              {% endif %}
             </div>
-            {% if project.date %}
-            <div class="item-dates">{{ project.date }}</div>
-            {% endif %}
+            {% if project.date %}<div class="item-dates">{{ project.date }}</div>{% endif %}
           </div>
-          {% if project.description %}
-          <div class="item-description">{{ project.description }}</div>
-          {% endif %}
+          {% if project.description %}<div class="item-description">{{ project.description }}</div>{% endif %}
         </div>
         {% endfor %}
       </div>
       {% endif %}
 
-      <!-- Certifications -->
       {% if data.certifications %}
       <div class="main-section">
         <h2>Certifications</h2>
