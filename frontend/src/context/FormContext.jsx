@@ -8,6 +8,7 @@ export const FormProvider = ({ children }) => {
     return savedData
       ? JSON.parse(savedData)
       : {
+          profileImage: null,
           firstName: "",
           middleInitial: "",
           lastName: "",

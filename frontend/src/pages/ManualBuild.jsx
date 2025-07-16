@@ -8,6 +8,7 @@ import {
   SkillsForm,
   CertificationsForm,
   ProjectsForm,
+  ImageForm
 } from "../components/Steps";
 import PDFViewer from "../components/PDFViewer";
 import useForm from "../hooks/useForm";
@@ -133,15 +134,15 @@ const ManualBuild = () => {
         );
       case 2:
         return (
-          <SkillsForm
+          <ImageForm
             formData={formData}
             setFormData={setFormData}
             nextStep={nextStep}
           />
-        );
+        )
       case 3:
         return (
-          <EducationForm
+          <SkillsForm
             formData={formData}
             setFormData={setFormData}
             nextStep={nextStep}
@@ -149,7 +150,7 @@ const ManualBuild = () => {
         );
       case 4:
         return (
-          <ExperienceForm
+          <EducationForm
             formData={formData}
             setFormData={setFormData}
             nextStep={nextStep}
@@ -157,7 +158,7 @@ const ManualBuild = () => {
         );
       case 5:
         return (
-          <ProjectsForm
+          <ExperienceForm
             formData={formData}
             setFormData={setFormData}
             nextStep={nextStep}
@@ -165,13 +166,21 @@ const ManualBuild = () => {
         );
       case 6:
         return (
-          <CertificationsForm
+          <ProjectsForm
             formData={formData}
             setFormData={setFormData}
             nextStep={nextStep}
           />
         );
       case 7:
+        return (
+          <CertificationsForm
+            formData={formData}
+            setFormData={setFormData}
+            nextStep={nextStep}
+          />
+        );
+      case 8:
         return (
           <SummaryForm
             formData={formData}

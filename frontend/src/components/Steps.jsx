@@ -118,6 +118,7 @@ export const SkillsForm = () => {
     setFormData({ ...formData, skills: updatedSkills });
   };
 
+
   const handleAddSkill = () => {
     if (formData.skills.length >= 10) {
       setErrorMessage("You can only add up to 10 skills.");
@@ -174,7 +175,110 @@ export const SkillsForm = () => {
     </div>
   );
 };
+export const ImageForm = () => {
+  const { formData, setFormData } = useFormContext();
+  const [preview, setPreview] = useState(formData.profileImage);
 
+  const MAX_WIDTH = 512;
+  const MAX_HEIGHT = 512;
+  const QUALITY = 0.7;
+
+  const compressImage = (file) =>
+    new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        img.src = e.target.result;
+      };
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let { width, height } = img;
+
+        // Resize if necessary
+        if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+          const aspectRatio = width / height;
+          if (aspectRatio > 1) {
+            width = MAX_WIDTH;
+            height = MAX_WIDTH / aspectRatio;
+          } else {
+            height = MAX_HEIGHT;
+            width = MAX_HEIGHT * aspectRatio;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressed = canvas.toDataURL("image/jpeg", QUALITY);
+        resolve(compressed);
+      };
+
+      img.onerror = reject;
+      reader.onerror = reject;
+
+      reader.readAsDataURL(file);
+    });
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      try {
+        const compressedBase64 = await compressImage(file);
+        setFormData({ ...formData, profileImage: compressedBase64 });
+        setPreview(compressedBase64);
+      } catch (err) {
+        console.error("Compression failed:", err);
+      }
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-6 p-4">
+      <h2 className="text-2xl font-bold text-accent2 text-center">
+        Upload Profile Picture
+      </h2>
+
+      <div className="flex flex-col items-center gap-4">
+        {preview ? (
+          <div className="w-48 aspect-square overflow-hidden rounded-xl border border-gray-300 shadow">
+            <img
+              src={preview}
+              alt="Profile Preview"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ) : (
+          <div className="w-48 aspect-square rounded-xl bg-gray-200 border border-dashed border-gray-400 flex items-center justify-center text-gray-500 shadow-inner">
+            No Image
+          </div>
+        )}
+
+        <label
+          htmlFor="upload-button"
+          className="cursor-pointer bg-accent2 text-white px-4 py-2 rounded-lg shadow hover:bg-accent2-dark transition"
+        >
+          Choose Image
+        </label>
+        <input
+          id="upload-button"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
+        />
+
+        <p className="text-xs text-gray-500 text-center">
+          Max size: ~200KB after compression · Formats: JPG/PNG
+        </p>
+      </div>
+    </div>
+  );
+};
 
 // Education Form (with drag and drop)
 export const EducationForm = () => {
@@ -608,7 +712,7 @@ export const CertificationsForm = () => {
       </div>
     </div>
   );
-};
+}; 
 
 // Work Experience Form (with drag and drop)
 export const ExperienceForm = () => {
