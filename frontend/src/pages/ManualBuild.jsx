@@ -104,7 +104,7 @@ const ManualBuild = () => {
       if (response) {
         console.log("Form submitted successfully!");
         setPdfBlob(response);
-        navigate("/analyze");
+        navigate("/Templates");
       } else {
         setErrorMessage("Failed to submit the form. Please try again.");
       }
@@ -235,7 +235,7 @@ const ManualBuild = () => {
               className="mt-6 bg-accent2 text-white font-medium px-6 py-2 rounded-full hover:opacity-90 transition"
               disabled={isLoading} // Disable button while loading
             >
-              {isLoading ? "Generating PDF..." : "Finish"}
+              {isLoading ? "Loading..." : "Choose Templates"}
             </button>
           )}
 

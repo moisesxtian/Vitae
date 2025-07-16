@@ -4,6 +4,7 @@ import ManualBuild from "./pages/ManualBuild"
 import Navbar from "./components/Navbar"
 import Analyze from "./pages/Analyze"
 import Jobs from "./pages/Jobs"
+import Templates from "./pages/Templates"
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 import { FormProvider } from "./context/FormContext"
 import { AiContextProvider } from "./context/AiContext"
@@ -22,6 +23,7 @@ function App() {
             <Route path="/create/manual" element={<ManualBuild/>}/>
             <Route path="/analyze" element={<Analyze/>}/>
             <Route path="/jobs" element={<Jobs/>}/>
+            <Route path="/templates" element={<Templates/>}/>
           </Routes>
         </div>
         </FormProvider>
