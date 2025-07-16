@@ -25,9 +25,10 @@ export const FormProvider = ({ children }) => {
         };
   });
   const [pdfBlob, setPdfBlob] = useState(null);
+  const [resume_template, setResumeTemplate] = useState("Classic");
 
   return (
-    <FormContext.Provider value={{ formData, setFormData, pdfBlob, setPdfBlob }}>
+    <FormContext.Provider value={{ formData, setFormData, pdfBlob, setPdfBlob ,resume_template, setResumeTemplate}}>
       {children}
     </FormContext.Provider>
   );

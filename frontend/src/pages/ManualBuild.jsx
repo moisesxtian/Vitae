@@ -98,22 +98,7 @@ const ManualBuild = () => {
     e.preventDefault();
     setIsLoading(true);
     handleDataFormat(formData);
-
-    try {
-      const response = await sendFormData();
-      if (response) {
-        console.log("Form submitted successfully!");
-        setPdfBlob(response);
-        navigate("/Templates");
-      } else {
-        setErrorMessage("Failed to submit the form. Please try again.");
-      }
-    } catch (err) {
-      console.error("Error:", err);
-      setErrorMessage("An error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    navigate("/templates");
   };
 
   useEffect(() => {

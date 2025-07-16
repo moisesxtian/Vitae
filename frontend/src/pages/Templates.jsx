@@ -1,32 +1,46 @@
 import { useNavigate } from "react-router-dom";
-
+import { useFormContext } from "../context/FormContext";
+import useForm from "../hooks/useForm";
 const Templates = () => {
   const navigate = useNavigate();
+  const {setResumeTemplate,formData,setPdfBlob} = useFormContext();
+  const {sendFormData,}=useForm();
 
   const buildOptions = [
     {
       title: 'Creative',
       description: 'A bold and modern resume layout that emphasizes design and uniqueness.',
       image: '/templates/classic_template.png', // relative to public/
-      route: '/create/creative',
+      template: 'creative',
       disabled: false,
     },
     {
       title: 'Classic',
       description: 'Standard Harvard resume template format. This resume is recommended for the tech industry.',
       image: '/templates/classic_template.png',
-      route: '/create/classic',
+      template: 'classic',
       disabled: false,
     },
     {
       title: 'Hybrid',
       description: 'Combines traditional structure with creative elements, perfect for diverse job applications.',
       image: '/templates/classic_template.png',
-      route: '/create/hybrid',
-      disabled: false,
+      template: 'hybrid',
+      disabled: true,
     },
   ];
 
+  const handleSelectedTemplate = async (selected_template) => {
+    await setResumeTemplate(selected_template);
+    const sendingData={formData,selected_template};
+    console.log(sendingData)
+    const blob=await sendFormData(sendingData);
+    console.log("BLOB:",blob)
+    await setPdfBlob(blob);
+
+    navigate('/analyze');
+
+  };
   return (
     <div className="min-h-[calc(100vh-100px)] w-full bg-bgcolor text-dark flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl sm:text-4xl font-bold text-accent2 mb-2 text-center">
@@ -42,7 +56,7 @@ const Templates = () => {
           <div
             key={idx}
             onClick={() => {
-              if (!option.disabled) navigate(option.route);
+              if (!option.disabled) handleSelectedTemplate(option.template);
             }}
             className={`cursor-pointer border rounded-2xl p-5 sm:p-6 shadow-sm transition-all duration-200 
               ${option.disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200' : 'hover:shadow-lg hover:scale-[1.02] bg-bgcolor border-dark/10'}

@@ -2,7 +2,7 @@ from fastapi.responses import FileResponse
 from weasyprint import HTML
 from jinja2 import Environment, FileSystemLoader
 from tempfile import NamedTemporaryFile
-from models.resumeModel import Resume
+from models.resumeModel import ResumeWrapper
 from fastapi.concurrency import run_in_threadpool
 from datetime import datetime
 
@@ -46,7 +46,6 @@ def count_total_entries(data: dict) -> int:
     print(count)
     return round(count)
 
-
 def datetimeformat(value, format="%B %Y"):
     try:
         date_obj = datetime.strptime(value, "%Y-%m")
@@ -62,8 +61,9 @@ def clean_data(obj):
     else:
         return obj
 
-async def submit_resume(data: Resume):
-    raw_data = data.model_dump()
+async def submit_resume(wrapper:ResumeWrapper):
+    print(wrapper)
+    raw_data = wrapper.formData.model_dump() 
     print("test")
     # Format dates in experience and education
     for entry in raw_data.get("education", []) + raw_data.get("experience", []):
@@ -89,7 +89,7 @@ async def submit_resume(data: Resume):
     else:
         cleaned_data["resume_density"] = "super_dense"
     # Render template
-    template = await run_in_threadpool(env.get_template, "harvard_resume.html")
+    template = await run_in_threadpool(env.get_template, f"{wrapper.selected_template}.html")
     html_content = await run_in_threadpool(template.render, data=cleaned_data)
     print(cleaned_data["resume_density"])
     # Generate PDF

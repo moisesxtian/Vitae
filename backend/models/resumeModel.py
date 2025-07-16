@@ -23,8 +23,8 @@ class CertificationEntry(BaseModel):
     name: str
     issuer: str
     date: str
-    credentialId: Optional[str] = None
-    credentialUrl: Optional[str] = None
+    credentialId: Optional[str] = ""
+    credentialUrl: Optional[str] = ""
 
 class Resume(BaseModel):
     firstName: str
@@ -35,7 +35,7 @@ class Resume(BaseModel):
 
     email: EmailStr
     phone: str
-    linkedin: Optional[str] = None
+    linkedin: Optional[str] = ""
     summary: Optional[str] = ""
 
     education: Optional[List[EducationEntry]]=[]
@@ -44,3 +44,7 @@ class Resume(BaseModel):
 
     skills: List[str]=[]
     projects: Optional[List[dict]]=[]
+
+class ResumeWrapper(BaseModel):
+    formData: Resume
+    selected_template:str

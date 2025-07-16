@@ -4,10 +4,11 @@ from controllers.resumeController import submit_resume
 from controllers.analyzeController import analyzeResume
 from controllers.recommendJobController import get_job_recommendations
 from controllers.analyzeJobRole import analyze_job_role
+from models.resumeModel import ResumeWrapper
 router = APIRouter()    
 @router.post("/submit") 
-async def submit_resume_router(data: Resume):
-    return await submit_resume(data)
+async def submit_resume_router(wrapper: ResumeWrapper):
+    return await submit_resume(wrapper)
 
 @router.post("/analyze")
 async def analyzeResume_router(data: Resume):

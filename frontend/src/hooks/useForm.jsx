@@ -4,10 +4,14 @@ import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_SERVER_API_URL;
 
 
-const useForm = (formData) => {
-  const sendFormData = async () => {
+const useForm = () => {
+  const sendFormData = async (sendingData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/submit`, formData,{responseType: 'blob'});
+      console.log("USE FORM:,",sendingData);
+      const response = await axios.post(`${API_BASE_URL}/submit`, {
+        formData: sendingData.formData,
+        selected_template: sendingData.selected_template
+      },{responseType: 'blob'});
       
       return response.data;
     } catch (error) {
