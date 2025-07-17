@@ -5,6 +5,7 @@ from controllers.analyzeController import analyzeResume
 from controllers.recommendJobController import get_job_recommendations
 from controllers.analyzeJobRole import analyze_job_role
 from controllers.messageController import get_ai_message
+from fastapi import Body
 from models.resumeModel import ResumeWrapper
 router = APIRouter()    
 @router.post("/submit") 
@@ -16,7 +17,7 @@ async def analyzeResume_router(data: Resume):
     return analyzeResume(data)
 
 @router.post("/message")
-async def get_ai_message_router(data:str):
+async def get_ai_message_router(data: str = Body(..., media_type="text/plain")):
     return get_ai_message(data)
 @router.get("/job-recommendations")
 async def  get_job_recommendations_router(job_role: str, job_location: str):
