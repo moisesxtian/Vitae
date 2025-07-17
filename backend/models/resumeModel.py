@@ -49,3 +49,7 @@ class Resume(BaseModel):
 class ResumeWrapper(BaseModel):
     formData: Resume
     selected_template:str
+
+class AiResponse(BaseModel):
+    reply:str
+    extracted_data:Optional[Resume]=""
