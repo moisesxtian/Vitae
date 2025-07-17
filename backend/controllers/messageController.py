@@ -1,6 +1,7 @@
 from google import genai
 from google.genai import types
 import os
+import json
 from dotenv import load_dotenv
 load_dotenv()
 GENAI_API_KEY = os.environ.get("GENAI_API_KEY")
@@ -68,6 +69,6 @@ def get_ai_message(data):
             "system_instruction": prompt,
         },
     )
-    return response.text
+    return json.loads(response.text)
   except Exception as e:
     return str(e)

@@ -1,23 +1,38 @@
 import { useEffect, useState } from "react";
+import useSmartBuild from "../hooks/useSmartBuild";
 const SmartBuild = () => {
     const [firstMessageSent, setFirstMessageSent] = useState(false);
     const [input,setInput] = useState('');
     const [message, setMessage] = useState([]);
+    const {getReply} = useSmartBuild();
 
-    const sendMessage = ()=> {
+    const sendMessage =async ()=> {
         const userMessage = {
             role: "user",
-            content: "Hello  im Christian"
+            content: input
         }
-        setMessage(prev => [...prev, userMessage]);
-        
+        await setMessage(prev => [...prev, userMessage]);
+        try{
+          const updatedMessage=[...message,userMessage];
+          const response=await getReply(JSON.stringify(updatedMessage));
+          const aiMessage = {
+            role: "ai",
+            content: response.reply
+          }
+          setMessage(prev => [...prev, aiMessage]);
+        }catch(err){
+          console.log(err)
+        }
     }
     // Set the First message
     useEffect(() => {
+      
+    },[message])
+    useEffect(() => {
     if (!firstMessageSent){
         const aiMessage = {
-            role: "ai",
-            content: "Hello Im Mr.Vitae, Tell me Everything about yourself and I will make a resume for you."
+          role: "ai",
+          content: "Hi there! I’m Mr. Vitae, your personal resume assistant. 😊 To help craft the perfect resume for you, could you tell me a bit about yourself? Let's start with your name, where you're currently based (city and state), a bit about your work experience, any notable projects, and the skills you're most confident in."
         }
         setMessage(prev => [...prev, aiMessage]);
         setFirstMessageSent(true);
