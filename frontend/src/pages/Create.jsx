@@ -9,9 +9,9 @@ export default function Create() {
     {
       title: 'Smart AI Build',
       description: 'Answer a few questions, and let our AI craft your resume.',
-      icon: <Sparkles className="w-8 h-8 text-gray-400" />,
+      icon: <Sparkles className="w-8 h-8 text-accent2" />,
       route: '/create/ai',
-      disabled: true, // Mark as in-progress
+      disabled: false,
     },
     {
       title: 'Manual Build',

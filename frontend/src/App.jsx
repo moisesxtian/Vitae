@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar"
 import Analyze from "./pages/Analyze"
 import Jobs from "./pages/Jobs"
 import Templates from "./pages/Templates"
+import SmartBuild from "./pages/SmartBuild"
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 import { FormProvider } from "./context/FormContext"
 import { AiContextProvider } from "./context/AiContext"
@@ -24,6 +25,7 @@ function App() {
             <Route path="/analyze" element={<Analyze/>}/>
             <Route path="/jobs" element={<Jobs/>}/>
             <Route path="/templates" element={<Templates/>}/>
+            <Route path="/create/ai" element={<SmartBuild/>}/>
           </Routes>
         </div>
         </FormProvider>
