@@ -4,13 +4,13 @@ import {useFormContext} from '../context/FormContext';
 
 const useSmartBuild = () => {
     const API_BASE_URL=import.meta.env.VITE_SERVER_API_URL
-    const { formData, setFormData } = useFormContext();
+    const { formdata, setFormData } = useFormContext();
     const getReply = async (message) => {
         try {
             console.log("Ai Message", message); // AI MESSAGE
             const response = await axios.post(`${API_BASE_URL}/message`, message,{
                 headers: {
-                    'Content-Type': 'text/plain'
+                    'Content-Type': 'application/json'
                 }
             });
             console.log("Response", response);

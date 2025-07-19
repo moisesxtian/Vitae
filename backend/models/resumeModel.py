@@ -53,3 +53,7 @@ class ResumeWrapper(BaseModel):
 class AiResponse(BaseModel):
     reply:str
     extracted_data:Optional[Resume]=""
+
+class MessageRequest(BaseModel):
+    message: str
+    formdata: str = ""

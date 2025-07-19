@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useFormContext } from "../context/FormContext";
 import useSmartBuild from "../hooks/useSmartBuild";
 const SmartBuild = () => {
     const [firstMessageSent, setFirstMessageSent] = useState(false);
     const [input,setInput] = useState('');
     const [message, setMessage] = useState([]);
     const {getReply} = useSmartBuild();
+    const { formData, setFormData } = useFormContext();
 
     const sendMessage =async ()=> {
         setInput('');
@@ -12,10 +14,13 @@ const SmartBuild = () => {
             role: "user",
             content: input
         }
-        await setMessage(prev => [...prev, userMessage]);
+          setMessage(prev => [...prev, userMessage]);
         try{
           const updatedMessage=[...message,userMessage];
-          const response=await getReply(JSON.stringify(updatedMessage));
+          const message_request={
+            message:JSON.stringify(updatedMessage.slice(-3)),
+            formdata:JSON.stringify(formData)};
+          const response=await getReply(message_request);
           const aiMessage = {
             role: "ai",
             content: response.reply
