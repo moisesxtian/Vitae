@@ -68,18 +68,22 @@ For education, experience, and certifications, treat user stories naturally. For
 → extract as an education entry.
 
 Be concise, clear, and do not ask all questions at once. Gather resume data naturally through conversation.
+If you think you have gathered enough data to form a good resume. Inform the user that you have everything you need to create a resume 
+but you can still proceed if you want to share some other relevant information.
 """
-def get_ai_message(data):
+def get_ai_message(request):
   try:
+    print("REQUEST:!!!",request)
     client = genai.Client(api_key=GENAI_API_KEY)
     response = client.models.generate_content(
         model="gemini-2.0-flash-lite",
-        contents=f"Follow Sytem Instruction and return a valid JSON object. {data}",
+        contents=f"{request.message}/// THIS IS THE CURRENT EXTRACTED DATA: {request.formdata}",
         config={
             "response_mime_type": "application/json",
             "system_instruction": prompt,
         },
     )
+    print ('AI RESPONSE:!!!',response.text)
     return json.loads(response.text)
   except Exception as e:
     return str(e)
