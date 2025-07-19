@@ -18,7 +18,7 @@ const SmartBuild = () => {
         try{
           const updatedMessage=[...message,userMessage];
           const message_request={
-            message:JSON.stringify(updatedMessage.slice(-3)),
+            message:JSON.stringify(updatedMessage.slice(-6)),
             formdata:JSON.stringify(formData)};
           const response=await getReply(message_request);
           const aiMessage = {
