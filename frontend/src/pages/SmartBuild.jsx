@@ -7,6 +7,7 @@ const SmartBuild = () => {
     const {getReply} = useSmartBuild();
 
     const sendMessage =async ()=> {
+        setInput('');
         const userMessage = {
             role: "user",
             content: input
@@ -20,6 +21,7 @@ const SmartBuild = () => {
             content: response.reply
           }
           setMessage(prev => [...prev, aiMessage]);
+          
         }catch(err){
           console.log(err)
         }
@@ -32,7 +34,7 @@ const SmartBuild = () => {
     if (!firstMessageSent){
         const aiMessage = {
           role: "ai",
-          content: "Hi there! I’m Mr. Vitae, your personal resume assistant. 😊 To help craft the perfect resume for you, could you tell me a bit about yourself? Let's start with your name, where you're currently based (city and state), a bit about your work experience, any notable projects, and the skills you're most confident in."
+          content: "Hi there! I’m Mr. Vitae, your personal resume assistant. 😊 To help craft the perfect resume for you, could you tell me a bit about yourself?"
         }
         setMessage(prev => [...prev, aiMessage]);
         setFirstMessageSent(true);

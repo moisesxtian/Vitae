@@ -14,9 +14,8 @@ const useSmartBuild = () => {
                 }
             });
             console.log("Response", response);
-            if(response.extracted_data){
-                setFormData(response.extraced_data)
-            }
+            console.log("Extracted Data", response.data.extracted_data);
+            setFormData(response.data.extracted_data)
             return response.data
         }catch(err){
             console.log("ERROR",err)
