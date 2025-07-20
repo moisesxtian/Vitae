@@ -5,6 +5,7 @@ import { FileText, Eye } from "lucide-react"; // Lucide icons
 
 const SmartBuild = () => {
   const [firstMessageSent, setFirstMessageSent] = useState(false);
+  const [responseLoading, setResponseLoading] = useState(false);
   const [input, setInput] = useState('');
   const [message, setMessage] = useState([]);
   const [resumeReady, setResumeReady] = useState(false); // new state
@@ -19,7 +20,8 @@ const SmartBuild = () => {
       content: input
     };
     setMessage(prev => [...prev, userMessage]);
-
+    
+    setResponseLoading(true);
     try {
       const updatedMessage = [...message, userMessage];
       const message_request = {
@@ -39,8 +41,11 @@ const SmartBuild = () => {
       if (response.resume_ready) {
         setResumeReady(true);
       }
+
+      setResponseLoading(false);
     } catch (err) {
       console.error(err);
+      setResponseLoading(false);
     }
   };
 
@@ -116,10 +121,13 @@ const SmartBuild = () => {
           />
           <button
             onClick={sendMessage}
-            className="px-4 py-2 ml-2 text-white rounded-lg bg-accent2 hover:bg-accent2-dark"
-          >
+            disabled={responseLoading}
+            className={`px-4 py-2 ml-2 text-white rounded-lg ${
+              responseLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-accent2 hover:bg-accent2-dark'
+            }`}
+            >
             Send
-          </button>
+          </button> 
         </div>
       </div>
     </div>
