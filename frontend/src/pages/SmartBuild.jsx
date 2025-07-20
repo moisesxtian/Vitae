@@ -2,9 +2,11 @@ import { useEffect, useState,useRef } from "react";
 import { useFormContext } from "../context/FormContext";
 import { Ellipsis } from 'react-css-spinners'
 import useSmartBuild from "../hooks/useSmartBuild";
+import { Navigate } from "react-router-dom";
 import { FileText, Eye } from "lucide-react"; // Lucide icons
 
 const SmartBuild = () => {
+  const navigate=useNavigate();
   const [firstMessageSent, setFirstMessageSent] = useState(false);
   const [responseLoading, setResponseLoading] = useState(false);
   const [input, setInput] = useState('');
@@ -103,7 +105,7 @@ const SmartBuild = () => {
           <div className="flex justify-around px-4 py-2 border-t border-gray-200 bg-gray-50">
             <button
               className="flex items-center gap-2 px-4 py-2 font-medium text-white bg-accent2 rounded-lg hover:bg-accent2-dark transition-all"
-              onClick={() => alert('TODO: View Resume')}
+              onClick={() => navigate('/create/manual')}
             >
               <Eye size={18} /> View Resume
             </button>
