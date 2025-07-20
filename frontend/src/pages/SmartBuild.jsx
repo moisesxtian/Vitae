@@ -1,5 +1,6 @@
 import { useEffect, useState,useRef } from "react";
 import { useFormContext } from "../context/FormContext";
+import { Ellipsis } from 'react-css-spinners'
 import useSmartBuild from "../hooks/useSmartBuild";
 import { FileText, Eye } from "lucide-react"; // Lucide icons
 
@@ -89,6 +90,11 @@ const SmartBuild = () => {
               </div>
             </div >
           ))}
+          {responseLoading && (
+              <div className="flex items-center gap-2 text-gray-500 italic ml-2">
+    Typing <Ellipsis color="#888" size={20} />
+    </div>
+          )}
           <div ref={endRef}></div>
         </div >
 
