@@ -2,7 +2,7 @@ import { useEffect, useState,useRef } from "react";
 import { useFormContext } from "../context/FormContext";
 import { Ellipsis } from 'react-css-spinners'
 import useSmartBuild from "../hooks/useSmartBuild";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FileText, Eye } from "lucide-react"; // Lucide icons
 
 const SmartBuild = () => {
@@ -111,7 +111,7 @@ const SmartBuild = () => {
             </button>
             <button
               className="flex items-center gap-2 px-4 py-2 font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all"
-              onClick={() => alert('TODO: Generate Resume')}
+              onClick={() => navigate('/templates')}
             >
               <FileText size={18} /> Generate
             </button>
