@@ -18,7 +18,7 @@ const useJobs = () => {
                 job_location
             }
         });
-        console.log("SENT")
+        console.log(response.data.message);
         return response.data
         }
         catch(err){
