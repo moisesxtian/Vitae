@@ -118,13 +118,19 @@ const SmartBuild = () => {
 
         {/* Input Area */}
         <div className="flex p-4 border-t border-gray-300">
-          <input
-            type="text"
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent2"
-          />
+<input
+  type="text"
+  placeholder="Type your message..."
+  value={input}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !responseLoading) {
+      e.preventDefault();
+      sendMessage(input);
+    }
+  }}
+  onChange={(e) => setInput(e.target.value)}
+  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent2"
+/>
           <button
             onClick={sendMessage}
             disabled={responseLoading}
