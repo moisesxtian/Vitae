@@ -42,14 +42,16 @@ const ManualBuild = () => {
   const isCurrentStepDataEmpty = () => {
     switch (step) {
       case 2: // SkillsForm
-        return formData.skills.length === 0;
+        return formData.profileImage === null;
       case 3: // EducationForm
-        return formData.education.length === 0;
+        return formData.skills.length === 0;
       case 4: // ExperienceForm
-        return formData.experience.length === 0;
+        return formData.education.length === 0;
       case 5: // ProjectsForm
-        return formData.projects.length === 0;
+        return formData.experience.length === 0;
       case 6: // CertificationsForm
+        return formData.projects.length === 0;
+      case 7: // CertificationsForm
         return formData.certifications.length === 0;
       case 7: // SummaryForm
         return !formData.summary.trim();
