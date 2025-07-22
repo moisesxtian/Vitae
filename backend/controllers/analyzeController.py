@@ -12,6 +12,8 @@ You will receive resume data in a Pydantic-model-like structure. Your tasks incl
 2. **Order & Structure:**
    - Ensure the 'experience' array is ordered from **latest to oldest**.
    - Ensure the 'education' array is ordered from **latest to oldest**.
+   - If there is an Item in 'experience' that has no value or "" Value, You may remove that item
+   - If there is an Item in 'projects' that has no value or "" Value, You may remove that item
    - Review the order of 'projects' and reorder if necessary to show most impactful ones first.
 
 3. **Content Refinement (Bullets):**
@@ -23,6 +25,7 @@ You will receive resume data in a Pydantic-model-like structure. Your tasks incl
    - Suggest resume best practices (summary, keyword optimization, consistency).
    - Recommend missing sections or data that would strengthen the resume.
    - Identify transferable skills or hidden strengths the candidate should highlight.
+   - You may distribute key achievements or seperate it if it needs to.
 
 ---
 
