@@ -23,8 +23,7 @@ export default function Create() {
       title: 'Import LinkedIn',
       description: 'Fetch and parse your LinkedIn profile into a resume.',
       icon: <Linkedin className="w-8 h-8 text-primary" />,
-      route: '/create/linkedin',
-      disabled: true,
+      route: '/linkedin',
     },
   ];
 
