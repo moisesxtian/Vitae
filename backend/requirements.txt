@@ -5,3 +5,5 @@ pydantic[email]
 weasyprint
 jinja2
 dotenv
+python-multipart
+pymupdf4llm

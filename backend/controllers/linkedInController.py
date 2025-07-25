@@ -3,6 +3,7 @@ from google.genai import types
 import os 
 from dotenv import load_dotenv
 import pymupdf4llm
+import fitz
 
 load_dotenv()
 GENAI_API_KEY = os.environ.get("GENAI_API_KEY")
@@ -109,11 +110,13 @@ Return a JSON object with:
   "skills": [""]
 }
 """
-def analyzeLinkedIn(pdfblob):
-    ## PDF TO TEXT
-    md_text=pymupdf4lm.to_markdown(pdfblob)
-
+async def analyzeLinkedIn(pdfblob):
     try:
+        pdf = fitz.open(stream=pdfblob.file.read(), filetype="pdf")
+        md_text = pymupdf4llm.to_markdown(pdf)
+        #save md file
+        with open("resume.md", "w") as f:
+            f.write(md_text)
         client = genai.Client(api_key=GENAI_API_KEY)
         response = client.models.generate_content(
                 model="gemini-2.0-flash-lite",

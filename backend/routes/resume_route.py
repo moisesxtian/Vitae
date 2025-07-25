@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, File, UploadFile
 from models.resumeModel import Resume
 from models.resumeModel import MessageRequest
 from controllers.resumeController import submit_resume
@@ -30,5 +30,5 @@ async def get_job_role(data: Resume):
     return analyze_job_role(data)
 
 @router.post("/linkedin")
-async def analyzeLinkedIn_router(file: UploadFile = File(...)):
+async def analyzeLinkedIn_router(pdfblob: UploadFile=File(...)):
     return await analyzeLinkedIn(pdfblob)
