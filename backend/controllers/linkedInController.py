@@ -1,14 +1,13 @@
 from google import genai
 from google.genai import types
-from datetime import datetime
-import os
-import json
+import os 
 from dotenv import load_dotenv
+import pymupdf4llm
+
 load_dotenv()
 GENAI_API_KEY = os.environ.get("GENAI_API_KEY")
-today_date = datetime.now().strftime("%B %d, %Y")
-prompt = """
-You are Mr. Vitae, a warm, insightful AI assistant who helps users build standout resumes by engaging in genuine, human-like conversations.
+prompt = """ You are Mr. Vitae, a warm, insightful AI assistant who helps users build standout resumes by engaging in genuine, human-like conversations.
+
 You are a data extraction assistant. Your job is to extract structured JSON data from the conversation.
 
 You are provided with a JSON object called `extracted_data` that may already contain previously extracted fields.
@@ -48,11 +47,7 @@ Analyze extracted_data before asking a question, Make sure the question you're a
 
 4. Do **not stay on one section more than 2–3 replies**. Rotate topics to cover more ground.
 
-5. Output should contain approximately 1 page worth of resume content.
 
-Keep bullet point descriptions concise (max 2–3 lines per item).
-
-Do not hallucinate data—only extract or paraphrase what is verifiable from the resume.
 ## RESPONSE FORMAT:
 Return a JSON object with:
 - `reply`: your next conversational message
@@ -114,18 +109,20 @@ Return a JSON object with:
   "skills": [""]
 }
 """
-def get_ai_message(request):
-  try:
-    print("REQUEST:!!!",request)
-    client = genai.Client(api_key=GENAI_API_KEY)
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=f"Today is {today_date}. "f"{request.message}/// THIS IS THE CURRENT EXTRACTED DATA: {json.dumps(request.formdata, indent=2)}",
-        config={
-            "response_mime_type": "application/json",
-            "system_instruction": prompt,
-        },
-    )
-    return json.loads(response.text)
-  except Exception as e:
-    return str(e)
+def analyzeLinkedIn(pdfblob):
+    ## PDF TO TEXT
+    md_text=pymupdf4lm.to_markdown(pdfblob)
+
+    try:
+        client = genai.Client(api_key=GENAI_API_KEY)
+        response = client.models.generate_content(
+                model="gemini-2.0-flash-lite",
+                contents=f"Follow Sytem Instruction and return a valid JSON object. {md_text}",
+                config={
+                        "response_mime_type": "application/json",
+                        "system_instruction": prompt,
+                },
+        )
+        return response.text
+    except Exception as e:
+        return str(e)

@@ -6,6 +6,7 @@ from controllers.analyzeController import analyzeResume
 from controllers.recommendJobController import get_job_recommendations
 from controllers.analyzeJobRole import analyze_job_role
 from controllers.messageController import get_ai_message
+from controllers.linkedInController import analyzeLinkedIn
 from fastapi import Body
 from models.resumeModel import ResumeWrapper
 router = APIRouter()    
@@ -27,3 +28,7 @@ async def  get_job_recommendations_router(job_role: str, job_location: str):
 @router.post("/job_role")
 async def get_job_role(data: Resume):
     return analyze_job_role(data)
+
+@router.post("/linkedin")
+async def analyzeLinkedIn_router(file: UploadFile = File(...)):
+    return await analyzeLinkedIn(pdfblob)
