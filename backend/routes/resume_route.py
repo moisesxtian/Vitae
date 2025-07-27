@@ -30,5 +30,5 @@ async def get_job_role(data: Resume):
     return analyze_job_role(data)
 
 @router.post("/linkedin")
-async def analyzeLinkedIn_router(pdfblob: UploadFile=File(...)):
-    return await analyzeLinkedIn(pdfblob)
+async def analyzeLinkedIn_router(uploadFile: UploadFile=File(...)):
+    return await analyzeLinkedIn(uploadFile)

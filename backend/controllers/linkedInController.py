@@ -48,6 +48,7 @@ Analyze extracted_data before asking a question, Make sure the question you're a
 
 4. Do **not stay on one section more than 2–3 replies**. Rotate topics to cover more ground.
 
+5. if a data is empty, always return an empty string "", DO NOT RETURN A NULL VALUE.
 
 ## RESPONSE FORMAT:
 Return a JSON object with:

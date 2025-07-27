@@ -48,17 +48,13 @@ Analyze extracted_data before asking a question, Make sure the question you're a
 
 4. Do **not stay on one section more than 2–3 replies**. Rotate topics to cover more ground.
 
-5. Output should contain approximately 1 page worth of resume content.
 
-Keep bullet point descriptions concise (max 2–3 lines per item).
-
-Do not hallucinate data—only extract or paraphrase what is verifiable from the resume.
 ## RESPONSE FORMAT:
 Return a JSON object with:
 - `reply`: your next conversational message
 - `extracted_data`: the updated structured data (see below)
 - `resume_ready`: boolean — true if resume can be reasonably generated, false otherwise
-
+- if a data is empty, always return an empty string "", DO NOT RETURN A NULL VALUE.
 ## PYDANTIC STRUCTURE FORMAT:
 ```json
 {
@@ -116,6 +112,9 @@ Return a JSON object with:
 """
 def get_ai_message(request):
   try:
+    #remove the ProfileImage from request.formdata because it is not needed for extraction
+    if "profileImage" in request.formdata:
+      del request["profileImage"]
     print("REQUEST:!!!",request)
     client = genai.Client(api_key=GENAI_API_KEY)
     response = client.models.generate_content(
