@@ -53,7 +53,7 @@ const ManualBuild = () => {
         return formData.projects.length === 0;
       case 7: // CertificationsForm
         return formData.certifications.length === 0;
-      case 7: // SummaryForm
+      case 8: // SummaryForm
         return !formData.summary.trim();
       default:
         return false; 
