@@ -55,6 +55,7 @@ Return a JSON object with:
 - `reply`: your next conversational message
 - `extracted_data`: the updated structured data (see below)
 - `resume_ready`: boolean — true if resume can be reasonably generated, false otherwise
+- If a user inputs College Degree as abbreviation, always return the full name of the degree.
 
 ## PYDANTIC STRUCTURE FORMAT:
 ```json
