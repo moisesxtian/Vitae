@@ -9,7 +9,9 @@ app=FastAPI(
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust this in production
+    allow_origins=[
+    "http://localhost:3000",
+    "https://vitae-alpha.vercel.app"],  # Adjust this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
