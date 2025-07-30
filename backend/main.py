@@ -11,6 +11,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
     "http://localhost:3000",
+    "https://vitae.hyxcreation.tech",
     "http://localhost:5173",
     "https://vitae-alpha.vercel.app"],
     allow_credentials=True,
