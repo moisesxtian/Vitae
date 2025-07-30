@@ -121,7 +121,7 @@ async def analyzeLinkedIn(pdfblob):
             f.write(md_text)
         client = genai.Client(api_key=GENAI_API_KEY)
         response = client.models.generate_content(
-                model="gemini-2.0-flash-lite",
+                model="gemini-2.5-flash",
                 contents=f"Follow Sytem Instruction and return a valid JSON object. {md_text}",
                 config={
                         "response_mime_type": "application/json",

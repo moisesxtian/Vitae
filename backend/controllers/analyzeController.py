@@ -153,11 +153,12 @@ The JSON output must contain two top-level keys:
 def analyzeResume(data):
     client = genai.Client(api_key="AIzaSyA8MVNrnvq8J11Im_Glyte2WrSBr4EqcJ0")
     response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
+        model="gemini-2.5-flash",
         contents=f"Follow Sytem Instruction and return a valid JSON object. {data}",
         config={
             "response_mime_type": "application/json",
             "system_instruction": prompt,
         },
     )
+    print(response.text)
     return response.text

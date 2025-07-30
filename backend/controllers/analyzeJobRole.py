@@ -31,13 +31,14 @@ def analyze_job_role(data):
   try:
     client = genai.Client(api_key=GENAI_API_KEY)
     response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
+        model="gemini-2.5-flash",
         contents=f"Follow Sytem Instruction and return a valid JSON object. {data}",
         config={
             "response_mime_type": "application/json",
             "system_instruction": prompt,
         },
     )
+    print(response.text)
     return response.text
   except Exception as e:
     return str(e)

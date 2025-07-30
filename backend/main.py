@@ -12,7 +12,7 @@ app.add_middleware(
     allow_origins=[
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://vitae-alpha.vercel.app"],  # Adjust this in production
+    "https://vitae-alpha.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
