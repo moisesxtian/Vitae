@@ -113,13 +113,13 @@ Return a JSON object with:
 def get_ai_message(request):
   try:
     #remove the ProfileImage from request.formdata because it is not needed for extraction
-    if "profileImage" in request.formdata:
-      del request["profileImage"]
-    print("REQUEST:!!!",request)
+    form_data=json.loads(request.formdata)
+    form_data.pop("profileImage")
+    print("Current Extracted Data:", form_data)
     client = genai.Client(api_key=GENAI_API_KEY)
     response = client.models.generate_content(
         model="gemini-2.0-flash",
-        contents=f"Today is {today_date}. "f"{request.message}/// THIS IS THE CURRENT EXTRACTED DATA: {json.dumps(request.formdata, indent=2)}",
+        contents=f"Today is {today_date}. "f"{request.message}/// THIS IS THE CURRENT EXTRACTED DATA: {json.dumps(form_data)}",
         config={
             "response_mime_type": "application/json",
             "system_instruction": prompt,
