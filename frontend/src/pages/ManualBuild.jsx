@@ -108,7 +108,7 @@ const ManualBuild = () => {
     localStorage.setItem("formData", JSON.stringify(formData));
     const handleKeyDown = (e) => {
       // Only proceed with Enter key if not on the last step or a modal is open
-      if (e.key === "Enter" && step < 7  && !isLoading) {
+      if (e.key === "Enter" && step < 8  && !isLoading) {
         // Prevent default form submission if it's an input field
         if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
           e.preventDefault();
