@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useFormContext } from "../context/FormContext";
+import { Loader } from "lucide-react";
 import useForm from "../hooks/useForm";
 const Templates = () => {
   const navigate = useNavigate();
@@ -53,9 +54,9 @@ const Templates = () => {
       <p className="text-dark/70 mb-8 text-center max-w-lg text-sm sm:text-base">
         How would you like your Resume to Look?
       </p>
-      {loading ? (
+      {!loading ? (
         <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <Loader className="animate-spin h-6 w-6 text-primary" />
           <span className="ml-2 text-primary">Loading...</span>
         </div>
       ): 
