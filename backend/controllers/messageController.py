@@ -283,6 +283,8 @@ Example Extracted_data:
 - Don’t linger too long on one section; rotate topics after 2–3 prompts.
 - After resume_ready = true, shift focus to refinement:
   - Ask for metrics, dates, certificates, and other additional details.
+
+if The Current Extracted Data does not match the AI Message: Like if its a different name its most likely a new user, so you should not use the current extracted data and instead clear the extracted data and start fresh.
 """
 
 def get_ai_message(request):
