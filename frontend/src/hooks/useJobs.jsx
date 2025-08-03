@@ -6,6 +6,7 @@ const API_BASE_URL = import.meta.env.VITE_SERVER_API_URL;
 
 const useJobs = () => {
     const {setJobLoading}=useAiContext()
+    const [errorMessage, setErrorMessage] = useState("");
     const getJobListing = async (job_role, job_location) => {
     const formatted_job_role = job_role.map(role => role.replaceAll(' ', '')).join(', ');
         try{
@@ -15,10 +16,12 @@ const useJobs = () => {
         const response= await axios.get(`${API_BASE_URL}/job-recommendations`,{
             params: {
                 job_role:job_role[0],
-                job_location
+                job_location,
             }
         });
-        console.log(response.data.message);
+        if (response.data.message){
+            setErrorMessage("I have reached my request limit for the Job Recommendation API, Sorry. the free plan was limited and i can't afford a paid plan yet.");
+        }
         return response.data
         }
         catch(err){
@@ -29,7 +32,7 @@ const useJobs = () => {
             setJobLoading(false);
         }
     }
-    return{getJobListing}
+    return{getJobListing,errorMessage}
 };
 
 export default useJobs;

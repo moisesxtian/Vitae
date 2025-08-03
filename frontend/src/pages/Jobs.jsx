@@ -6,7 +6,7 @@ import useGetRole from "../hooks/useGetRole";
 import useJobs from "../hooks/useJobs";
 const Jobs = () => {
   const hasCalledRef = useRef(false);
-  const {getJobListing}=useJobs()
+  const {getJobListing,errorMessage}=useJobs()
   const { getRole } = useGetRole();
   const {setJobRole,setJobListing}=useAiContext()
   const { formData } = useFormContext();
@@ -99,9 +99,16 @@ useEffect(() => {
             ))
           ) : (
             <p className="text-gray-500 col-span-full">No jobs found.</p>
-          )}
+            
+          )
+          }
         </div>
       )}
+      {errorMessage && (
+          <p className="text-red-500 flex justify-center text-sm mt-2 animate-shake">
+            {errorMessage}
+          </p>
+        )}
     </div>
   );
 };

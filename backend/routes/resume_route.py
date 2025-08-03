@@ -15,7 +15,7 @@ async def submit_resume_router(wrapper: ResumeWrapper):
     return await submit_resume(wrapper)
 
 @router.post("/analyze")
-async def analyzeResume_router(data):
+async def analyzeResume_router(data:Resume):
     return analyzeResume(data)
 
 @router.post("/message")
