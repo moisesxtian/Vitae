@@ -39,8 +39,40 @@ You will receive resume data in a Pydantic-model-like structure. Perform the fol
 * Suggest any missing sections that would strengthen the resume.
 * Highlight transferable or underrepresented skills.
 * Distribute or separate major achievements if they are buried in long bullets.
+*IDEAL RESUME Atleast 1 Education with 1 bullet point, 3 experience with 2 bullet points, at maximum 10 skills. 2 projects with 1 bullet point each, and 1 certification with 1 bullet point.
 
 ---
+### Conditional Formatting Rule for Super-Filled FormData
+Only apply the following constraints if the input form data is overfilled or contains excessive entries. Use your judgment or token count to detect this.
+
+If the resume is super-filled:
+
+Limit Education to at least 1 entry with at least 1 bullet point
+
+Limit Experience to exactly 3 entries, with exactly 2 bullet points each
+(Prioritize most recent or relevant experiences)
+
+Limit Skills to a maximum of 10
+
+Limit Projects to exactly 2, each with 1 bullet point
+
+Limit Certifications to exactly 1, with 1 bullet point
+
+If the form data is not super-filled, retain all valid entries.
+
+Example Prompt Snippet You Can Add:
+plaintext
+Copy
+Edit
+If the input form data is too long or overfilled (e.g., has more than 5 experiences, 5 projects, or too many skills), apply the following constraints:
+
+- At least 1 education with 1 bullet
+- Exactly 3 experiences with 2 bullet points each
+- Max 10 skills
+- Exactly 2 projects with 1 bullet each
+- Exactly 1 certification with 1 bullet
+
+Otherwise, preserve all complete and relevant entries as-is.
 
 ### Output Format
 
