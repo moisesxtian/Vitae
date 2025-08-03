@@ -43,8 +43,7 @@ const LinkedIn = () => {
       const parsedResponse = JSON.parse(response);
       setFormData(parsedResponse);
     } catch (err) {
-      console.error("Upload error:", err);
-      setError("Failed to upload. Please try again.");
+      setError(err.message || "An error occurred while uploading.");
     }
     navigate("/create/manual");
     setIsLoading(false);
