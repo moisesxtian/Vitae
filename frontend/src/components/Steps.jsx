@@ -136,7 +136,7 @@ export const SkillsForm = () => {
   return (
     <div className="flex flex-col gap-6 p-4">
       <h2 className="text-2xl font-bold text-accent2">Skills</h2>
-      <div className="grid grid-cols-2 gap-4 overrflow-y-auto">
+      <div className="grid grid-cols-1 justify-items-center md:grid-cols-2 gap-4 overrflow-y-auto">
 
         {formData.skills.map((skill, index) => (
           <div key={index} className="flex items-center gap-2">
@@ -440,7 +440,7 @@ export const EducationForm = () => {
           {/* Content */}
           {expandedIdx === idx && (
             <div className="p-4 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1">
                 <Input
                   label="School / University"
                   name="school"
@@ -457,7 +457,7 @@ export const EducationForm = () => {
                   />
                 )}
                 {edu.level === "College" && (
-                  <div className="col-span-2">
+                  <div className="col-span-1 md:col-span-2">
                     <Input
                       label="Field of Study"
                       name="field"
@@ -480,7 +480,7 @@ export const EducationForm = () => {
 
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   label="Start Date"
                   name="start"
