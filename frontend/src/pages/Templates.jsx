@@ -2,12 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useFormContext } from "../context/FormContext";
 import { Loader } from "lucide-react";
+import recordData from "../hooks/recordData";
 import useForm from "../hooks/useForm";
 const Templates = () => {
   const navigate = useNavigate();
   const {setResumeTemplate,formData,setPdfBlob} = useFormContext();
   const {sendFormData,}=useForm();
   const [loading, setLoading] = useState(false);
+
 
   const buildOptions = [
     {
@@ -36,6 +38,7 @@ const Templates = () => {
   const handleSelectedTemplate = async (selected_template) => {
     setLoading(true);
     await setResumeTemplate(selected_template);
+    const result = await recordData(formData)
     const sendingData={formData,selected_template};
     console.log(sendingData)
     const blob=await sendFormData(sendingData);
