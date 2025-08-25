@@ -7,6 +7,7 @@ import Jobs from "./pages/Jobs"
 import Templates from "./pages/Templates"
 import SmartBuild from "./pages/SmartBuild"
 import LinkedIn from "./pages/LinkedIn"
+import About from "./pages/About"
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 import { FormProvider } from "./context/FormContext"
 import { AiContextProvider } from "./context/AiContext"
@@ -28,6 +29,9 @@ function App() {
             <Route path="/templates" element={<Templates/>}/>
             <Route path="/create/ai" element={<SmartBuild/>}/>
             <Route path="/linkedin" element={<LinkedIn/>}/>
+            <Route path="/linkedin" element={<LinkedIn/>}/>
+            <Route path="/linkedin" element={<LinkedIn/>}/>
+            <Route path="/about" element={<About/>}/>
           </Routes>
         </div>
         </FormProvider>
