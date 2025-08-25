@@ -1,13 +1,22 @@
-from google import genai
-from google.genai import types
+from openai import OpenAI
 from datetime import datetime
 import os
 import json
 from dotenv import load_dotenv
 load_dotenv()
-GENAI_API_KEY = os.environ.get("GENAI_API_KEY")
+
+# Use the new OpenAI client instead of the old openai.ChatCompletion API
+# Prefer explicit OPENAI_API_KEY, fall back to GENAI_API_KEY if present
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY") or os.environ.get("GENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise EnvironmentError("OPENAI_API_KEY (or GENAI_API_KEY) not set in environment")
+
+# instantiate client with the API key
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+GENAI_API_KEY = os.environ.get("GENAI_API_KEY")  # ...keep for compatibility if other code uses it...
 today_date = datetime.now().strftime("%B %d, %Y")
-prompt="""You are Mr. Vitae — a warm, insightful AI assistant that helps users build polished, professional resumes through natural, conversational dialogue.
+prompt = """You are Mr. Vitae — a warm, insightful AI assistant that helps users build polished, professional resumes through natural, conversational dialogue.
 
 Your job is to:
 1. Engage in human-like conversation to collect or update resume data.
@@ -285,28 +294,47 @@ Example Extracted_data:
   - Ask for metrics, dates, certificates, and other additional details.
 
 if The Current Extracted Data does not match the AI Message: Like if its a different name its most likely a new user, so you should not use the current extracted data and instead clear the extracted data and start fresh.
+
 """
 
 def get_ai_message(request):
   try:
-    #remove the ProfileImage from request.formdata because it is not needed for extraction
-    form_data=json.loads(request.formdata)
-    if "profileImage" in form_data:
-      # Remove profileImage if it exists, as it's not needed for extraction
-      form_data.pop("profileImage")
+    form_data = json.loads(request.formdata)
+    form_data.pop("profileImage", None)
     print("Current Extracted Data:", form_data)
-    client = genai.Client(api_key=GENAI_API_KEY)
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=f"Today is {today_date}. "f"{request.message}/// THIS IS THE CURRENT EXTRACTED DATA: {json.dumps(form_data)} /// Please extract and update the data in the JSON format as specified.",
-        config={
-            "response_mime_type": "application/json",
-            "system_instruction": prompt,
-            "thinking_config":types.ThinkingConfig(thinking_budget=-1),
-        },
+
+    messages = [
+      {"role": "system", "content": prompt},
+      {"role": "user", "content": f"Today is {today_date}. {request.message} /// THIS IS THE CURRENT EXTRACTED DATA: {json.dumps(form_data)} /// Please extract and update the data in the JSON format as specified."}
+    ]
+
+    resp = client.chat.completions.create(
+      model="gpt-4.1-mini",        # change model as needed / to one you have access to
+      messages=messages,
+      temperature=0.0,
     )
-    print("Response:", response.text)
-    return json.loads(response.text)
+
+    # get text content
+    content = ""
+    try:
+      # new client response exposes content as an attribute
+      content = resp.choices[0].message.content
+    except Exception:
+      # fallback for different client shapes
+      content = getattr(resp.choices[0], "text", None) or str(resp)
+
+    print("OpenAI raw response:", content)
+
+    if not content or not content.strip():
+      return {"reply": "OpenAI returned an empty response.", "error": "empty_response", "raw_response": resp}
+
+    try:
+      parsed = json.loads(content)
+      return parsed
+    except Exception as e:
+      print("Failed to parse JSON from OpenAI response:", e)
+      return {"reply": "Failed to parse model JSON output.", "error": str(e), "raw_response": content}
+
   except Exception as e:
     print("Error:", e)
-    return {"reply": e.__str__()}
+    return {"reply": str(e)}
