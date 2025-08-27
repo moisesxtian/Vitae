@@ -39,9 +39,11 @@ const LinkedIn = () => {
     setIsLoading(true);
     try {
       const response = await getLinkedIn(selectedFile);
-      console.log("Setting Form data to:", response);
-      const parsedResponse = JSON.parse(response);
-      setFormData(parsedResponse);
+      console.log("Setting Form data..");
+      setFormData(response);
+      console.log("Sucessfully set Form Data! ");
+      
+      
     } catch (err) {
       setError(err.message || "An error occurred while uploading.");
     }
