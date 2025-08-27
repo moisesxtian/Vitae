@@ -10,6 +10,7 @@ import { useAiContext } from "../context/AiContext";
 import PayPalButton from "../components/PaypalButton";
 export default function Analyze() {
   const { job_listing, setJobListing, setJobRole, job_roles } = useAiContext();
+  const { getJobListing } = useJobs();
   const { formData, pdfBlob } = useFormContext();
   const [revisedUsed, setRevisedUsed] = useState(false);
   const [parsed, setParsed] = useState(null);

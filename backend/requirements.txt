@@ -4,7 +4,10 @@ email-validator
 pydantic[email]
 weasyprint
 jinja2
-dotenv
+python-dotenv
 python-multipart
 pymupdf4llm
 google-genai
+langchain
+langchain-openai
+openai

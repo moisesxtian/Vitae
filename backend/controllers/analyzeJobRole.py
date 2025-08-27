@@ -1,21 +1,25 @@
-from google import genai
-from google.genai import types
-import os 
+import os
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+
 load_dotenv()
-GENAI_API_KEY = os.environ.get("GENAI_API_KEY")
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
 prompt = """
 You are a resume analysis assistant. Your job is to Assess the user's Recommended Job Field:
 1. `recommended_job_category`: A list of job roles that match the user's experience, skills, and projects.
 ### Output:
 
 Return a single JSON with:
-`recommended_job_category`: job roles based on the resume content.
+"recommended_job_category": job roles based on the resume content.
 Output Format (example):
     "recommended_job_category":[
         "Software Engineer",
         "Web Developer",
-        "Full Stack Developer",]
+        "Full Stack Developer"
+    ]
 ---
 
 ### Rules:
@@ -25,20 +29,26 @@ Output Format (example):
 - Do not include markdown, comments, or extra text.
 - Do not escape line breaks.
 - STRICTLY follow the output structure.
-
 """
-def analyze_job_role(data):
-  try:
-    client = genai.Client(api_key=GENAI_API_KEY)
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=f"Follow Sytem Instruction and return a valid JSON object. {data}",
-        config={
-            "response_mime_type": "application/json",
-            "system_instruction": prompt,
-        },
-    )
-    print(response.text)
-    return response.text
-  except Exception as e:
-    return str(e)
+
+def analyze_job_role(data: str):
+    try:
+        llm = ChatOpenAI(
+            api_key=OPENAI_API_KEY,
+            model="gpt-4o-mini",  # you can change to gpt-4.1 / gpt-4o / gpt-3.5-turbo etc.
+            temperature=0
+        )
+
+        template = ChatPromptTemplate.from_messages([
+            ("system", prompt),
+            ("user", f"Follow system instruction and return a valid JSON object. {data}")
+        ])
+
+        chain = template | llm
+        response = chain.invoke({})
+
+        # LangChain's ChatOpenAI returns a message object, extract content
+        return response.content
+
+    except Exception as e:
+        return str(e)

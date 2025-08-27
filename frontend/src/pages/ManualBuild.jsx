@@ -63,11 +63,12 @@ const ManualBuild = () => {
   const validateStepOne = () => {
     const containsOnlyLetters = (str) => /^[a-zA-Z]*$/.test(str);
     const isNotEmpty =
-      formData.firstName.trim() !== "" &&
-      formData.middleInitial.trim() !== "" &&
-      formData.lastName.trim() !== "" &&
-      formData.email.trim() !== "" &&
-      formData.phone.trim() !== "";
+    (formData.firstName || "").trim() !== "" &&
+    (formData.middleInitial || "").trim() !== "" &&
+    (formData.lastName || "").trim() !== "" &&
+    (formData.email || "").trim() !== "" &&
+    (formData.phone || "").trim() !== "";
+
     const isLettersOnly =
       containsOnlyLetters(formData.middleInitial) &&
       containsOnlyLetters(formData.lastName);

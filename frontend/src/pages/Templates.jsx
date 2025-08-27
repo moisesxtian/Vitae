@@ -57,7 +57,7 @@ const Templates = () => {
       <p className="text-dark/70 mb-8 text-center max-w-lg text-sm sm:text-base">
         How would you like your Resume to Look?
       </p>
-      {!loading ? (
+      {loading ? (
         <div className="flex items-center justify-center">
           <Loader className="animate-spin h-6 w-6 text-primary" />
           <span className="ml-2 text-primary">Loading...</span>
